@@ -321,21 +321,10 @@
     [self.videoPlayerView.player pause];
     [self.progressView setProgress:0];
     
-    __block SCRecordSessionSegment * segment = [self.videoEditAuxiliary getCurrentSegment:self.recordSegments index:self.currentSelected];
-    __block SCRecordSessionSegment * newSegment = nil;
-    __block NSString * temppath = NSTemporaryDirectory();
+    __block SCRecordSessionSegment *segment = [self.videoEditAuxiliary getCurrentSegment:self.recordSegments index:self.currentSelected];
+    __block SCRecordSessionSegment *newSegment = nil;
     
-    temppath = [temppath stringByAppendingPathComponent:@"SCVideo"];
-    BOOL exists =[[NSFileManager defaultManager] fileExistsAtPath:temppath isDirectory:NULL];
-    if (!exists) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:temppath withIntermediateDirectories:YES attributes:nil error:NULL];
-    }
-    
-    NSString *filename = [NSString stringWithFormat:@"SCVideoReversed.%ld.mov",(long)self.currentSelected];
-    temppath = [temppath stringByAppendingPathComponent:filename];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:temppath isDirectory:NULL]) {
-        [[NSFileManager defaultManager] removeItemAtPath:temppath error:NULL];
-    }
+    NSURL *tempPath = [LZVideoTools filePathWithFileName:@"ConponVideo.m4v"];
     
     if ([segment.isReverse boolValue] == YES && segment.assetSourcePath != nil) {
         
@@ -358,14 +347,14 @@
     else {
         WS(weakSelf);
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [HKMediaOperationTools assetByReversingAsset:segment.asset videoComposition:nil duration:segment.duration outputURL:[NSURL fileURLWithPath:temppath] progressHandle:^(CGFloat progress) {
+            [HKMediaOperationTools assetByReversingAsset:segment.asset videoComposition:nil duration:segment.duration outputURL:tempPath progressHandle:^(CGFloat progress) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     DLog(@"%0.2f %%", progress*100);
                     [self.progressView setProgress:progress animated:YES];
                     
                     if (progress == 1.00) {
                         [self.progressView setProgress:1 animated:YES];
-                        newSegment = [SCRecordSessionSegment segmentWithURL:[NSURL fileURLWithPath:temppath] info:nil];
+                        newSegment = [SCRecordSessionSegment segmentWithURL:tempPath info:nil];
                         newSegment.startTime = segment.startTime;
                         newSegment.endTime = segment.endTime;
                         newSegment.isSelect = segment.isSelect;
@@ -375,7 +364,7 @@
                         if(newSegment) {
                             [newSegment setIsReverse:[NSNumber numberWithBool:YES]];
                             [newSegment setAssetSourcePath:segment.url];
-                            [newSegment setAssetTargetPath:temppath];
+                            [newSegment setAssetTargetPath:[tempPath path]];
                             
                             //更新session
                             [weakSelf.recordSegments removeObject:segment];
