@@ -72,7 +72,7 @@
     formatter.dateFormat = @"yyyyMMddHHmmss";
     NSString *nowTimeStr = [formatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:0]];
     
-    NSString *fileName = [[path stringByAppendingPathComponent:nowTimeStr] stringByAppendingString:@"merge.mp4"];
+    NSString *fileName = [[path stringByAppendingPathComponent:nowTimeStr] stringByAppendingString:@"merge.m4v"];
     
     return fileName;
 }
@@ -88,7 +88,7 @@
     formatter.dateFormat = @"yyyyMMddHHmmss";
     NSString *nowTimeStr = [formatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:0]];
     
-    NSString *fileName = [[path stringByAppendingPathComponent:nowTimeStr] stringByAppendingString:@".mp4"];
+    NSString *fileName = [[path stringByAppendingPathComponent:nowTimeStr] stringByAppendingString:@".m4v"];
     
     return fileName;
 }

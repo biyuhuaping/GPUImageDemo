@@ -11,6 +11,7 @@
 #import "LZVideoEditCollectionViewCell.h"
 
 #import "ProgressBar.h"
+#import "HKMediaOperationTools.h"           //视频倒播
 
 #import "LZVideoEditAuxiliary.h"
 #import "LZVideoTools.h"
@@ -26,10 +27,12 @@
 @property (strong, nonatomic) IBOutlet UIButton *lzVoiceButton;             //声音按钮
 @property (strong, nonatomic) IBOutlet UIButton *lzDeleteButton;            //删除按钮
 @property (strong, nonatomic) IBOutlet UILabel *hintLabel;                  //提示信息
+@property (strong, nonatomic) IBOutlet UIProgressView *progressView;        //处理倒放视频进度
 
 @property (strong, nonatomic) LZVideoEditAuxiliary *videoEditAuxiliary;
 @property (assign, nonatomic) NSInteger currentSelected;
 @property (strong, nonatomic) NSMutableArray *recordSegments;
+@property (nonatomic, assign) __block BOOL isReverseCancel;   //取消翻转
 
 @end
 
@@ -187,7 +190,7 @@
         NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:segment.asset];
         if ([compatiblePresets containsObject:AVAssetExportPresetHighestQuality]) {
 
-            NSString *filename = [NSString stringWithFormat:@"SCVideoEditCut-%ld.mp4", (long)i];
+            NSString *filename = [NSString stringWithFormat:@"SCVideoEditCut-%ld.m4v", (long)i];
             NSURL *tempPath = [LZVideoTools filePathWithFileName:filename];
             
             CMTime start = CMTimeMakeWithSeconds(segment.startTime.floatValue, segment.duration.timescale);
@@ -304,6 +307,90 @@
         self.lzDeleteButton.hidden  = YES;
         
         self.hintLabel.hidden = NO;
+    }
+}
+
+//倒放
+- (IBAction)lzBackwardsButtonAction:(UIButton *)sender {
+    if (self.recordSegments.count == 0) {
+        return;
+    }
+    
+    self.progressView.hidden = NO;
+    self.isReverseCancel = NO;
+    [self.videoPlayerView.player pause];
+    [self.progressView setProgress:0];
+    
+    __block SCRecordSessionSegment * segment = [self.videoEditAuxiliary getCurrentSegment:self.recordSegments index:self.currentSelected];
+    __block SCRecordSessionSegment * newSegment = nil;
+    __block NSString * temppath = NSTemporaryDirectory();
+    
+    temppath = [temppath stringByAppendingPathComponent:@"SCVideo"];
+    BOOL exists =[[NSFileManager defaultManager] fileExistsAtPath:temppath isDirectory:NULL];
+    if (!exists) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:temppath withIntermediateDirectories:YES attributes:nil error:NULL];
+    }
+    
+    NSString *filename = [NSString stringWithFormat:@"SCVideoReversed.%ld.mov",(long)self.currentSelected];
+    temppath = [temppath stringByAppendingPathComponent:filename];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:temppath isDirectory:NULL]) {
+        [[NSFileManager defaultManager] removeItemAtPath:temppath error:NULL];
+    }
+    
+    if ([segment.isReverse boolValue] == YES && segment.assetSourcePath != nil) {
+        
+        newSegment = [SCRecordSessionSegment segmentWithURL:segment.assetSourcePath info:nil];
+        NSAssert(newSegment.url != nil, @"segment must be non-nil");
+        if(newSegment) {
+            [newSegment setIsReverse:[NSNumber numberWithBool:NO]];
+            [newSegment setAssetSourcePath:segment.assetSourcePath];
+            [newSegment setAssetTargetPath:segment.assetTargetPath];
+            
+            [self.recordSegments removeObject:segment];
+            [self.recordSegments insertObject:newSegment atIndex:self.currentSelected];
+            
+            [self showVideo:self.currentSelected];
+            //更新
+            [self.videoEditAuxiliary updateTrimmerView:self.trimmerView recordSegments:self.recordSegments index:self.currentSelected];
+            self.progressView.hidden = YES;
+        }
+    }
+    else {
+        WS(weakSelf);
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [HKMediaOperationTools assetByReversingAsset:segment.asset videoComposition:nil duration:segment.duration outputURL:[NSURL fileURLWithPath:temppath] progressHandle:^(CGFloat progress) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    DLog(@"%0.2f %%", progress*100);
+                    [self.progressView setProgress:progress animated:YES];
+                    
+                    if (progress == 1.00) {
+                        [self.progressView setProgress:1 animated:YES];
+                        newSegment = [SCRecordSessionSegment segmentWithURL:[NSURL fileURLWithPath:temppath] info:nil];
+                        newSegment.startTime = segment.startTime;
+                        newSegment.endTime = segment.endTime;
+                        newSegment.isSelect = segment.isSelect;
+                        newSegment.isVoice = segment.isVoice;
+                        
+                        NSAssert(newSegment.url != nil, @"segment must be non-nil");
+                        if(newSegment) {
+                            [newSegment setIsReverse:[NSNumber numberWithBool:YES]];
+                            [newSegment setAssetSourcePath:segment.url];
+                            [newSegment setAssetTargetPath:temppath];
+                            
+                            //更新session
+                            [weakSelf.recordSegments removeObject:segment];
+                            [weakSelf.recordSegments insertObject:newSegment atIndex:weakSelf.currentSelected];
+                            
+                            [weakSelf showVideo:weakSelf.currentSelected];
+                            
+                            //更新
+                            [weakSelf.videoEditAuxiliary updateTrimmerView:self.trimmerView recordSegments:self.recordSegments index:self.currentSelected];
+                            weakSelf.progressView.hidden = YES;
+                        }
+                    }
+                });
+            } cancle:&_isReverseCancel];
+        });
     }
 }
 

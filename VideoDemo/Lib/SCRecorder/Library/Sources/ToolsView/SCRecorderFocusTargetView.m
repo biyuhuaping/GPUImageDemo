@@ -67,8 +67,8 @@
     
     // insideCircle 微微的闪烁
     CABasicAnimation *insideCircleAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-    insideCircleAnimation.beginTime = CACurrentMediaTime() + 0.1;
-    insideCircleAnimation.duration = 0.5;
+    insideCircleAnimation.beginTime = CACurrentMediaTime();
+    insideCircleAnimation.duration = 0.25;
     insideCircleAnimation.fromValue = [NSNumber numberWithFloat:1.0f];
     insideCircleAnimation.toValue = [NSNumber numberWithFloat:0.5f];
     insideCircleAnimation.repeatCount = HUGE_VAL;
@@ -78,7 +78,7 @@
     
     // outsideCircle 匀速的缩放
     CABasicAnimation *outsideCircleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-    outsideCircleAnimation.beginTime = CACurrentMediaTime() + 0.1;
+    outsideCircleAnimation.beginTime = CACurrentMediaTime();
     outsideCircleAnimation.fromValue = [NSNumber numberWithFloat:1.0f];
     outsideCircleAnimation.toValue = [NSNumber numberWithFloat:0.85f];
     outsideCircleAnimation.repeatCount = HUGE_VAL;
@@ -106,10 +106,10 @@
     fadeAnim.toValue=[NSNumber numberWithDouble:0.0];
     
     CAAnimationGroup *group = [CAAnimationGroup animation];
-    group.beginTime = CACurrentMediaTime() + 0.3;
+    group.beginTime = CACurrentMediaTime();
     group.fillMode = kCAFillModeForwards;
     group.removedOnCompletion = NO;
-    group.duration = 0.3;
+    group.duration = 0.25;
     group.repeatCount = 1;
     group.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     group.animations = [NSArray arrayWithObjects:scaleAniamtion, fadeAnim, nil];

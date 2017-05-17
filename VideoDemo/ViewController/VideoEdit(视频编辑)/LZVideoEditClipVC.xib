@@ -19,6 +19,7 @@
                 <outlet property="lzDeleteButton" destination="wfT-kS-Xzs" id="i3V-gR-h2R"/>
                 <outlet property="lzVoiceButton" destination="sqn-xh-d30" id="LAN-89-fRN"/>
                 <outlet property="progressBar" destination="ebS-1B-Vpw" id="HKG-wd-JyY"/>
+                <outlet property="progressView" destination="v55-X0-QeX" id="vXv-RL-EBb"/>
                 <outlet property="trimmerView" destination="xC6-nN-6Hu" id="IT2-7f-hIL"/>
                 <outlet property="videoPlayerView" destination="KsQ-Dl-A1u" id="dkd-sz-BC7"/>
                 <outlet property="view" destination="6zu-AM-1rd" id="DuD-Bx-KSM"/>
@@ -37,7 +38,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ebS-1B-Vpw" customClass="ProgressBar">
-                    <rect key="frame" x="0.0" y="375" width="375" height="8"/>
+                    <rect key="frame" x="0.0" y="375" width="375" height="7.5"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="ebS-1B-Vpw" secondAttribute="height" multiplier="375:7.5" id="3KX-pq-lQ6"/>
@@ -54,11 +55,11 @@
                         <action selector="lzCopyButtonAction:" destination="-1" eventType="touchUpInside" id="IRA-Ej-QyI"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sqn-xh-d30">
-                    <rect key="frame" x="141" y="607" width="94" height="60"/>
-                    <state key="normal" image="lz_videoedit_voice_on"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rJG-qk-Hfs">
+                    <rect key="frame" x="188" y="607" width="94" height="60"/>
+                    <state key="normal" image="lz_videoedit_backwards"/>
                     <connections>
-                        <action selector="lzVoiceButtonAction:" destination="-1" eventType="touchUpInside" id="lMu-G2-yys"/>
+                        <action selector="lzBackwardsButtonAction:" destination="-1" eventType="touchUpInside" id="pvU-fe-FF6"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wfT-kS-Xzs">
@@ -75,7 +76,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="HqY-y0-qrC">
-                    <rect key="frame" x="0.0" y="472" width="375" height="80"/>
+                    <rect key="frame" x="0.0" y="471.5" width="375" height="80"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="80" id="ksD-pH-O8Y"/>
@@ -92,25 +93,42 @@
                     </connections>
                 </collectionView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xC6-nN-6Hu" customClass="SAVideoRangeSlider">
-                    <rect key="frame" x="0.0" y="403" width="375" height="49"/>
+                    <rect key="frame" x="0.0" y="402.5" width="375" height="49"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="49" id="5Xt-w1-5oC"/>
                     </constraints>
                 </view>
+                <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="v55-X0-QeX">
+                    <rect key="frame" x="0.0" y="385.5" width="375" height="2"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="2" id="zKX-rz-0QF"/>
+                    </constraints>
+                </progressView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sqn-xh-d30">
+                    <rect key="frame" x="94" y="607" width="94" height="60"/>
+                    <state key="normal" image="lz_videoedit_voice_on"/>
+                    <connections>
+                        <action selector="lzVoiceButtonAction:" destination="-1" eventType="touchUpInside" id="lMu-G2-yys"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="huv-mn-5XT" secondAttribute="bottom" id="25V-8t-EYN"/>
-                <constraint firstItem="sqn-xh-d30" firstAttribute="centerX" secondItem="6zu-AM-1rd" secondAttribute="centerX" id="49d-M8-Rcc"/>
                 <constraint firstItem="ebS-1B-Vpw" firstAttribute="leading" secondItem="6zu-AM-1rd" secondAttribute="leading" id="4Cm-Tz-Zxy"/>
                 <constraint firstItem="KsQ-Dl-A1u" firstAttribute="top" secondItem="6zu-AM-1rd" secondAttribute="top" id="4JI-2k-tma"/>
+                <constraint firstItem="sqn-xh-d30" firstAttribute="leading" secondItem="huv-mn-5XT" secondAttribute="trailing" id="6RS-hp-yS3"/>
                 <constraint firstAttribute="bottom" secondItem="sqn-xh-d30" secondAttribute="bottom" id="7PM-8x-jEF"/>
                 <constraint firstItem="sqn-xh-d30" firstAttribute="width" secondItem="huv-mn-5XT" secondAttribute="width" id="BF9-Wk-wac"/>
                 <constraint firstAttribute="bottom" secondItem="wfT-kS-Xzs" secondAttribute="bottom" id="BsX-Eq-v9Y"/>
                 <constraint firstItem="huv-mn-5XT" firstAttribute="width" secondItem="6zu-AM-1rd" secondAttribute="width" multiplier="1:4" id="CAZ-MH-6kz"/>
                 <constraint firstAttribute="trailing" secondItem="xC6-nN-6Hu" secondAttribute="trailing" id="EdZ-tI-kSr"/>
                 <constraint firstItem="KsQ-Dl-A1u" firstAttribute="leading" secondItem="6zu-AM-1rd" secondAttribute="leading" id="GOa-rZ-w49"/>
+                <constraint firstItem="rJG-qk-Hfs" firstAttribute="width" secondItem="huv-mn-5XT" secondAttribute="width" id="GfR-Ow-FYi"/>
+                <constraint firstItem="rJG-qk-Hfs" firstAttribute="height" secondItem="huv-mn-5XT" secondAttribute="height" id="Jbo-tb-Emb"/>
                 <constraint firstItem="HqY-y0-qrC" firstAttribute="top" secondItem="xC6-nN-6Hu" secondAttribute="bottom" constant="20" id="LOI-p4-JHH"/>
+                <constraint firstItem="v55-X0-QeX" firstAttribute="top" secondItem="ebS-1B-Vpw" secondAttribute="bottom" constant="3" id="M3i-Kv-eK7"/>
+                <constraint firstAttribute="trailing" secondItem="v55-X0-QeX" secondAttribute="trailing" id="MLx-or-qMT"/>
                 <constraint firstItem="ebS-1B-Vpw" firstAttribute="top" secondItem="KsQ-Dl-A1u" secondAttribute="bottom" id="Ncm-QX-bOj"/>
                 <constraint firstAttribute="trailing" secondItem="KsQ-Dl-A1u" secondAttribute="trailing" id="NxS-Bv-BM2"/>
                 <constraint firstItem="wfT-kS-Xzs" firstAttribute="width" secondItem="huv-mn-5XT" secondAttribute="width" id="PhW-u2-uVF"/>
@@ -121,8 +139,11 @@
                 <constraint firstItem="HqY-y0-qrC" firstAttribute="leading" secondItem="6zu-AM-1rd" secondAttribute="leading" id="hOv-ch-Adk"/>
                 <constraint firstAttribute="trailing" secondItem="ebS-1B-Vpw" secondAttribute="trailing" id="hwC-8c-OZj"/>
                 <constraint firstItem="wfT-kS-Xzs" firstAttribute="height" secondItem="huv-mn-5XT" secondAttribute="height" id="lTb-JH-CNe"/>
+                <constraint firstItem="v55-X0-QeX" firstAttribute="leading" secondItem="6zu-AM-1rd" secondAttribute="leading" id="nTp-ED-bc7"/>
+                <constraint firstItem="rJG-qk-Hfs" firstAttribute="leading" secondItem="sqn-xh-d30" secondAttribute="trailing" id="p3B-er-JID"/>
                 <constraint firstAttribute="trailing" secondItem="HqY-y0-qrC" secondAttribute="trailing" id="pUY-ft-AWR"/>
                 <constraint firstAttribute="trailing" secondItem="wfT-kS-Xzs" secondAttribute="trailing" id="qcZ-RM-fEG"/>
+                <constraint firstAttribute="bottom" secondItem="rJG-qk-Hfs" secondAttribute="bottom" id="qpv-II-d4f"/>
                 <constraint firstItem="sqn-xh-d30" firstAttribute="height" secondItem="huv-mn-5XT" secondAttribute="height" id="vHq-r5-4R2"/>
                 <constraint firstItem="xMb-1e-kRb" firstAttribute="centerX" secondItem="6zu-AM-1rd" secondAttribute="centerX" id="vTr-5B-ABA"/>
             </constraints>
@@ -130,6 +151,7 @@
         </view>
     </objects>
     <resources>
+        <image name="lz_videoedit_backwards" width="20" height="20"/>
         <image name="lz_videoedit_copy" width="20" height="19"/>
         <image name="lz_videoedit_delete" width="20" height="20"/>
         <image name="lz_videoedit_voice_on" width="20" height="17"/>

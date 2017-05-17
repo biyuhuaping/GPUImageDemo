@@ -94,7 +94,7 @@
     [self saveToCameraRoll];
     return;
     
-    NSURL *tempPath = [LZVideoTools filePathWithFileName:@"ConponVideo.mp4"];
+    NSURL *tempPath = [LZVideoTools filePathWithFileName:@"ConponVideo.m4v"];
 
 //    4.导出
     WS(weakSelf);

@@ -12,7 +12,7 @@
 
 #import "LZGridView.h"
 #import "LZLevelView.h"
-#import "ProgressBar.h"
+#import "RecordProgressView.h"
 #import "LZButton.h"
 
 #import "SCRecorder.h"
@@ -29,10 +29,10 @@
 @property (strong, nonatomic) IBOutlet LZGridView *girdView;        //网格view
 @property (strong, nonatomic) IBOutlet UIImageView *ghostImageView; //快照imageView
 @property (strong, nonatomic) IBOutlet LZLevelView *levelView;      //水平仪view
-@property (strong, nonatomic) IBOutlet ProgressBar *progressBar;    //进度条
+@property (strong, nonatomic) IBOutlet RecordProgressView *progressView;    //进度条
 @property (strong, nonatomic) IBOutlet SCRecorderToolsView *focusView;
 
-
+@property (strong, nonatomic) IBOutlet UIButton *recordBtn;         //录制按钮
 @property (strong, nonatomic) IBOutlet UIButton *cancelButton;      //删除按钮
 @property (strong, nonatomic) IBOutlet UIButton *confirmButton;     //确认按钮
 @property (strong, nonatomic) IBOutlet LZButton *gridOrlineButton;  //网格按钮
@@ -42,6 +42,7 @@
 @property (nonatomic, strong) SCRecorder *recorder;
 @property (nonatomic, strong) NSMutableArray *videoListSegmentArrays; //音频库
 
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *recordBtnWidth;
 @end
 
 @implementation LZNewPromotionVC
@@ -54,7 +55,10 @@
     
     [self configNavigationBar];
     [self initSCRecorder];
-    [self.progressBar startShining];
+    [self.progressView resetProgress];
+    
+    self.recordBtn.layer.cornerRadius = 26;
+    self.recordBtn.layer.masksToBounds = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -122,7 +126,7 @@
     _recorder.session = session;
     
     self.focusView.recorder = _recorder;
-    self.focusView.outsideFocusTargetImage = [UIImage imageNamed:@"lz_recorder_change_hd"];
+    self.focusView.outsideFocusTargetImage = [UIImage imageNamed:@"focusImg"];
 //    self.focusView.insideFocusTargetImage = [UIImage imageNamed:@"lz_recorder_change"];
 }
 
@@ -156,17 +160,19 @@
 //更新进度条
 - (void)updateProgressBar {
     if (self.recorder.session.segments.count == 0) {
+        [self.progressView updateProgressWithValue:0];
         return;
     }
     
-    self.cancelButton.enabled = YES;
+//    self.cancelButton.enabled = YES;
     if (CMTimeGetSeconds(self.recorder.session.duration) >= 3) {
         self.confirmButton.enabled = YES;
     } else {
         self.confirmButton.enabled = NO;
     }
     
-    [self.progressBar removeAllSubViews];
+//    [self.progressBar removeAllSubViews];
+    CGFloat progress = 0;
     for (int i = 0; i < self.recorder.session.segments.count; i++) {
         SCRecordSessionSegment * segment = self.recorder.session.segments[i];
         
@@ -174,10 +180,25 @@
         CMTime currentTime = kCMTimeZero;
         if (segment) {
             currentTime = segment.duration;
-            CGFloat width = CMTimeGetSeconds(currentTime) / MAX_VIDEO_DUR * SCREEN_WIDTH;
-            [self.progressBar setCurrentProgressToWidth:width];
+            progress += CMTimeGetSeconds(currentTime) / MAX_VIDEO_DUR;
+//            [self.progressBar setCurrentProgressToWidth:progress];
         }
     }
+    [self.progressView updateProgressWithValue:progress];
+}
+
+- (void)changeToRecordStyle {
+    [UIView animateWithDuration:0.2 animations:^{
+        self.recordBtnWidth.constant = 28;
+        self.recordBtn.layer.cornerRadius = 4;
+    }];
+}
+
+- (void)changeToStopStyle {
+    [UIView animateWithDuration:0.2 animations:^{
+        self.recordBtnWidth.constant = 52;
+        self.recordBtn.layer.cornerRadius = 26;
+    }];
 }
 
 //更新快照
@@ -215,16 +236,21 @@
     }
 }
 
+//滑动调整景深
+- (IBAction)sliderAction:(UISlider *)sender {
+    _recorder.videoZoomFactor = sender.value;
+}
+
 //取消/删除视频按钮
 - (IBAction)cancelButton:(UIButton *)sender {
     if (sender.selected == NO && sender.enabled == YES) {//第一次按下删除按钮
         sender.selected = YES;
-        [self.progressBar setLastProgressToStyle:ProgressBarProgressStyleDelete];
+//        [self.progressBar setLastProgressToStyle:ProgressBarProgressStyleDelete];
     }
     else if (sender.selected == YES) {//第二次按下删除按钮
         [self.recorder.session removeLastSegment];
-        [self.progressBar deleteLastProgress];
-        
+//        [self.progressBar deleteLastProgress];
+        [self updateProgressBar];
         if (self.recorder.session.segments.count > 0) {
             sender.selected = NO;
             sender.enabled = YES;
@@ -244,18 +270,24 @@
 
 //开始录制按钮
 - (IBAction)recordButton:(UIControl *)sender {
-    [self.progressBar setLastProgressToStyle:ProgressBarProgressStyleNormal];
-    self.ghostImageView.hidden = YES;
-    [self.recorder record];
-}
-
-//暂停录制
-- (IBAction)recordPauseButton:(id)sender {
-    [self.recorder pause];
+//    [self.progressBar setLastProgressToStyle:ProgressBarProgressStyleNormal];
+    if (sender.selected == NO) {
+        self.ghostImageView.hidden = YES;
+        self.cancelButton.enabled = NO;
+        [self.recorder record];//开始录制
+        [self.progressView updateProgressWithValue:self.progressView.progress];
+        [self changeToRecordStyle];
+    }else {
+        self.cancelButton.enabled = YES;
+        [self.recorder pause];//暂停录制
+        [self changeToStopStyle];
+    }
+    sender.selected = !sender.selected;
 }
 
 //确认按钮
 - (IBAction)confirmButton:(UIButton *)sender {
+    [self recordButton:nil];
     [self saveAndShowSession:self.recorder.session];
 }
 
@@ -323,9 +355,9 @@
 
 //启动录制
 - (void)recorder:(SCRecorder *__nonnull)recorder didBeginSegmentInSession:(SCRecordSession *__nonnull)session error:(NSError *__nullable)error {
-    [self.progressBar addProgressView];
-    [self.progressBar stopShining];
-    self.cancelButton.enabled = YES;
+//    [self.progressBar addProgressView];
+//    [self.progressBar stopShining];
+//    self.cancelButton.enabled = YES;
 }
 
 //更新进度条
@@ -339,8 +371,9 @@
     
     DLog(@"%@", [NSString stringWithFormat:@"current:%.2f sec, all:%.2f sec", CMTimeGetSeconds(currentTime), CMTimeGetSeconds(recorderTime)]);
     
-    CGFloat width = CMTimeGetSeconds(currentTime) / MAX_VIDEO_DUR * SCREEN_WIDTH;
-    [self.progressBar setLastProgressToWidth:width];
+    CGFloat width = CMTimeGetSeconds(currentTime) / MAX_VIDEO_DUR;
+//    [self.progressBar setLastProgressToWidth:width];
+    [self.progressView updateProgressWithValue:width];
     
     if (CMTimeGetSeconds(recorderTime) >= 3) {
         self.confirmButton.enabled = YES;
@@ -351,7 +384,7 @@
 
 //更新快照
 - (void)recorder:(SCRecorder *)recorder didCompleteSegment:(SCRecordSessionSegment *)segment inSession:(SCRecordSession *)recordSession error:(NSError *)error {
-    [self.progressBar startShining];
+//    [self.progressBar startShining];
     DLog(@"Completed record segment at %@: %@ (frameRate: %f)", segment.url, error, segment.frameRate);
     [self updateGhostImage];
 }
@@ -359,6 +392,7 @@
 //录制完成
 - (void)recorder:(SCRecorder *)recorder didCompleteSession:(SCRecordSession *)recordSession {
     DLog(@"didCompleteSession:");
+    self.cancelButton.enabled = YES;
     [self saveAndShowSession:recordSession];
 }
 

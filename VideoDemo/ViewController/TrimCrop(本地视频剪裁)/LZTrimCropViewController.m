@@ -143,7 +143,7 @@
 - (void)cutVideo {
     NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:self.selectSegment.asset];
     if ([compatiblePresets containsObject:AVAssetExportPresetHighestQuality]) {
-        NSURL *tempPath = [LZVideoTools filePathWithFileName:@"ConponVideo.mp4"];
+        NSURL *tempPath = [LZVideoTools filePathWithFileName:@"ConponVideo.m4v"];
         WS(weakSelf);
         [LZVideoTools cutVideoWith:self.selectSegment filePath:tempPath completion:^{
             SCRecordSessionSegment * newSegment = [[SCRecordSessionSegment alloc] initWithURL:tempPath info:nil];
