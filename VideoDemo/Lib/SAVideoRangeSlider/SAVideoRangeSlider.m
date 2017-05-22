@@ -141,10 +141,11 @@
     _minGap = minGap;
 }
 
-- (void)delegateNotification
+//left：是左边动的
+- (void)delegateNotification:(BOOL)isLeft
 {
-    if ([_delegate respondsToSelector:@selector(videoRange:didChangeLeftPosition:rightPosition:)]){
-        [_delegate videoRange:self didChangeLeftPosition:self.leftPosition rightPosition:self.rightPosition];
+    if ([_delegate respondsToSelector:@selector(videoRange:isLeft:didChangeLeftPosition:rightPosition:)]){
+        [_delegate videoRange:self isLeft:isLeft didChangeLeftPosition:self.leftPosition rightPosition:self.rightPosition];
     }
 }
 
@@ -173,7 +174,7 @@
         [gesture setTranslation:CGPointZero inView:self];
         [self setNeedsLayout];
         
-        [self delegateNotification];
+        [self delegateNotification:YES];
     }
     
     if (gesture.state == UIGestureRecognizerStateEnded){
@@ -209,7 +210,7 @@
         [gesture setTranslation:CGPointZero inView:self];
         [self setNeedsLayout];
         
-        [self delegateNotification];
+        [self delegateNotification:NO];
     }
     
     if (gesture.state == UIGestureRecognizerStateEnded){
@@ -235,7 +236,7 @@
         [gesture setTranslation:CGPointZero inView:self];
         [self setNeedsLayout];
         
-        [self delegateNotification];
+        [self delegateNotification:YES];
     }
     
     if (gesture.state == UIGestureRecognizerStateEnded){

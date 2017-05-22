@@ -43,4 +43,11 @@
  */
 + (NSURL *)filePathWithFileName:(NSString *)fileName;
 
+
+//声音淡出
++ (AVPlayerItem *)audioFadeOut:(SCRecordSessionSegment *)selectSegment;
+
+//视频淡出
++ (AVPlayerItem *)videoFadeOut:(SCRecordSessionSegment *)selectSegment;
+
 @end

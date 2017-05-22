@@ -33,7 +33,6 @@
 @property (assign, nonatomic) NSInteger currentSelected;
 @property (strong, nonatomic) NSMutableArray *recordSegments;
 @property (nonatomic, assign) __block BOOL isReverseCancel;   //取消翻转
-
 @end
 
 @implementation LZVideoEditClipVC
@@ -122,13 +121,6 @@
         NSAssert(segment != nil, @"segment must be non-nil");
         
         [self.videoPlayerView.player setItemByAsset:segment.asset];
-        
-        //切换视频的时候，移动到剪切位置
-        if(segment.startTime.floatValue > 0) {
-//            [self startTimer];
-            [self seekVideoToPos];
-        }
-    
         [self.videoPlayerView.player play];
     }
     
@@ -168,13 +160,6 @@
         self.videoPlayerView.player.volume = 1;
         [self.lzVoiceButton setImage:[UIImage imageNamed:@"lz_videoedit_voice_on"] forState:UIControlStateNormal];
     }
-}
-
-//控制快进，后退
-- (void)seekVideoToPos {
-    SCRecordSessionSegment * segment = [self.videoEditAuxiliary getCurrentSegment:self.recordSegments index:self.currentSelected];
-    CMTime time = CMTimeMakeWithSeconds(segment.startTime.floatValue, self.videoPlayerView.player.currentTime.timescale);
-    [self.videoPlayerView.player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
 }
 
 #pragma mark - Event
@@ -259,6 +244,15 @@
 
 //声音
 - (IBAction)lzVoiceButtonAction:(UIButton *)sender {
+    SCRecordSessionSegment * segment1 = [self.videoEditAuxiliary getCurrentSegment:self.recordSegments index:self.currentSelected];
+//  AVPlayerItem *item = [LZVideoTools audioFadeOut:segment1];
+    AVPlayerItem *item = [LZVideoTools videoFadeOut:segment1];
+    
+    [self addWatermark];
+    [self.videoPlayerView.player setItem:item];
+    [self.videoPlayerView.player play];
+    
+    return;
     if (self.recordSegments.count == 0) {
         return;
     }
@@ -275,6 +269,14 @@
         [self.lzVoiceButton setImage:[UIImage imageNamed:@"lz_videoedit_voice_on"] forState:UIControlStateNormal];
         self.videoPlayerView.player.volume = 1;
     }
+}
+
+//添加水印
+- (void)addWatermark {
+    CALayer *waterMark =  [CALayer layer];
+    waterMark.backgroundColor = [UIColor greenColor].CGColor;
+    waterMark.frame = CGRectMake(8, 8, 20, 20);
+    [self.videoPlayerView.layer addSublayer:waterMark];
 }
 
 //删除
@@ -384,10 +386,9 @@
 }
 
 #pragma mark - SAVideoRangeSliderDelegate
-- (void)videoRange:(SAVideoRangeSlider *)videoRange didChangeLeftPosition:(CGFloat)leftPosition rightPosition:(CGFloat)rightPosition
+- (void)videoRange:(SAVideoRangeSlider *)videoRange isLeft:(BOOL)isLeft didChangeLeftPosition:(CGFloat)leftPosition rightPosition:(CGFloat)rightPosition
 {
 //    [self startTimer];
-    
     SCRecordSessionSegment * segment = [self.videoEditAuxiliary getCurrentSegment:self.recordSegments index:self.currentSelected];
     NSAssert(segment.url != nil, @"segment must be non-nil");
     if(segment) {
@@ -399,7 +400,16 @@
         
         DLog(@"%f, %f", segment.startTime.floatValue, segment.endTime.floatValue);
         
-        [self seekVideoToPos];
+        
+        //控制快进，后退
+        float f = 0;
+        if (isLeft) {
+            f = segment.startTime.floatValue;
+        }else{
+            f = segment.endTime.floatValue;
+        }
+        CMTime time = CMTimeMakeWithSeconds(f, self.videoPlayerView.player.currentTime.timescale);
+        [self.videoPlayerView.player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
     }
 }
 
