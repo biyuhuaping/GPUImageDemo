@@ -39,7 +39,7 @@
 @property (strong, nonatomic) GPUImageVideoCameraEx *videoCamera;
 //@property (strong, nonatomic) GPUImageMovieWriterEx *movieWriter;
 @property (strong, nonatomic) LZSession *session;
-@property (strong, nonatomic) NSURL *movieURL;
+//@property (strong, nonatomic) NSURL *movieURL;
 
 
 @property (strong, nonatomic) IBOutlet UIView *previewView;         //试映view
@@ -100,16 +100,11 @@
     
     
     //设置写入地址
-    NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/LiveMovied.m4v"];
-    self.movieURL = [NSURL fileURLWithPath:pathToMovie];
-    
-    
-    self.session.movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
-    self.session.movieWriter.encodingLiveVideo = YES;
-    
-//    NSString *filename = [NSString stringWithFormat:@"LZVideoEditCut-%ld.m4v", (long)_segments.count];
-//    _movieURL = [lz filePathWithFileName:filename];
-//    self.session.movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:_movieURL size:CGSizeMake(480.0, 480.0)];
+//    NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/LiveMovied.m4v"];
+//    self.movieURL = [NSURL fileURLWithPath:pathToMovie];
+//    
+//    
+//    self.session.movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
 //    self.session.movieWriter.encodingLiveVideo = YES;
     
     //滤镜
@@ -383,44 +378,33 @@
     if (sender.selected == NO) {
         self.ghostImageView.hidden = YES;
         self.cancelButton.enabled = NO;
-        [self.recorder record];//开始录制
-        [self.progressView updateProgressWithValue:self.progressView.progress];
+//        [self.recorder record];//开始录制
+//        [self.progressView updateProgressWithValue:self.progressView.progress];
         [self changeToRecordStyle];
         
-        
-//        GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
-//        [cropFilter addTarget:self.session.movieWriter];
-//        [self.filter addTarget:cropFilter];
-//        [self.filter addTarget:self.filterView];
-//        [self.videoCamera addTarget:self.filter];
-        
-//        [self.videoCamera addTarget:self.session.movieWriter];
-//        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.session startRecording];
-//        });
+        [self.session startRecording];
     }else {
         self.cancelButton.enabled = YES;
-        [self.recorder pause];//暂停录制
+//        [self.recorder pause];//暂停录制
         [self changeToStopStyle];
 
         [self.session endRecordingFilter:self.filter Completion:^(NSMutableArray<NSURL *> *segments) {
             DLog("===================== %@",segments);
+            GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
+            [cropFilter addTarget:self.session.movieWriter];
+            [self.filter addTarget:cropFilter];
+            //设置声音
+            self.videoCamera.audioEncodingTarget = self.session.movieWriter;
         }];
-        
-        
-        [self.videoCamera removeTarget:self.session.movieWriter];//1
-        [[NSFileManager defaultManager] removeItemAtURL:_movieURL error:nil];//2
-        [self initMovieWriter];//3
-        [self.videoCamera addTarget:self.session.movieWriter];//4
     }
     
     sender.selected = !sender.selected;
 }
 
-- (void)initMovieWriter {
-    self.session.movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
-    self.session.movieWriter.encodingLiveVideo = YES;
-}
+//- (void)initMovieWriter {
+//    self.session.movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
+//    self.session.movieWriter.encodingLiveVideo = YES;
+//}
 
 - (IBAction)stopWrite:(id)sender {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -456,7 +440,7 @@
 //    [self recordButton:nil];
 //    [self saveAndShowSession:self.recorder.session];
     
-    AVAsset *asset = [AVAsset assetWithURL:self.movieURL];
+//    AVAsset *asset = [AVAsset assetWithURL:self.movieURL];
     
 //    [self.session endRecordingCompletion:^(NSMutableArray<NSURL *> *segments) {
 //        LZVideoDetailsVC * vc = [[LZVideoDetailsVC alloc]initWithNibName:@"LZVideoDetailsVC" bundle:nil];
@@ -487,6 +471,9 @@
     [self.filter addTarget:cropFilter];
     [self.filter addTarget:self.filterView];
     [self.videoCamera addTarget:self.filter];
+    
+    //设置声音
+    self.videoCamera.audioEncodingTarget = self.session.movieWriter;
 }
 
 //切换摄像头按钮

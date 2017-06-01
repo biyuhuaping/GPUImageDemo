@@ -11,7 +11,6 @@
 @interface LZSession ()
 {
     int32_t _currentFrame;
-    NSURL *_movieURL;
 }
 
 @end
@@ -23,32 +22,45 @@
     if (self) {
         _segments = [[NSMutableArray alloc] init];
 //        _sessionSegment = [[LZSessionSegment alloc]init];
-        [self initMovieWriter];
+//        [self initMovieWriter];
     }
     
     return self;
 }
 
-- (void)initMovieWriter {
+- (GPUImageMovieWriter *)movieWriter {
+    if (_movieWriter == nil) {
+        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
+        _movieWriter.encodingLiveVideo = YES;
+    }
+    return _movieWriter;
+}
+
+- (NSURL *)movieURL{
+    if (_movieURL == nil) {
+        NSString *filename = [NSString stringWithFormat:@"LZVideoEdit-%ld.m4v", (long)_segments.count];
+        _movieURL = [self filePathWithFileName:filename];
+    }
+    return _movieURL;
+}
+
+//- (void)initMovieWriter {
 //    NSString *filename = [NSString stringWithFormat:@"LZVideoEditCut-%ld.m4v", (long)_segments.count];
 //    _movieURL = [self filePathWithFileName:filename];
 //    self.movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:_movieURL size:CGSizeMake(480.0, 480.0)];
 //    self.movieWriter.encodingLiveVideo = YES;
-}
+//}
 
 //开始录制
 - (void)startRecording{
     _currentFrame = 0;
     _currentSegmentDuration = kCMTimeZero;
     
-    NSString *filename = [NSString stringWithFormat:@"LZVideoEditCut-%ld.m4v", (long)_segments.count];
-    _movieURL = [self filePathWithFileName:filename];
-    
-    [self initMovieWriter];
+//    [self initMovieWriter];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.movieWriter startRecording];
     });
-    DLog(@"开始录制，地址：%@",_movieURL);
+    DLog(@"开始录制");
 }
 
 //结束录制
@@ -57,7 +69,8 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         AVAssetWriter *writer = self.movieWriter.assetWriter;
 //        [writer endSessionAtSourceTime:CMTimeAdd(self.currentSegmentDuration, kCMTimeZero)];
-        DLog(@"writer.outputURL:%@",writer.outputURL);
+        DLog(@"writer.outputURL:----%@",writer.outputURL);
+        
         [self.movieWriter finishRecordingWithCompletionHandler:^{
             [self appendRecordSegmentUrl:writer.outputURL filter:filter Completion:^(LZSessionSegment *segment) {
                 completion(_segments);
@@ -75,6 +88,8 @@
 }
 
 - (void)_destroyAssetWriter {
+    _movieWriter = nil;
+    _movieURL = nil;
 //    _currentSegmentHasAudio = NO;
 //    _currentSegmentHasVideo = NO;
 //    _assetWriter = nil;
@@ -196,7 +211,7 @@
  @return 文件路径：..LZVideo/fileName
  */
 - (NSURL *)filePathWithFileName:(NSString *)fileName {
-    NSString * tempPath = [tempPath = NSHomeDirectory() stringByAppendingPathComponent:@"LZVideo"];
+    NSString * tempPath = [tempPath = NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideo"];
     NSFileManager *manager = [NSFileManager defaultManager];
     BOOL exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
     if (!exists) {
