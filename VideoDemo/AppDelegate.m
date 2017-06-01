@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "ViewController.h"
+#import "ClearCacheTool.h"
 
 @interface AppDelegate ()
 
@@ -27,6 +28,8 @@
     
     self.window.rootViewController = nav;
     [self.window makeKeyAndVisible];
+    //清除缓存
+    [ClearCacheTool clearAction];
     return YES;
 }
 

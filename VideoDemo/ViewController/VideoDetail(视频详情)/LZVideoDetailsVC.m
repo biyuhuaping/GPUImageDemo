@@ -34,18 +34,18 @@
         emptyFilter.name = @"#nofilter";
         
         self.filterSwitcherView.filters = @[
-                                            emptyFilter,
-//                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectNoir"],
-//                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectChrome"],
-//                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectInstant"],
-//                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectTonal"],
-//                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectFade"],
-//                                            [SCFilter filterWithCIFilterName:@"CIExposureAdjust"],
-//                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectProcess"],
-//                                            [SCFilter filterWithCIFilterName:@"CISaturationBlendMode"],
+//                                            emptyFilter,
+                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectNoir"],//黑白
+                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectChrome"],//铬黄
+                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectInstant"],//
+                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectTonal"],//
+                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectFade"],//
+                                            [SCFilter filterWithCIFilterName:@"CIExposureAdjust"],//
+                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectProcess"],//
+                                            [SCFilter filterWithCIFilterName:@"CISaturationBlendMode"],//
                                             // Adding a filter created using CoreImageShop Untitled、a_filter
-                                            [SCFilter filterWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"a_filter" withExtension:@"cisf"]],
-                                            [self createAnimatedFilter]
+//                                            [SCFilter filterWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"a_filter" withExtension:@"cisf"]],
+//                                            [self createAnimatedFilter]
                                             ];
         self.player.SCImageView = self.filterSwitcherView;
 //        [self.filterSwitcherView addObserver:self forKeyPath:@"selectedFilter" options:NSKeyValueObservingOptionNew context:nil];

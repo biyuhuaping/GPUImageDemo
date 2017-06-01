@@ -5,13 +5,11 @@
 @implementation AVUtilities
 
 + (AVAsset *)assetByReversingAsset:(AVAsset *)asset outputURL:(NSURL *)outputURL progressHandle:(HKProgressHandle)progressHandle {
-    
     NSError * error;
 
     AVAssetReader * reader = [[AVAssetReader alloc] initWithAsset:asset error:&error];
     
     AVAssetTrack * videoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] lastObject];
-    
     AVAssetTrack * audioTrack = [[asset tracksWithMediaType:AVMediaTypeAudio] lastObject];
     
     NSDictionary * readerVideoOutputSettings = [NSDictionary dictionaryWithObjectsAndKeys:

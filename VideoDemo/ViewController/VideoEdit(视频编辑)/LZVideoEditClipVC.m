@@ -16,7 +16,15 @@
 #import "LZVideoEditAuxiliary.h"
 #import "LZVideoTools.h"
 
+#import "GPUImage.h"
+#import "GPUImageVideoCameraEx.h"
+#import "GPUImageMovieWriterEx.h"
+#import <AssetsLibrary/ALAssetsLibrary.h>
+
 @interface LZVideoEditClipVC ()<LewReorderableLayoutDelegate, LewReorderableLayoutDataSource, SAVideoRangeSliderDelegate>
+@property (strong, nonatomic) IBOutlet GPUImageView *filterView;
+@property (strong, nonatomic) GPUImageOutput<GPUImageInput> *filter;
+@property (strong, nonatomic) GPUImageVideoCameraEx *videoCamera;
 
 @property (strong, nonatomic) IBOutlet SCVideoPlayerView *videoPlayerView;  //视频播放View
 @property (strong, nonatomic) IBOutlet SAVideoRangeSlider *trimmerView;     //微调视图
@@ -55,6 +63,17 @@
     
     [self.trimmerView getMovieFrame:[self.videoEditAuxiliary getCurrentSegment:self.recordSegments index:0].url];
     self.trimmerView.delegate = self;
+    
+    
+    //--------------------------------
+//    _videoCamera = [[GPUImageVideoCameraEx alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
+//    _videoCamera.outputImageOrientation = [UIApplication sharedApplication].statusBarOrientation;
+//    
+//    _filter = [[GPUImageSepiaFilter alloc] init];
+//    
+//    [_videoCamera addTarget:_filter];
+//    [_filter addTarget:self.filterView];
+//    [_videoCamera startCameraCapture];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

@@ -134,11 +134,11 @@
  配置文件路径
  
  @param fileName 文件名称
- @return 文件路径
+ @return 文件路径：..LZVideo/fileName
  */
 + (NSURL *)filePathWithFileName:(NSString *)fileName {
     NSString * tempPath = NSTemporaryDirectory();
-    tempPath = [tempPath stringByAppendingPathComponent:@"SCVideo"];
+    tempPath = [tempPath stringByAppendingPathComponent:@"LZVideo"];
     NSFileManager *manager = [NSFileManager defaultManager];
     BOOL exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
     if (!exists) {
