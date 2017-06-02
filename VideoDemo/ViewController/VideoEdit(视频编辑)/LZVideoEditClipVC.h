@@ -7,10 +7,10 @@
 //  视频编辑页面
 
 #import <UIKit/UIKit.h>
-#import "SCRecorder.h"
+#import "LZSession.h"
 
 @interface LZVideoEditClipVC : UIViewController
 
-@property (nonatomic, strong) SCRecordSession * recordSession;
+@property (strong, nonatomic) LZSession *recordSession;
 
 @end

@@ -48,8 +48,6 @@
 		FB39243E1ED42CBD00CFD2CE /* GPUImageMovieWriterEx.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3924381ED42CBD00CFD2CE /* GPUImageMovieWriterEx.m */; };
 		FB39243F1ED42CBD00CFD2CE /* GPUImageVideoCameraEx.m in Sources */ = {isa = PBXBuildFile; fileRef = FB39243A1ED42CBD00CFD2CE /* GPUImageVideoCameraEx.m */; };
 		FB3924401ED42CBD00CFD2CE /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = FB39243B1ED42CBD00CFD2CE /* README.md */; };
-		FB3924471ED7FA1F00CFD2CE /* LZRecordSession.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3924461ED7FA1F00CFD2CE /* LZRecordSession.m */; };
-		FB39244A1ED7FA3C00CFD2CE /* LZRecordSessionSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3924491ED7FA3C00CFD2CE /* LZRecordSessionSegment.m */; };
 		FB39244D1ED8246A00CFD2CE /* LZSessionSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = FB39244C1ED8246A00CFD2CE /* LZSessionSegment.m */; };
 		FB3924501ED9123C00CFD2CE /* LZSession.m in Sources */ = {isa = PBXBuildFile; fileRef = FB39244F1ED9123C00CFD2CE /* LZSession.m */; };
 		FB69C3FE1EB96ADC007B38BD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C3FD1EB96ADC007B38BD /* main.m */; };
@@ -380,10 +378,6 @@
 		FB3924391ED42CBD00CFD2CE /* GPUImageVideoCameraEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageVideoCameraEx.h; sourceTree = "<group>"; };
 		FB39243A1ED42CBD00CFD2CE /* GPUImageVideoCameraEx.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImageVideoCameraEx.m; sourceTree = "<group>"; };
 		FB39243B1ED42CBD00CFD2CE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		FB3924451ED7FA1F00CFD2CE /* LZRecordSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZRecordSession.h; sourceTree = "<group>"; };
-		FB3924461ED7FA1F00CFD2CE /* LZRecordSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZRecordSession.m; sourceTree = "<group>"; };
-		FB3924481ED7FA3C00CFD2CE /* LZRecordSessionSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZRecordSessionSegment.h; sourceTree = "<group>"; };
-		FB3924491ED7FA3C00CFD2CE /* LZRecordSessionSegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZRecordSessionSegment.m; sourceTree = "<group>"; };
 		FB39244B1ED8246A00CFD2CE /* LZSessionSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZSessionSegment.h; sourceTree = "<group>"; };
 		FB39244C1ED8246A00CFD2CE /* LZSessionSegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZSessionSegment.m; sourceTree = "<group>"; };
 		FB39244E1ED9123C00CFD2CE /* LZSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZSession.h; sourceTree = "<group>"; };
@@ -596,10 +590,6 @@
 				FB0E9AAC1EC2E268005FE237 /* SCRecordSession_Internal.h */,
 				FB0E9AAD1EC2E268005FE237 /* SCRecordSessionSegment.h */,
 				FB0E9AAE1EC2E268005FE237 /* SCRecordSessionSegment.m */,
-				FB3924451ED7FA1F00CFD2CE /* LZRecordSession.h */,
-				FB3924461ED7FA1F00CFD2CE /* LZRecordSession.m */,
-				FB3924481ED7FA3C00CFD2CE /* LZRecordSessionSegment.h */,
-				FB3924491ED7FA3C00CFD2CE /* LZRecordSessionSegment.m */,
 				FB3924511ED9124B00CFD2CE /* 视频分段 */,
 			);
 			path = "Recorder(录像机)";
@@ -1362,7 +1352,6 @@
 				FB69C4DE1EB975EE007B38BD /* LZImageView.m in Sources */,
 				FB0E9ACA1EC2E268005FE237 /* SCMediaTypeConfiguration.m in Sources */,
 				FB69C5451EC1667F007B38BD /* SCWatermarkOverlayView.m in Sources */,
-				FB3924471ED7FA1F00CFD2CE /* LZRecordSession.m in Sources */,
 				FB69C4511EB96ED2007B38BD /* LZVideoDetailsVC.m in Sources */,
 				FB0E9ADB1EC2E268005FE237 /* SCAssetExportSession.m in Sources */,
 				FB69C4D41EB975EE007B38BD /* MASConstraint.m in Sources */,
@@ -1419,7 +1408,6 @@
 				FB69C4DF1EB975EE007B38BD /* SAVideoRangeSlider.m in Sources */,
 				FB69C5041EB97863007B38BD /* XBNSensorManager.m in Sources */,
 				FB0E9AE21EC2E268005FE237 /* SCWeakSelectorTarget.m in Sources */,
-				FB39244A1ED7FA3C00CFD2CE /* LZRecordSessionSegment.m in Sources */,
 				FB0E9AC91EC2E268005FE237 /* SCAudioConfiguration.m in Sources */,
 				FB69C4D61EB975EE007B38BD /* MASLayoutConstraint.m in Sources */,
 				FB0E9AE31EC2E268005FE237 /* UIImage+SCSaveToCameraRoll.m in Sources */,

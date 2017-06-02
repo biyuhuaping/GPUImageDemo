@@ -184,7 +184,7 @@
 #pragma mark - Event
 //保存
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
-    [self.recordSession removeAllSegments:NO];
+    /*[self.recordSession removeAllSegments:NO];
     
     WS(weakSelf);
     dispatch_group_t serviceGroup = dispatch_group_create();
@@ -226,7 +226,7 @@
             }
         }
         [weakSelf.navigationController popViewControllerAnimated:YES];
-    });
+    });*/
 }
 
 //复制

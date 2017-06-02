@@ -7,10 +7,10 @@
 //  视频详情
 
 #import <UIKit/UIKit.h>
-#import "SCRecorder.h"
+#import "LZSession.h"
 
 @interface LZVideoDetailsVC : UIViewController
 
-@property (nonatomic, strong) SCRecordSession * recordSession;
+@property (nonatomic, strong) LZSession * recordSession;
 
 @end

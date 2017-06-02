@@ -21,6 +21,7 @@
                 <outlet property="girdView" destination="s4r-Er-HdQ" id="pGv-KZ-Ero"/>
                 <outlet property="gridOrlineButton" destination="oYL-lC-4WG" id="0Ch-mC-foc"/>
                 <outlet property="levelView" destination="YGh-h4-lhj" id="Em3-UF-p71"/>
+                <outlet property="maskView" destination="Ahh-gQ-1tA" id="rjg-yC-uHt"/>
                 <outlet property="progressView" destination="TuX-7V-eYx" id="qmH-Wc-UtP"/>
                 <outlet property="recordBtn" destination="gez-5Y-VGK" id="gwR-Pj-MC8"/>
                 <outlet property="recordBtnWidth" destination="Him-Ek-5B1" id="E0Z-FT-Jbk"/>
@@ -82,39 +83,6 @@
                                 <action selector="cancelButton:" destination="-1" eventType="touchUpInside" id="dTy-nb-oGd"/>
                             </connections>
                         </button>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TuX-7V-eYx" customClass="RecordProgressView">
-                            <rect key="frame" x="156.5" y="103" width="62" height="62"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gez-5Y-VGK">
-                                    <rect key="frame" x="5" y="5" width="52" height="52"/>
-                                    <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" secondItem="gez-5Y-VGK" secondAttribute="height" multiplier="1:1" id="Beh-qn-FED"/>
-                                        <constraint firstAttribute="width" constant="52" id="Him-Ek-5B1"/>
-                                    </constraints>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                            <real key="value" value="26"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                    <connections>
-                                        <action selector="recordButton:" destination="-1" eventType="touchUpInside" id="pdK-gI-tep"/>
-                                    </connections>
-                                </button>
-                            </subviews>
-                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                            <constraints>
-                                <constraint firstItem="gez-5Y-VGK" firstAttribute="centerY" secondItem="TuX-7V-eYx" secondAttribute="centerY" id="Kwy-ge-mlN"/>
-                                <constraint firstAttribute="width" secondItem="TuX-7V-eYx" secondAttribute="height" multiplier="1:1" id="QyI-MW-BF7"/>
-                                <constraint firstAttribute="width" constant="62" id="kJb-eK-Srq"/>
-                                <constraint firstItem="gez-5Y-VGK" firstAttribute="centerX" secondItem="TuX-7V-eYx" secondAttribute="centerX" id="psh-Ue-39Q"/>
-                            </constraints>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                    <real key="value" value="56.5"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="72Y-ht-z9P">
                             <rect key="frame" x="272" y="104" width="60" height="60"/>
                             <constraints>
@@ -192,6 +160,43 @@
                                 <action selector="snapshotButton:" destination="-1" eventType="touchUpInside" id="a7N-iI-lho"/>
                             </connections>
                         </button>
+                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ahh-gQ-1tA">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="292"/>
+                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TuX-7V-eYx" customClass="RecordProgressView">
+                            <rect key="frame" x="156" y="103" width="62" height="62"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gez-5Y-VGK">
+                                    <rect key="frame" x="5" y="5" width="52" height="52"/>
+                                    <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="gez-5Y-VGK" secondAttribute="height" multiplier="1:1" id="Beh-qn-FED"/>
+                                        <constraint firstAttribute="width" constant="52" id="Him-Ek-5B1"/>
+                                    </constraints>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                            <real key="value" value="26"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="recordButton:" destination="-1" eventType="touchUpInside" id="pdK-gI-tep"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="gez-5Y-VGK" firstAttribute="centerY" secondItem="TuX-7V-eYx" secondAttribute="centerY" id="Kwy-ge-mlN"/>
+                                <constraint firstAttribute="width" secondItem="TuX-7V-eYx" secondAttribute="height" multiplier="1:1" id="QyI-MW-BF7"/>
+                                <constraint firstAttribute="width" constant="62" id="kJb-eK-Srq"/>
+                                <constraint firstItem="gez-5Y-VGK" firstAttribute="centerX" secondItem="TuX-7V-eYx" secondAttribute="centerX" id="psh-Ue-39Q"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="56.5"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
@@ -205,10 +210,12 @@
                         <constraint firstAttribute="bottom" secondItem="8Dt-fW-k0d" secondAttribute="bottom" constant="15" id="PK2-s1-JCJ"/>
                         <constraint firstItem="f19-VY-RBU" firstAttribute="width" secondItem="AMw-fI-DcK" secondAttribute="width" multiplier="1:6" id="QyQ-ao-bxC"/>
                         <constraint firstItem="JGT-Zp-7Nw" firstAttribute="leading" secondItem="AMw-fI-DcK" secondAttribute="leading" constant="43.5" id="Sqv-0x-d5C"/>
+                        <constraint firstItem="Ahh-gQ-1tA" firstAttribute="leading" secondItem="AMw-fI-DcK" secondAttribute="leading" id="TFg-m4-m0N"/>
                         <constraint firstItem="TuX-7V-eYx" firstAttribute="centerY" secondItem="AMw-fI-DcK" secondAttribute="centerY" constant="-12" id="TZF-yZ-AsL"/>
                         <constraint firstAttribute="bottom" secondItem="f19-VY-RBU" secondAttribute="bottom" constant="15" id="Tzs-eO-2V7"/>
                         <constraint firstAttribute="trailing" secondItem="72Y-ht-z9P" secondAttribute="trailing" constant="43.5" id="UsC-40-Ljf"/>
                         <constraint firstAttribute="bottom" secondItem="cZo-bM-lGj" secondAttribute="bottom" constant="15" id="W2t-bB-7C5"/>
+                        <constraint firstAttribute="bottom" secondItem="Ahh-gQ-1tA" secondAttribute="bottom" id="YAw-em-yxS"/>
                         <constraint firstItem="JGT-Zp-7Nw" firstAttribute="width" secondItem="AMw-fI-DcK" secondAttribute="width" multiplier="60:375" id="atG-78-GMn"/>
                         <constraint firstItem="72Y-ht-z9P" firstAttribute="centerY" secondItem="TuX-7V-eYx" secondAttribute="centerY" id="esU-L5-2Ca"/>
                         <constraint firstAttribute="bottom" secondItem="4xn-7i-c51" secondAttribute="bottom" constant="15" id="gCa-Db-hXn"/>
@@ -219,8 +226,10 @@
                         <constraint firstItem="qBO-Wg-J4v" firstAttribute="width" secondItem="cZo-bM-lGj" secondAttribute="width" id="o19-pU-V6W"/>
                         <constraint firstItem="oYL-lC-4WG" firstAttribute="width" secondItem="f19-VY-RBU" secondAttribute="width" id="oZR-v1-Y3T"/>
                         <constraint firstItem="8Dt-fW-k0d" firstAttribute="leading" secondItem="f19-VY-RBU" secondAttribute="trailing" id="tM3-Tg-ip6"/>
+                        <constraint firstItem="Ahh-gQ-1tA" firstAttribute="top" secondItem="AMw-fI-DcK" secondAttribute="top" id="uyZ-3L-6Iq"/>
                         <constraint firstItem="72Y-ht-z9P" firstAttribute="width" secondItem="AMw-fI-DcK" secondAttribute="width" multiplier="60:375" id="ymV-LN-ivc"/>
                         <constraint firstAttribute="bottom" secondItem="qBO-Wg-J4v" secondAttribute="bottom" constant="15" id="zMS-Kb-Z8P"/>
+                        <constraint firstAttribute="trailing" secondItem="Ahh-gQ-1tA" secondAttribute="trailing" id="zSf-EG-0wu"/>
                     </constraints>
                 </view>
             </subviews>
@@ -249,6 +258,7 @@
                 <constraint firstItem="em2-hW-3kc" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="30" id="rYf-dH-Rkb"/>
                 <constraint firstItem="AMw-fI-DcK" firstAttribute="top" secondItem="Nbh-Xr-mn6" secondAttribute="bottom" id="yXw-F0-khi"/>
             </constraints>
+            <point key="canvasLocation" x="33.5" y="53.5"/>
         </view>
     </objects>
     <resources>
