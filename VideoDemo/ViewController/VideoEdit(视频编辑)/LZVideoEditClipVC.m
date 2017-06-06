@@ -17,14 +17,14 @@
 #import "LZVideoTools.h"
 
 #import "GPUImage.h"
-#import "GPUImageVideoCameraEx.h"
-#import "GPUImageMovieWriterEx.h"
+#import "GPUImageVideoCamera.h"
+#import "GPUImageMovieWriter.h"
 #import <AssetsLibrary/ALAssetsLibrary.h>
 
 @interface LZVideoEditClipVC ()<LewReorderableLayoutDelegate, LewReorderableLayoutDataSource, SAVideoRangeSliderDelegate>
 @property (strong, nonatomic) IBOutlet GPUImageView *filterView;
 @property (strong, nonatomic) GPUImageOutput<GPUImageInput> *filter;
-@property (strong, nonatomic) GPUImageVideoCameraEx *videoCamera;
+@property (strong, nonatomic) GPUImageVideoCamera *videoCamera;
 
 @property (strong, nonatomic) IBOutlet SCVideoPlayerView *videoPlayerView;  //视频播放View
 @property (strong, nonatomic) IBOutlet SAVideoRangeSlider *trimmerView;     //微调视图

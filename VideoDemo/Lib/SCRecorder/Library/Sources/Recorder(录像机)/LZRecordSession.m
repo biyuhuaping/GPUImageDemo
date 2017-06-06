@@ -30,10 +30,17 @@
     return self;
 }
 
-- (GPUImageMovieWriter *)movieWriter {
+//- (GPUImageMovieWriter *)movieWriter {
+//    if (_movieWriter == nil) {
+//        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
+//        _movieWriter.encodingLiveVideo = YES;
+//    }
+//    return _movieWriter;
+//}
+
+- (LZMovieWriter *)movieWriter {
     if (_movieWriter == nil) {
-        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
-        _movieWriter.encodingLiveVideo = NO;
+        _movieWriter = [[LZMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
     }
     return _movieWriter;
 }
@@ -76,15 +83,15 @@
 
 //触发计时器
 - (void)updateProgress{
-    CMTime recordedDuration = _movieWriter.duration;
-    if (CMTIME_COMPARE_INLINE(recordedDuration, !=, _lastMovieFileOutputTime)) {
-        if ([self.delegate respondsToSelector:@selector(didAppendVideoSampleBufferInSession:)]) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.delegate didAppendVideoSampleBufferInSession:self];
-            });
-        }
-    }
-    _lastMovieFileOutputTime = recordedDuration;
+//    CMTime recordedDuration = _movieWriter.duration;
+//    if (CMTIME_COMPARE_INLINE(recordedDuration, !=, _lastMovieFileOutputTime)) {
+//        if ([self.delegate respondsToSelector:@selector(didAppendVideoSampleBufferInSession:)]) {
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [self.delegate didAppendVideoSampleBufferInSession:self];
+//            });
+//        }
+//    }
+//    _lastMovieFileOutputTime = recordedDuration;
 }
 
 //结束录制
@@ -130,7 +137,7 @@
 //保存视频片段
 - (void)saveSegment{
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.movieWriter finishRecording];
+        [self.movieWriter finishRecordingWithCompletionHandler:nil];
     });
     //    self.sessionSegment.url = _movieURL;
     [_segments addObject:_movieURL];

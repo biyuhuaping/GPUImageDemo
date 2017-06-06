@@ -26,8 +26,8 @@
 #import "ClearCacheTool.h"
 
 #import "GPUImage.h"
-#import "GPUImageVideoCameraEx.h"
-#import "GPUImageMovieWriterEx.h"
+//#import "GPUImageVideoCameraEx.h"
+//#import "GPUImageMovieWriterEx.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "UINavigationController+FDFullscreenPopGesture.h"
 
@@ -37,7 +37,7 @@
 
 @property (strong, nonatomic) IBOutlet GPUImageView *filterView;
 @property (strong, nonatomic) GPUImageOutput<GPUImageInput> *filter;
-@property (strong, nonatomic) GPUImageVideoCameraEx *videoCamera;
+@property (strong, nonatomic) GPUImageVideoCamera *videoCamera;
 //@property (strong, nonatomic) GPUImageMovieWriterEx *movieWriter;
 @property (strong, nonatomic) LZRecordSession *recordSession;
 
@@ -89,8 +89,7 @@
 }
 
 - (void)configGPUImageView {
-    self.videoCamera = [[GPUImageVideoCameraEx alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
-//    self.videoCamera = [[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
+    self.videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
     
     //输出方向为竖屏
     self.videoCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
@@ -108,7 +107,7 @@
     self.filter = [[GPUImageSepiaFilter alloc] init];
     
     GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
-    [cropFilter addTarget:self.recordSession.movieWriter];
+//    [cropFilter addTarget:self.recordSession.movieWriter];
     [self.filter addTarget:cropFilter];
     [self.filter addTarget:self.filterView];
     
@@ -116,7 +115,7 @@
     [self.videoCamera addTarget:self.filter];
 
     //设置声音
-    self.videoCamera.audioEncodingTarget = self.recordSession.movieWriter;
+//    self.videoCamera.audioEncodingTarget = self.recordSession.movieWriter;
 }
 
 //- (GPUImageVideoCamera *)videoCamera {
@@ -337,26 +336,20 @@
         self.cancelButton.enabled = NO;
 //        [self.recorder record];//开始录制
         [self changeToRecordStyle];
-        
+
         [self.recordSession startRecording];
     }else {
         self.cancelButton.enabled = YES;
 //        [self.recorder pause];//暂停录制
         [self changeToStopStyle];
 
-        DLog(@"%@,%@",self.videoCamera.targets,self.filter.targets);
-//        [self.filter removeAllTargets];
-//        [self.videoCamera removeAllTargets];
-        [self changeFilter];
-        DLog(@"%@,%@",self.videoCamera.targets,self.filter.targets);
-
         [self.recordSession endRecordingFilter:self.filter Completion:^(NSMutableArray<NSURL *> *segments) {
             DLog("===================== %@",segments);
             GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
-            [cropFilter addTarget:self.recordSession.movieWriter];
+//            [cropFilter addTarget:self.recordSession.movieWriter];
             [self.filter addTarget:cropFilter];
             //设置声音
-            self.videoCamera.audioEncodingTarget = self.recordSession.movieWriter;
+//            self.videoCamera.audioEncodingTarget = self.recordSession.movieWriter;
         }];
     }
     self.fd_interactivePopDisabled = !sender.selected;
@@ -372,7 +365,7 @@
     self.filter = [[GPUImageSobelEdgeDetectionFilter alloc]init];
     [self.videoCamera addTarget:self.filter];
     [self.filter addTarget:self.filterView];
-    [self.filter addTarget:self.recordSession.movieWriter];
+//    [self.filter addTarget:self.recordSession.movieWriter];
 }
 
 - (void)stopWrite {
@@ -678,14 +671,14 @@
 
 #pragma mark - LZRecorderDelegate 更新进度条
 - (void)didAppendVideoSampleBufferInSession:(LZRecordSession *)recordSession {
-    Float64 time1 = CMTimeGetSeconds(self.recordSession.segmentsDuration);
-    Float64 time2 = CMTimeGetSeconds(self.recordSession.movieWriter.duration);
-    DLog(@"%f,%f",time1,time2);
-    
-    CGFloat progress = (time1+time2) / MAX_VIDEO_DUR;
-    [self.progressView updateProgressWithValue:progress];
-    
-    self.labelTime.text = [self timeFormatted:(time1 + time2)];
+//    Float64 time1 = CMTimeGetSeconds(self.recordSession.segmentsDuration);
+//    Float64 time2 = CMTimeGetSeconds(self.recordSession.movieWriter.duration);
+//    DLog(@"%f,%f",time1,time2);
+//    
+//    CGFloat progress = (time1+time2) / MAX_VIDEO_DUR;
+//    [self.progressView updateProgressWithValue:progress];
+//    
+//    self.labelTime.text = [self timeFormatted:(time1 + time2)];
     self.labelCount.text = [NSString stringWithFormat:@"%lu",self.recordSession.segments.count + 1];
 }
 
