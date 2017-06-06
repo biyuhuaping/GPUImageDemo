@@ -20,6 +20,8 @@
 #import "SCRecordSessionSegment+LZAdd.h"
 #import "LZVideoEditAuxiliary.h"
 
+#import "GPUImage.h"
+
 @interface LZSelectVideoViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
 
 //views
@@ -140,6 +142,43 @@
     }
     
     [self.collectionView reloadData];
+}
+
+- (void)ddd{
+    /* 使用GPUImage来给视频加上滤镜
+     */
+    GPUImageContrastFilter *secondFilter = [[GPUImageContrastFilter alloc] init];
+    [secondFilter setContrast:1.80];
+    
+    GPUImageBrightnessFilter *firstFilter = [[GPUImageBrightnessFilter alloc] init];
+    [firstFilter setBrightness:0.1];
+    
+    //GPUImageColorBurnBlendFilter
+    GPUImageRGBFilter *filter = [[GPUImageRGBFilter alloc] init];
+    filter.red = 0.8;
+    filter.green = 1;
+    filter.blue = 1.2;
+    
+    NSURL *vedioURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"s2" ofType:@"mp4"]];
+    
+    GPUImageMovie *movie = [[GPUImageMovie alloc] initWithURL:vedioURL];
+    movie.runBenchmark = YES;
+    //[movie addTarget:filter];
+    [movie addTarget:secondFilter];
+    movie.audioEncodingTarget = nil;
+    movie.playAtActualSpeed = NO;
+    [movie startProcessing];
+
+    GPUImageMovieWriter *vedioWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:[NSURL fileURLWithPath:@"/Users/huazai/Desktop/t/t16.mov"] size:CGSizeMake(1280, 800)];
+    vedioWriter.shouldPassthroughAudio = YES;
+    
+    [filter addTarget:vedioWriter];
+    //[secondFilter addTarget:vedioWriter];
+    
+    [vedioWriter startRecording];
+    [vedioWriter setCompletionBlock:^{
+        NSLog(@"已完成！！！");
+    }];
 }
 
 #pragma mark - Event

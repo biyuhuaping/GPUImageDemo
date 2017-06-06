@@ -52,11 +52,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VideoDemo/ViewController/LZNewPromotionVC.m"
-            timestampString = "518089005.624935"
+            timestampString = "518348591.114558"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "404"
-            endingLineNumber = "404"
+            startingLineNumber = "390"
+            endingLineNumber = "390"
             landmarkName = "-stopWrite"
             landmarkType = "7">
          </BreakpointContent>
@@ -68,11 +68,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VideoDemo/ViewController/LZNewPromotionVC.m"
-            timestampString = "518089005.624935"
+            timestampString = "518348591.114558"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "402"
-            endingLineNumber = "402"
+            startingLineNumber = "388"
+            endingLineNumber = "388"
             landmarkName = "-stopWrite"
             landmarkType = "7">
             <Locations>
@@ -84,11 +84,11 @@
                   moduleName = "VideoDemo"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/biyuhuaping/GPUImageDemo/VideoDemo/ViewController/LZNewPromotionVC.m"
-                  timestampString = "518088460.575633"
+                  timestampString = "518352245.404059"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "401"
-                  endingLineNumber = "401"
+                  startingLineNumber = "388"
+                  endingLineNumber = "388"
                   offsetFromSymbolStart = "404">
                </Location>
                <Location
@@ -99,11 +99,11 @@
                   moduleName = "VideoDemo"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/biyuhuaping/GPUImageDemo/VideoDemo/ViewController/LZNewPromotionVC.m"
-                  timestampString = "518088460.577077"
+                  timestampString = "518352245.40554"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "401"
-                  endingLineNumber = "401"
+                  startingLineNumber = "388"
+                  endingLineNumber = "388"
                   offsetFromSymbolStart = "24">
                </Location>
             </Locations>
@@ -116,11 +116,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VideoDemo/Lib/SCRecorder/Library/Sources/Recorder(&#x5f55;&#x50cf;&#x673a;)/LZSession.m"
-            timestampString = "518089101.912948"
+            timestampString = "518323214.09362"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "221"
-            endingLineNumber = "221"
+            startingLineNumber = "204"
+            endingLineNumber = "204"
             landmarkName = "-appendSegmentsToComposition:audioMix:"
             landmarkType = "7">
          </BreakpointContent>
@@ -131,13 +131,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "VideoDemo/ViewController/VideoDetail(&#x89c6;&#x9891;&#x8be6;&#x60c5;)/LZVideoDetailsVC.m"
-            timestampString = "517999292.128116"
+            filePath = "VideoDemo/ViewController/LZNewPromotionVC.m"
+            timestampString = "518348052.509339"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
-            landmarkName = "-viewDidLoad"
+            startingLineNumber = "347"
+            endingLineNumber = "347"
+            landmarkName = "-recordButton:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -147,13 +147,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "VideoDemo/ViewController/LZNewPromotionVC.m"
-            timestampString = "518087706.026522"
+            filePath = "VideoDemo/Lib/SCRecorder/Library/Sources/Recorder(&#x5f55;&#x50cf;&#x673a;)/LZRecordSession.m"
+            timestampString = "518351100.532826"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "365"
-            endingLineNumber = "365"
-            landmarkName = "-observeValueForKeyPath:ofObject:change:context:"
+            startingLineNumber = "96"
+            endingLineNumber = "96"
+            landmarkName = "-endRecordingFilter:Completion:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -163,29 +163,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "VideoDemo/ViewController/LZNewPromotionVC.m"
-            timestampString = "518089005.624935"
+            filePath = "VideoDemo/ViewController/SelectVideo(&#x9009;&#x62e9;&#x89c6;&#x9891;)/LZSelectVideoViewController.m"
+            timestampString = "518348100.68918"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "376"
-            endingLineNumber = "376"
-            landmarkName = "-updateText"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VideoDemo/ViewController/LZNewPromotionVC.m"
-            timestampString = "518088000.943127"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "238"
-            endingLineNumber = "238"
-            landmarkName = "-updateProgressBar"
+            startingLineNumber = "186"
+            endingLineNumber = "186"
+            landmarkName = "-nextButtonAction:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

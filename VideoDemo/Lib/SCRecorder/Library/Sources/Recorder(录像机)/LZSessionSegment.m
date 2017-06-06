@@ -7,7 +7,7 @@
 //
 
 #import "LZSessionSegment.h"
-#import "LZSession.h"
+#import "LZRecordSession.h"
 
 @interface LZSessionSegment ()
 {

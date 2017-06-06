@@ -1,31 +1,30 @@
 //
-//  LZSession.m
+//  LZRecordSession.m
 //  VideoDemo
 //
-//  Created by biyuhuaping on 2017/5/27.
+//  Created by biyuhuaping on 2017/6/5.
 //  Copyright © 2017年 biyuhuaping. All rights reserved.
 //
 
-#import "LZSession.h"
+#import "LZRecordSession.h"
 
-@interface LZSession ()
+@interface LZRecordSession ()
 {
-    int32_t _currentFrame;
     CMTime _currentSegmentDuration;
+    CMTime _lastMovieFileOutputTime;
+//    NSTimer *_movieOutputProgressTimer;
+    CADisplayLink *_displayLink;
 }
 
 @end
 
-@implementation LZSession
+@implementation LZRecordSession
 
 - (id)init {
     self = [super init];
     if (self) {
         _segments = [[NSMutableArray alloc] init];
         _segmentsDuration = kCMTimeZero;
-        _currentSegmentDuration = kCMTimeZero;
-//        _sessionSegment = [[LZSessionSegment alloc]init];
-//        [self initMovieWriter];
     }
     
     return self;
@@ -34,7 +33,7 @@
 - (GPUImageMovieWriter *)movieWriter {
     if (_movieWriter == nil) {
         _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
-        _movieWriter.encodingLiveVideo = YES;
+        _movieWriter.encodingLiveVideo = NO;
     }
     return _movieWriter;
 }
@@ -61,34 +60,31 @@
     return asset;
 }
 
-- (CMTime)currentSegmentDuration {
-    return _movieWriter.assetWriter.startWriting ? _movieWriter.duration : _currentSegmentDuration;
-}
-
-- (CMTime)duration {
-    return CMTimeAdd(_segmentsDuration, [self currentSegmentDuration]);
-}
-
 #pragma mark -
 //开始录制
 - (void)startRecording{
-    _currentFrame = 0;
-//    _currentSegmentDuration = kCMTimeZero;
+//    _movieOutputProgressTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 target:self selector:@selector(updateProgress) userInfo:nil repeats:YES];
+    _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateProgress)];
+    [_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+//    [_displayLink setPaused:NO];
     
-//    [self initMovieWriter];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.movieWriter startRecording];
-//        [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(ddd) userInfo:nil repeats:YES];
-//        [self performSelectorInBackground:@selector(ddd) withObject:nil];
     });
     DLog(@"开始录制");
 }
 
--(void)ddd{
-    
-//    [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
-//        DLog(@"%f",CMTimeGetSeconds(self.movieWriter.duration));
-//    }];
+//触发计时器
+- (void)updateProgress{
+    CMTime recordedDuration = _movieWriter.duration;
+    if (CMTIME_COMPARE_INLINE(recordedDuration, !=, _lastMovieFileOutputTime)) {
+        if ([self.delegate respondsToSelector:@selector(didAppendVideoSampleBufferInSession:)]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate didAppendVideoSampleBufferInSession:self];
+            });
+        }
+    }
+    _lastMovieFileOutputTime = recordedDuration;
 }
 
 //结束录制
@@ -97,11 +93,15 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         AVAssetWriter *writer = self.movieWriter.assetWriter;
 //        [writer endSessionAtSourceTime:CMTimeAdd(self.currentSegmentDuration, kCMTimeZero)];
-        DLog(@"writer.outputURL:----%@",writer.outputURL);
+        DLog(@"writer.outputURL:----%@",filter);
+//        [_movieOutputProgressTimer invalidate];
+        [_displayLink invalidate];
+
         
         [self.movieWriter finishRecordingWithCompletionHandler:^{
             [self appendRecordSegmentUrl:writer.outputURL filter:filter Completion:^(LZSessionSegment *segment) {
                 completion(_segments);
+                
             }];
         }];
     });
@@ -117,15 +117,14 @@
 
 - (void)_destroyAssetWriter {
     _movieWriter = nil;
-    _movieURL = nil;
-//    _currentSegmentHasAudio = NO;
-//    _currentSegmentHasVideo = NO;
-//    _assetWriter = nil;
-//    _lastTimeAudio = kCMTimeInvalid;
-//    _lastTimeVideo = kCMTimeInvalid;
-//    _currentSegmentDuration = kCMTimeZero;
-//    _sessionStartTime = kCMTimeInvalid;
-//    _movieFileOutput = nil;
+//    _movieURL = nil;
+    //    _currentSegmentHasAudio = NO;
+    //    _currentSegmentHasVideo = NO;
+    //    _assetWriter = nil;
+    //    _lastTimeAudio = kCMTimeInvalid;
+    //    _lastTimeVideo = kCMTimeInvalid;
+    //    _sessionStartTime = kCMTimeInvalid;
+    //    _movieFileOutput = nil;
 }
 
 //保存视频片段
@@ -133,9 +132,9 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.movieWriter finishRecording];
     });
-//    self.sessionSegment.url = _movieURL;
+    //    self.sessionSegment.url = _movieURL;
     [_segments addObject:_movieURL];
-
+    
     DLog(@"保存地址：%@",_movieURL);
 }
 
@@ -158,27 +157,27 @@
 }
 
 - (void)removeSegmentAtIndex:(NSInteger)segmentIndex deleteFile:(BOOL)deleteFile {
-        LZSessionSegment *segment = [_segments objectAtIndex:segmentIndex];
-        [_segments removeObjectAtIndex:segmentIndex];
-        
-        CMTime segmentDuration = segment.duration;
-        
-        if (CMTIME_IS_VALID(segmentDuration)) {
-//            NSLog(@"Removed duration of %fs", CMTimeGetSeconds(segmentDuration));
-            _segmentsDuration = CMTimeSubtract(_segmentsDuration, segmentDuration);
-        } else {
-            CMTime newDuration = kCMTimeZero;
-            for (LZSessionSegment *segment in _segments) {
-                if (CMTIME_IS_VALID(segment.duration)) {
-                    newDuration = CMTimeAdd(newDuration, segment.duration);
-                }
+    LZSessionSegment *segment = [_segments objectAtIndex:segmentIndex];
+    [_segments removeObjectAtIndex:segmentIndex];
+    
+    CMTime segmentDuration = segment.duration;
+    
+    if (CMTIME_IS_VALID(segmentDuration)) {
+        //            NSLog(@"Removed duration of %fs", CMTimeGetSeconds(segmentDuration));
+        _segmentsDuration = CMTimeSubtract(_segmentsDuration, segmentDuration);
+    } else {
+        CMTime newDuration = kCMTimeZero;
+        for (LZSessionSegment *segment in _segments) {
+            if (CMTIME_IS_VALID(segment.duration)) {
+                newDuration = CMTimeAdd(newDuration, segment.duration);
             }
-            _segmentsDuration = newDuration;
         }
-        
-        if (deleteFile) {
-            [segment deleteFile];
-        }
+        _segmentsDuration = newDuration;
+    }
+    
+    if (deleteFile) {
+        [segment deleteFile];
+    }
 }
 
 - (void)removeLastSegment {

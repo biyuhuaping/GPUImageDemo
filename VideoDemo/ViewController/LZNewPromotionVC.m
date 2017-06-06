@@ -31,15 +31,15 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "UINavigationController+FDFullscreenPopGesture.h"
 
-#import "LZSession.h"
+#import "LZRecordSession.h"
 
-@interface LZNewPromotionVC ()<SCRecorderDelegate>
+@interface LZNewPromotionVC ()<LZRecorderDelegate>
 
 @property (strong, nonatomic) IBOutlet GPUImageView *filterView;
 @property (strong, nonatomic) GPUImageOutput<GPUImageInput> *filter;
 @property (strong, nonatomic) GPUImageVideoCameraEx *videoCamera;
 //@property (strong, nonatomic) GPUImageMovieWriterEx *movieWriter;
-@property (strong, nonatomic) LZSession *session;
+@property (strong, nonatomic) LZRecordSession *recordSession;
 
 
 @property (strong, nonatomic) IBOutlet UIView *previewView;         //试映view
@@ -83,7 +83,8 @@
     self.recordBtn.layer.cornerRadius = 26;
     self.recordBtn.layer.masksToBounds = YES;
     
-    self.session = [[LZSession alloc]init];
+    self.recordSession = [[LZRecordSession alloc]init];
+    self.recordSession.delegate = self;
     [self configGPUImageView];
 }
 
@@ -107,13 +108,15 @@
     self.filter = [[GPUImageSepiaFilter alloc] init];
     
     GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
-    [cropFilter addTarget:self.session.movieWriter];
+    [cropFilter addTarget:self.recordSession.movieWriter];
     [self.filter addTarget:cropFilter];
     [self.filter addTarget:self.filterView];
+    
+//    [self.videoCamera addTarget:cropFilter];
     [self.videoCamera addTarget:self.filter];
 
     //设置声音
-    self.videoCamera.audioEncodingTarget = self.session.movieWriter;
+    self.videoCamera.audioEncodingTarget = self.recordSession.movieWriter;
 }
 
 //- (GPUImageVideoCamera *)videoCamera {
@@ -235,13 +238,13 @@
 
 //更新进度条
 - (void)updateProgressBar {
-    if (self.session.segments.count == 0) {
+    if (self.recordSession.segments.count == 0) {
         [self.progressView updateProgressWithValue:0];
         return;
     }
     
 //    self.cancelButton.enabled = YES;
-    if (CMTimeGetSeconds(self.session.segmentsDuration) >= 3) {
+    if (CMTimeGetSeconds(self.recordSession.segmentsDuration) >= 3) {
         self.confirmButton.enabled = YES;
     } else {
         self.confirmButton.enabled = NO;
@@ -249,8 +252,8 @@
     
 //    [self.progressBar removeAllSubViews];
     CGFloat progress = 0;
-    for (int i = 0; i < self.session.segments.count; i++) {
-        LZSessionSegment * segment = self.session.segments[i];
+    for (int i = 0; i < self.recordSession.segments.count; i++) {
+        LZSessionSegment * segment = self.recordSession.segments[i];
         
         NSAssert(segment != nil, @"segment must be non-nil");
         CMTime currentTime = kCMTimeZero;
@@ -313,9 +316,9 @@
         sender.selected = YES;
     }
     else if (sender.selected == YES) {//第二次按下删除按钮
-        [self.session removeLastSegment];
+        [self.recordSession removeLastSegment];
         [self updateProgressBar];
-        if (self.session.segments.count > 0) {
+        if (self.recordSession.segments.count > 0) {
             sender.selected = NO;
             sender.enabled = YES;
         } else {
@@ -335,22 +338,25 @@
 //        [self.recorder record];//开始录制
         [self changeToRecordStyle];
         
-        [self.session startRecording];
-        [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateText) userInfo:nil repeats:YES];
-
-        [self.session addObserver:self forKeyPath:@"duration" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
+        [self.recordSession startRecording];
     }else {
         self.cancelButton.enabled = YES;
 //        [self.recorder pause];//暂停录制
         [self changeToStopStyle];
 
-        [self.session endRecordingFilter:self.filter Completion:^(NSMutableArray<NSURL *> *segments) {
+        DLog(@"%@,%@",self.videoCamera.targets,self.filter.targets);
+//        [self.filter removeAllTargets];
+//        [self.videoCamera removeAllTargets];
+        [self changeFilter];
+        DLog(@"%@,%@",self.videoCamera.targets,self.filter.targets);
+
+        [self.recordSession endRecordingFilter:self.filter Completion:^(NSMutableArray<NSURL *> *segments) {
             DLog("===================== %@",segments);
             GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
-            [cropFilter addTarget:self.session.movieWriter];
+            [cropFilter addTarget:self.recordSession.movieWriter];
             [self.filter addTarget:cropFilter];
             //设置声音
-            self.videoCamera.audioEncodingTarget = self.session.movieWriter;
+            self.videoCamera.audioEncodingTarget = self.recordSession.movieWriter;
         }];
     }
     self.fd_interactivePopDisabled = !sender.selected;
@@ -361,38 +367,18 @@
     sender.selected = !sender.selected;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context{
-    NSLog(@"%@", keyPath);
-    NSLog(@"%@", object);
-    NSLog(@"%@", change[NSKeyValueChangeNewKey]);
-}
-
-- (void)updateText{
-    Float64 time = CMTimeGetSeconds(self.session.duration);
-    Float64 time1 = CMTimeGetSeconds(self.session.segmentsDuration);
-    Float64 time2 = CMTimeGetSeconds(self.session.movieWriter.duration);
-    DLog(@"%f,%f",time,time1);
-    
-    CGFloat progress = (time1+time2) / MAX_VIDEO_DUR;
-    [self.progressView updateProgressWithValue:progress];
-    
-    self.labelTime.text = [self timeFormatted:(time1 + time2)];
-    self.labelCount.text = [NSString stringWithFormat:@"%lu",self.session.segments.count + 1];
-}
-
-//转换成时分秒
-- (NSString *)timeFormatted:(int)totalSeconds{
-    int seconds = totalSeconds % 60;
-    int minutes = (totalSeconds / 60) % 60;
-//    int hours = totalSeconds / 3600;
-    
-    return [NSString stringWithFormat:@"%02d:%02d", minutes, seconds];
+- (void)changeFilter{
+    [self.videoCamera removeAllTargets];
+    self.filter = [[GPUImageSobelEdgeDetectionFilter alloc]init];
+    [self.videoCamera addTarget:self.filter];
+    [self.filter addTarget:self.filterView];
+    [self.filter addTarget:self.recordSession.movieWriter];
 }
 
 - (void)stopWrite {
     dispatch_async(dispatch_get_main_queue(), ^{
         ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-        NSArray *segments = self.session.segments;
+        NSArray *segments = self.recordSession.segments;
         for (int i = 0; i < segments.count; i++) {
             LZSessionSegment *segment = (LZSessionSegment *)segments[i];
             NSURL *url = segment.url;//segments[i];
@@ -421,10 +407,9 @@
 - (IBAction)confirmButton:(UIButton *)sender {
 //    [self stopWrite];
 //    [self recordButton:nil];
-    
     //视频详情
     LZVideoDetailsVC * vc = [[LZVideoDetailsVC alloc]initWithNibName:@"LZVideoDetailsVC" bundle:nil];
-    vc.recordSession = self.session;
+    vc.recordSession = self.recordSession;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -440,13 +425,13 @@
 
     //组合
     GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
-    [cropFilter addTarget:self.session.movieWriter];
+    [cropFilter addTarget:self.recordSession.movieWriter];
     [self.filter addTarget:cropFilter];
     [self.filter addTarget:self.filterView];
     [self.videoCamera addTarget:self.filter];
     
     //设置声音
-    self.videoCamera.audioEncodingTarget = self.session.movieWriter;
+    self.videoCamera.audioEncodingTarget = self.recordSession.movieWriter;
 }
 
 //切换摄像头按钮
@@ -520,6 +505,197 @@
         [self.videoCamera.inputCamera setTorchMode:AVCaptureTorchModeOff];
         [self.videoCamera.inputCamera unlockForConfiguration];
     }
+}
+
+-(void)changeEffct:(GPUImageFilter *)mFilter withBtn:(UIButton *)btn{
+    
+    //移除上一个效果
+    [self.videoCamera removeTarget:self.filter];
+    
+    self.filter = mFilter;
+    
+    // 添加滤镜到相机上
+    [self.videoCamera addTarget:self.filter];
+    [self.filter addTarget:self.filterView];
+}
+
+/**
+ *以下的滤镜是GPUImage自带的滤镜，后面有几个效果不是很明显，我只是拿来做测试用。
+ *GPUImage自带的滤镜很多，大家可以都试试看，当然也可以自己写滤镜，这就需要后续深入学习了
+ *对checkViewController中filtercode属性的说明：filtercode是在选择滤镜的时候设置，
+ *在拍照的时候传值给CheckViewController，实际上拍照传递给CheckVC的是原图加上当前设置的filtercode，
+ *所以在后续CheckVC中改变滤镜的时候是基于原图进行改变。
+ 
+- (void)switchCameraFilter:(NSInteger)index {
+    [self.videoCamera removeAllTargets];
+    switch (index) {
+        case 0:
+            _filter = [[GPUImageFilter alloc] init];//原图
+            [_checkVC setFilterCode:0];
+            break;
+        case 1:
+            _filter = [[GPUImageHueFilter alloc] init];//绿巨人
+            [_checkVC setFilterCode:1];
+            break;
+        case 2:
+            _filter = [[GPUImageColorInvertFilter alloc] init];//负片
+            [_checkVC setFilterCode:2];
+            break;
+        case 3:
+            _filter = [[GPUImageSepiaFilter alloc] init];//老照片
+            [_checkVC setFilterCode:3];
+            break;
+        case 4: {
+            _filter = [[GPUImageGaussianBlurPositionFilter alloc] init];
+            [(GPUImageGaussianBlurPositionFilter*)_filter setBlurRadius:40.0/320.0];
+            [_checkVC setFilterCode:4];
+        }
+            break;
+        case 5:
+            _filter = [[GPUImageSketchFilter alloc] init];//素描
+            [_checkVC setFilterCode:5];
+            break;
+        case 6:
+            _filter = [[GPUImageVignetteFilter alloc] init];//黑晕
+            [_checkVC setFilterCode:6];
+            break;
+        case 7:
+            _filter = [[GPUImageGrayscaleFilter alloc] init];//灰度
+            [_checkVC setFilterCode:7];
+            break;
+        case 8:
+            _filter = [[GPUImageToonFilter alloc] init];//卡通效果 黑色粗线描边
+            [_checkVC setFilterCode:8];
+        default:
+            _filter = [[GPUImageFilter alloc] init];
+            [_checkVC setFilterCode:9];
+            break;
+    }
+    
+    [self.cameraManager addTarget:_filter];
+    [_filter addTarget:_filterView];
+}
+
+#pragma mark - 调整焦距方法
+//调整焦距方法
+-(void)focusDisdance:(UIPinchGestureRecognizer*)pinch {
+    self.effectiveScale = self.beginGestureScale * pinch.scale;
+    if (self.effectiveScale < 1.0f) {
+        self.effectiveScale = 1.0f;
+    }
+    CGFloat maxScaleAndCropFactor = 3.0f;//设置最大放大倍数为3倍
+    if (self.effectiveScale > maxScaleAndCropFactor)
+        self.effectiveScale = maxScaleAndCropFactor;
+    [CATransaction begin];
+    [CATransaction setAnimationDuration:.025];
+    NSError *error;
+    if([self.cameraManager.inputCamera lockForConfiguration:&error]){
+        [self.cameraManager.inputCamera setVideoZoomFactor:self.effectiveScale];
+        [self.cameraManager.inputCamera unlockForConfiguration];
+    }
+    else {
+        NSLog(@"ERROR = %@", error);
+    }
+    
+    [CATransaction commit];
+}
+
+//手势代理方法
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    if ( [gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] ) {
+        self.beginGestureScale = self.effectiveScale;
+    }
+    return YES;
+}
+
+#pragma mark - 对焦方法
+//对焦方法
+- (void)focus:(UITapGestureRecognizer *)tap {
+    self.preview.userInteractionEnabled = NO;
+    CGPoint touchPoint = [tap locationInView:tap.view];
+    // CGContextRef *touchContext = UIGraphicsGetCurrentContext();
+    [self layerAnimationWithPoint:touchPoint];
+    //下面是照相机焦点坐标轴和屏幕坐标轴的映射问题，这个坑困惑了我好久，花了各种方案来解决这个问题，以下是最简单的解决方案也是最准确的坐标转换方式
+    if(_cameraManager.cameraPosition == AVCaptureDevicePositionBack){
+        touchPoint = CGPointMake( touchPoint.y /tap.view.bounds.size.height ,1-touchPoint.x/tap.view.bounds.size.width);
+    }
+    else
+        touchPoint = CGPointMake(touchPoint.y /tap.view.bounds.size.height ,touchPoint.x/tap.view.bounds.size.width);
+    //以下是相机的聚焦和曝光设置，前置不支持聚焦但是可以曝光处理，后置相机两者都支持，下面的方法是通过点击一个点同时设置聚焦和曝光，当然根据需要也可以分开进行处理
+
+    if([self.cameraManager.inputCamera isExposurePointOfInterestSupported] && [self.cameraManager.inputCamera isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure])
+    {
+        NSError *error;
+        if ([self.cameraManager.inputCamera lockForConfiguration:&error]) {
+            [self.cameraManager.inputCamera setExposurePointOfInterest:touchPoint];
+            [self.cameraManager.inputCamera setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
+            if ([self.cameraManager.inputCamera isFocusPointOfInterestSupported] && [self.cameraManager.inputCamera isFocusModeSupported:AVCaptureFocusModeAutoFocus]) {
+                [self.cameraManager.inputCamera setFocusPointOfInterest:touchPoint];
+                [self.cameraManager.inputCamera setFocusMode:AVCaptureFocusModeAutoFocus];
+            }
+            [self.cameraManager.inputCamera unlockForConfiguration];
+        } else {
+            NSLog(@"ERROR = %@", error);
+        }
+    }
+}
+
+//对焦动画
+- (void)layerAnimationWithPoint:(CGPoint)point {
+    if (_focusLayer) {
+        ///聚焦点聚焦动画设置
+        CALayer *focusLayer = _focusLayer;
+        focusLayer.hidden = NO;
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
+        [focusLayer setPosition:point];
+        focusLayer.transform = CATransform3DMakeScale(2.0f,2.0f,1.0f);
+        [CATransaction commit];
+        
+        CABasicAnimation *animation = [ CABasicAnimation animationWithKeyPath: @"transform" ];
+        animation.toValue = [ NSValue valueWithCATransform3D: CATransform3DMakeScale(1.0f,1.0f,1.0f)];
+        animation.delegate = self;
+        animation.duration = 0.3f;
+        animation.repeatCount = 1;
+        animation.removedOnCompletion = NO;
+        animation.fillMode = kCAFillModeForwards;
+        [focusLayer addAnimation: animation forKey:@"animation"];
+    }
+}
+
+//动画的delegate方法
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
+    //    1秒钟延时
+    [self performSelector:@selector(focusLayerNormal) withObject:self afterDelay:0.5f];
+}
+
+//focusLayer回到初始化状态
+- (void)focusLayerNormal {
+    self.preview.userInteractionEnabled = YES;
+    _focusLayer.hidden = YES;
+}*/
+
+#pragma mark - LZRecorderDelegate 更新进度条
+- (void)didAppendVideoSampleBufferInSession:(LZRecordSession *)recordSession {
+    Float64 time1 = CMTimeGetSeconds(self.recordSession.segmentsDuration);
+    Float64 time2 = CMTimeGetSeconds(self.recordSession.movieWriter.duration);
+    DLog(@"%f,%f",time1,time2);
+    
+    CGFloat progress = (time1+time2) / MAX_VIDEO_DUR;
+    [self.progressView updateProgressWithValue:progress];
+    
+    self.labelTime.text = [self timeFormatted:(time1 + time2)];
+    self.labelCount.text = [NSString stringWithFormat:@"%lu",self.recordSession.segments.count + 1];
+}
+
+//转换成时分秒
+- (NSString *)timeFormatted:(int)totalSeconds{
+    int seconds = totalSeconds % 60;
+    int minutes = (totalSeconds / 60) % 60;
+    //    int hours = totalSeconds / 3600;
+    
+    return [NSString stringWithFormat:@"%02d:%02d", minutes, seconds];
 }
 
 #pragma mark - SCRecorderDelegate
