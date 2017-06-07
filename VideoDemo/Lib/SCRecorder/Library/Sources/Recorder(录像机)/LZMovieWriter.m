@@ -11,10 +11,16 @@
 @implementation LZMovieWriter
 
 - (id)initWithMovieURL:(NSURL *)newMovieURL size:(CGSize)newSize {
-    if ((self = [super init]))
-    {
+    self = [super init];
+    if (self) {
         _assetWriter = [AVAssetWriter assetWriterWithURL:newMovieURL fileType:AVFileTypeQuickTimeMovie error:nil];
-        assetWriterVideoInput = [[AVAssetWriterInput alloc] initWithMediaType:AVMediaTypeVideo outputSettings:nil];
+        
+        NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
+        [settings setObject:AVVideoCodecH264 forKey:AVVideoCodecKey];
+        [settings setObject:[NSNumber numberWithInt:newSize.width] forKey:AVVideoWidthKey];
+        [settings setObject:[NSNumber numberWithInt:newSize.height] forKey:AVVideoHeightKey];
+        
+        assetWriterVideoInput = [[AVAssetWriterInput alloc] initWithMediaType:AVMediaTypeVideo outputSettings:settings];
         assetWriterVideoInput.expectsMediaDataInRealTime = YES;
         assetWriterAudioInput = [[AVAssetWriterInput alloc] initWithMediaType:AVMediaTypeAudio outputSettings:nil];
         assetWriterAudioInput.expectsMediaDataInRealTime = YES;
@@ -26,31 +32,131 @@
             [_assetWriter addInput:assetWriterAudioInput];
         }
         
-        
-        
-//        assetWriterVideoInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:nil];
-//        assetWriterVideoInput.expectsMediaDataInRealTime = YES;
-//        [_assetWriter addInput:assetWriterVideoInput];
-//        
-//        
-//        assetWriterAudioInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeAudio outputSettings:nil];
-//        [_assetWriter addInput:assetWriterAudioInput];
-//        assetWriterAudioInput.expectsMediaDataInRealTime = YES;
     }
-    return nil;
+    return self;
 }
 
 - (void)startRecording;{
     [self.assetWriter startWriting];
     //    [assetWriter startSessionAtSourceTime:kCMTimeZero];
+    [self dddd];
 }
 
 - (void)finishRecordingWithCompletionHandler:(void (^)(void))handler{
     [assetWriterVideoInput markAsFinished];
     [assetWriterAudioInput markAsFinished];
-    [self.assetWriter finishWritingWithCompletionHandler:(handler ?: ^{ })];
+    [self.assetWriter finishWritingWithCompletionHandler:(handler ?: ^{})];
 }
 
+//首先先准备好AVCaptureSession，当录制开始后，可以控制调用相关回调来取音视频的每一贞数据。
+- (void)dddd {
+    NSError * error;
+    
+    self.session = [[AVCaptureSession alloc] init];
+    [self.session beginConfiguration];
+    [self.session setSessionPreset:AVCaptureSessionPreset640x480];
+    [self initVideoAudioWriter];
+    
+    AVCaptureDevice * videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    AVCaptureDeviceInput *videoInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
+    AVCaptureDevice * audioDevice1 = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
+    AVCaptureDeviceInput *audioInput1 = [AVCaptureDeviceInput deviceInputWithDevice:audioDevice1 error:&error];
+    
+    self.videoOutput = [[AVCaptureVideoDataOutput alloc] init];
+    [self.videoOutput setAlwaysDiscardsLateVideoFrames:YES];
+    [self.videoOutput setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_32BGRA]forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
+    [self.videoOutput setSampleBufferDelegate:self queue:dispatch_get_main_queue()];
+    
+    
+    self.audioOutput = [[AVCaptureAudioDataOutput alloc] init];
+//numberWithInt:kCVPixelFormatType_32BGRA] forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
+    
+    [self.audioOutput setSampleBufferDelegate:self queue:dispatch_get_main_queue()];
+    [self.session addInput:videoInput];
+    [self.session addInput:audioInput1];
+    [self.session addOutput:self.videoOutput];
+    [self.session addOutput:self.audioOutput];
+    [self.session commitConfiguration];
+    [self.session startRunning];
+}
+
+#pragma mark AVCaptureVideoDataOutputSampleBufferDelegate
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
+    if (self.assetWriter.status == AVAssetWriterStatusUnknown) {
+        [self.assetWriter startSessionAtSourceTime:CMSampleBufferGetPresentationTimeStamp(sampleBuffer)];
+    }
+    
+    if (self.videoWriterInput.readyForMoreMediaData) {
+        [self.videoWriterInput appendSampleBuffer:sampleBuffer];
+    }
+    
+    if (self.audioWriterInput.readyForMoreMediaData) {
+        [self.audioWriterInput appendSampleBuffer:sampleBuffer];
+    }
+    
+    
+    /*/CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)CMSampleBufferGetImageBuffer(sampleBuffer);
+    static int frame = 0;
+    CMTime lastSampleTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+    if( frame == 0 && self.assetWriter.status != AVAssetWriterStatusWriting){
+        [self.assetWriter startWriting];
+        [self.assetWriter startSessionAtSourceTime:lastSampleTime];
+    }
+    if (captureOutput == self.videoOutput){
+        if(self.assetWriter.status > AVAssetWriterStatusWriting){
+            NSLog(@"Warning: writer status is %ld", (long)self.assetWriter.status);
+            if(self.assetWriter.status == AVAssetWriterStatusFailed )
+                NSLog(@"Error: %@", self.assetWriter.error);
+            return;
+        }
+        
+        if ([self.videoWriterInput isReadyForMoreMediaData])
+            if( ![self.videoWriterInput appendSampleBuffer:sampleBuffer] )
+                NSLog(@"无法写入视频输入");
+            else
+                NSLog(@"已经写的视频");
+    }else if (captureOutput == self.audioOutput){
+        if(self.assetWriter.status > AVAssetWriterStatusWriting ){
+            NSLog(@"Warning: writer status is %d", self.assetWriter.status);
+            if(self.assetWriter.status == AVAssetWriterStatusFailed )
+                NSLog(@"Error: %@", self.assetWriter.error);
+            return;
+        }
+        
+        if ([self.audioWriterInput isReadyForMoreMediaData])
+            if( ![self.audioWriterInput appendSampleBuffer:sampleBuffer] )
+                NSLog(@"无法写入视频输入");
+            else{
+                NSLog(@"已经写的视频");
+            }
+    }*/
+}
+
+- (void)captureOutput1:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
+
+//    if let assetWriter = assetWriter where assetWriter.status == AVAssetWriterStatus.Unknown {
+//        assetWriter.startWriting()
+//        assetWriter.startSessionAtSourceTime(CMSampleBufferGetPresentationTimeStamp(sampleBuffer))
+//    }
+//    if connection == self.videoConnection {
+//        dispatch_async(videoDataOutputQueue, { () -> Void in
+//            if let videoWriterInput = self.videoWriterInput where videoWriterInput.readyForMoreMediaData {
+//                videoWriterInput.appendSampleBuffer(sampleBuffer)
+//            }
+//        })
+//    }
+//    else if connection == self.audioConnection {
+//        dispatch_async(audioDataOutputQueue, { () -> Void in
+//            if let audioWriterInput = self.audioWriterInput where audioWriterInput.readyForMoreMediaData {
+//                audioWriterInput.appendSampleBuffer(sampleBuffer)
+//            }
+//        })
+//    }
+//    objc_sync_exit(self)
+}
+
+
+//剩下的工作就是初始化AVAssetWriter，包括音频与视频输入输出：
 - (void)initVideoAudioWriter{
     CGSize size = CGSizeMake(480, 320);
     NSString *betaCompressionDirectory = [NSHomeDirectory()stringByAppendingPathComponent:@"Documents/Movie.mp4"];

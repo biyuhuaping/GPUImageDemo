@@ -19,8 +19,8 @@
 
 @interface LZRecordSession : NSObject
 
-@property (strong, nonatomic) GPUImageMovieWriter * _Nullable movieWriter1; // 视频写入
-@property (strong, nonatomic) LZMovieWriter * _Nullable movieWriter;
+@property (strong, nonatomic) GPUImageMovieWriter * _Nullable movieWriter; // 视频写入
+@property (strong, nonatomic) LZMovieWriter * _Nullable movieWriter1;
 @property (strong, nonatomic) NSMutableArray * _Nullable segments;
 @property (strong, nonatomic) NSURL * _Nullable movieURL;
 @property (weak, nonatomic) id<LZRecorderDelegate> __nullable delegate;

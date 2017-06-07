@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 
-@interface LZMovieWriter : NSObject
+@interface LZMovieWriter : NSObject<AVCaptureVideoDataOutputSampleBufferDelegate,AVCaptureAudioDataOutputSampleBufferDelegate>
 {
 //    BOOL alreadyFinishedRecording;
 //    
@@ -23,6 +23,10 @@
 @property (strong, nonatomic) AVAssetWriterInput *videoWriterInput;
 @property (strong, nonatomic) AVAssetWriterInputPixelBufferAdaptor *adaptor;
 @property (strong, nonatomic) AVAssetWriterInput *audioWriterInput;
+
+@property (strong, nonatomic) AVCaptureSession *session;
+@property (strong, nonatomic) AVCaptureVideoDataOutput *videoOutput;
+@property (strong, nonatomic) AVCaptureAudioDataOutput *audioOutput;
 
 - (id)initWithMovieURL:(NSURL *)newMovieURL size:(CGSize)newSize;
 

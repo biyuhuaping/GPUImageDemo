@@ -84,7 +84,7 @@
                   moduleName = "VideoDemo"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/biyuhuaping/GPUImageDemo/VideoDemo/ViewController/LZNewPromotionVC.m"
-                  timestampString = "518435028.90443"
+                  timestampString = "518510330.423543"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "381"
@@ -99,7 +99,7 @@
                   moduleName = "VideoDemo"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/biyuhuaping/GPUImageDemo/VideoDemo/ViewController/LZNewPromotionVC.m"
-                  timestampString = "518435028.906182"
+                  timestampString = "518510330.426165"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "381"
@@ -196,12 +196,124 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VideoDemo/Lib/SCRecorder/Library/Sources/Recorder(&#x5f55;&#x50cf;&#x673a;)/LZMovieWriter.m"
-            timestampString = "518434817.294358"
+            timestampString = "518435706.217577"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14"
-            endingLineNumber = "14"
+            startingLineNumber = "15"
+            endingLineNumber = "15"
             landmarkName = "-initWithMovieURL:size:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GPUImage/Source/GPUImageVideoCamera.m"
+            timestampString = "518496282.47349"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "875"
+            endingLineNumber = "875"
+            landmarkName = "-captureOutput:didOutputSampleBuffer:fromConnection:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GPUImage/Source/GPUImageVideoCamera.m"
+            timestampString = "518496283.699757"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "879"
+            endingLineNumber = "879"
+            landmarkName = "-captureOutput:didOutputSampleBuffer:fromConnection:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GPUImage/Source/GPUImageVideoCamera.m"
+            timestampString = "518496548.845638"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "893"
+            endingLineNumber = "893"
+            landmarkName = "-captureOutput:didOutputSampleBuffer:fromConnection:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoDemo/Lib/SCRecorder/Library/Sources/Recorder(&#x5f55;&#x50cf;&#x673a;)/LZMovieWriter.m"
+            timestampString = "518509928.00659"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "136"
+            endingLineNumber = "136"
+            landmarkName = "-captureOutput1:didOutputSampleBuffer:fromConnection:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoDemo/Lib/SCRecorder/Library/Sources/Recorder(&#x5f55;&#x50cf;&#x673a;)/LZMovieWriter.m"
+            timestampString = "518509928.00659"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "99"
+            endingLineNumber = "99"
+            landmarkName = "-captureOutput:didOutputSampleBuffer:fromConnection:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoDemo/Lib/SCRecorder/Library/Sources/Recorder(&#x5f55;&#x50cf;&#x673a;)/LZMovieWriter.m"
+            timestampString = "518509321.835658"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "-startRecording"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GPUImage/Source/GPUImageVideoCamera.m"
+            timestampString = "518510328.378513"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "616"
+            endingLineNumber = "616"
+            landmarkName = "-processVideoSampleBuffer:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

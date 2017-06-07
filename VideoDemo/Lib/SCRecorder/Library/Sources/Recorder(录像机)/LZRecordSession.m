@@ -30,20 +30,20 @@
     return self;
 }
 
-//- (GPUImageMovieWriter *)movieWriter {
-//    if (_movieWriter == nil) {
-//        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
-//        _movieWriter.encodingLiveVideo = YES;
-//    }
-//    return _movieWriter;
-//}
-
-- (LZMovieWriter *)movieWriter {
+- (GPUImageMovieWriter *)movieWriter {
     if (_movieWriter == nil) {
-        _movieWriter = [[LZMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
+        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
+        _movieWriter.encodingLiveVideo = YES;
     }
     return _movieWriter;
 }
+
+//- (LZMovieWriter *)movieWriter {
+//    if (_movieWriter == nil) {
+//        _movieWriter = [[LZMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
+//    }
+//    return _movieWriter;
+//}
 
 - (NSURL *)movieURL{
     if (_movieURL == nil) {
@@ -124,7 +124,7 @@
 
 - (void)_destroyAssetWriter {
     _movieWriter = nil;
-//    _movieURL = nil;
+    _movieURL = nil;
     //    _currentSegmentHasAudio = NO;
     //    _currentSegmentHasVideo = NO;
     //    _assetWriter = nil;
