@@ -12,10 +12,10 @@
 {
     CMTime _currentSegmentDuration;
     CMTime _lastMovieFileOutputTime;
-//    NSTimer *_movieOutputProgressTimer;
     CADisplayLink *_displayLink;
 }
 @property (strong, nonatomic) dispatch_queue_t writeQueue;
+@property (nonatomic, assign) BOOL canWrite;
 
 @end
 
@@ -26,33 +26,23 @@
     if (self) {
         _segments = [[NSMutableArray alloc] init];
         _segmentsDuration = kCMTimeZero;
-        _writeQueue = dispatch_queue_create("com.5miles", DISPATCH_QUEUE_SERIAL);
+        _writeQueue = dispatch_queue_create("LZWriteQueue", DISPATCH_QUEUE_SERIAL);
+        [self initVideoCamera];
     }
     
     return self;
 }
 
-- (GPUImageVideoCamera *)videoCamera{
-    if (_videoCamera == nil) {
-        _videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
-        
-        //输出方向为竖屏
-        _videoCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
-        [_videoCamera addAudioInputsAndOutputs];
-        //相机开始运行
-        [_videoCamera startCameraCapture];
-        _videoCamera.delegate = self;
-    }
-    return _videoCamera;
+- (void)initVideoCamera{
+    _videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
+    
+    //输出方向为竖屏
+    _videoCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
+    [_videoCamera addAudioInputsAndOutputs];
+    //相机开始运行
+    [_videoCamera startCameraCapture];
+    _videoCamera.delegate = self;
 }
-
-//- (GPUImageMovieWriter *)movieWriter {
-//    if (_movieWriter == nil) {
-//        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
-//        _movieWriter.encodingLiveVideo = YES;
-//    }
-//    return _movieWriter;
-//}
 
 - (LZMovieWriter *)movieWriter {
     if (_movieWriter == nil) {
@@ -60,13 +50,6 @@
     }
     return _movieWriter;
 }
-
-//- (LZAssetWriter *)movieWriter {
-//    if (_movieWriter == nil) {
-//        _movieWriter = [[LZAssetWriter alloc] initWithURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
-//    }
-//    return _movieWriter;
-//}
 
 - (NSURL *)movieURL{
     if (_movieURL == nil) {
@@ -90,21 +73,20 @@
     return asset;
 }
 
-#pragma mark -
+#pragma mark - Action
 //开始录制
 - (void)startRecording{
-//    _movieOutputProgressTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/60.0 target:self selector:@selector(updateProgress) userInfo:nil repeats:YES];
     _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateProgress)];
     [_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
 //    [_displayLink setPaused:NO];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.movieWriter startRecording];
+//        [self.movieWriter startRecording];
+        self.canWrite = YES;
     });
     DLog(@"开始录制");
 }
 
-//触发计时器
 - (void)updateProgress{
 //    CMTime recordedDuration = _movieWriter.mutableCopy;
 //    if (CMTIME_COMPARE_INLINE(recordedDuration, !=, _lastMovieFileOutputTime)) {
@@ -124,19 +106,28 @@
         AVAssetWriter *writer = self.movieWriter.assetWriter;
 //        [writer endSessionAtSourceTime:CMTimeAdd(self.currentSegmentDuration, kCMTimeZero)];
         DLog(@"writer.outputURL:----%@",filter);
-//        [_movieOutputProgressTimer invalidate];
         [_displayLink invalidate];
 
         
-        [self.movieWriter finishRecordingWithCompletionHandler:^{
+//        [self.movieWriter finishRecordingWithCompletionHandler:^{
+        [self finishRecordingWithCompletionHandler:^{
             [self appendRecordSegmentUrl:writer.outputURL filter:filter Completion:^(LZSessionSegment *segment) {
                 completion(_segments);
-                
             }];
         }];
+        
     });
 }
 
+- (void)finishRecordingWithCompletionHandler:(void (^)(void))handler{
+    [self.movieWriter.assetWriterVideoInput markAsFinished];
+    [self.movieWriter.assetWriterAudioInput markAsFinished];
+    [self.movieWriter.assetWriter finishWritingWithCompletionHandler:^{
+        handler();
+    }];
+}
+
+#pragma mark -
 - (void)appendRecordSegmentUrl:(NSURL *)url filter:(GPUImageOutput<GPUImageInput> * _Nullable)filter Completion:(void (^)(LZSessionSegment *))completion {
     LZSessionSegment *segment = nil;
     segment = [LZSessionSegment segmentWithURL:url filter:filter];
@@ -145,30 +136,6 @@
     completion(segment);
 }
 
-- (void)_destroyAssetWriter {
-    _movieWriter = nil;
-    _movieURL = nil;
-    //    _currentSegmentHasAudio = NO;
-    //    _currentSegmentHasVideo = NO;
-    //    _assetWriter = nil;
-    //    _lastTimeAudio = kCMTimeInvalid;
-    //    _lastTimeVideo = kCMTimeInvalid;
-    //    _sessionStartTime = kCMTimeInvalid;
-    //    _movieFileOutput = nil;
-}
-
-//保存视频片段
-- (void)saveSegment{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.movieWriter finishRecordingWithCompletionHandler:nil];
-    });
-    //    self.sessionSegment.url = _movieURL;
-    [_segments addObject:_movieURL];
-    
-    DLog(@"保存地址：%@",_movieURL);
-}
-
-#pragma mark -
 - (void)addSegment:(LZSessionSegment *)segment {
     [_segments addObject:segment];
     _segmentsDuration = CMTimeAdd(_segmentsDuration, segment.duration);
@@ -328,7 +295,17 @@
 }
 
 
-
+- (void)_destroyAssetWriter {
+    _movieWriter = nil;
+    _movieURL = nil;
+//    _currentSegmentHasAudio = NO;
+//    _currentSegmentHasVideo = NO;
+//    _assetWriter = nil;
+//    _lastTimeAudio = kCMTimeInvalid;
+//    _lastTimeVideo = kCMTimeInvalid;
+//    _sessionStartTime = kCMTimeInvalid;
+//    _movieFileOutput = nil;
+}
 
 
 
@@ -366,15 +343,24 @@
 
 - (void)myCaptureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
     CFRetain(sampleBuffer);
+    __weak __typeof(self)weakSelf = self;
     dispatch_async(self.writeQueue, ^{
+//        if (self.movieWriter.assetWriter == AVAssetWriterStatusUnknown) {
+        if (self.canWrite){
+            CMTime startTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+            [weakSelf.movieWriter.assetWriter startWriting];
+            [weakSelf.movieWriter.assetWriter startSessionAtSourceTime:startTime];
+            weakSelf.canWrite = NO;
+        }
+        
         if ([captureOutput isKindOfClass:[AVCaptureVideoDataOutput class]]) {
-            if (self.movieWriter.assetWriter.status != 0) {
-                [self.movieWriter.assetWriterVideoInput appendSampleBuffer:sampleBuffer];
+            if (weakSelf.movieWriter.assetWriter.status == AVAssetWriterStatusWriting) {
+                [weakSelf.movieWriter.assetWriterVideoInput appendSampleBuffer:sampleBuffer];
             }
         }
         if ([captureOutput isKindOfClass:[AVCaptureAudioDataOutput class]]) {
-            if (self.movieWriter.assetWriter.status != 0) {
-                [self.movieWriter.assetWriterAudioInput appendSampleBuffer:sampleBuffer];
+            if (weakSelf.movieWriter.assetWriter.status == AVAssetWriterStatusWriting) {
+                [weakSelf.movieWriter.assetWriterAudioInput appendSampleBuffer:sampleBuffer];
             }
         }
         CFRelease(sampleBuffer);

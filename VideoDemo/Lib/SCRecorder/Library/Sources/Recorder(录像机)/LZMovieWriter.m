@@ -57,15 +57,18 @@
 
 
 - (void)startRecording{
-    startTime = kCMTimeInvalid;
-    [self.assetWriter startWriting];
-    [self.assetWriter startSessionAtSourceTime:kCMTimeZero];
+//    startTime = kCMTimeInvalid;
+//    [self.assetWriter startWriting];
+//    [self.assetWriter startSessionAtSourceTime:self.startTime];
 }
 
 - (void)finishRecordingWithCompletionHandler:(void (^)(void))handler{
     [self.assetWriterVideoInput markAsFinished];
     [self.assetWriterAudioInput markAsFinished];
-    [self.assetWriter finishWritingWithCompletionHandler:(handler ?: ^{})];
+    [self.assetWriter finishWritingWithCompletionHandler:^{
+        handler();
+        [self destroyWrite];
+    }];
 }
 
 - (CMTime)duration {
@@ -76,6 +79,13 @@
     if( ! CMTIME_IS_NEGATIVE_INFINITY(previousAudioTime) )
         return CMTimeSubtract(previousAudioTime, startTime);
     return kCMTimeZero;
+}
+
+- (void)destroyWrite {
+    _assetWriter = nil;
+    _assetWriterAudioInput = nil;
+    _assetWriterVideoInput = nil;
+    _movieURL = nil;
 }
 
 @end

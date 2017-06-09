@@ -27,32 +27,32 @@
     _player = [SCPlayer player];
     [self.player setLoopEnabled:YES];
     
-//    if ([[NSProcessInfo processInfo] activeProcessorCount] > 1) {
-//        //        self.filterSwitcherView.contentMode = UIViewContentModeScaleAspectFill;
-//        
-//        SCFilter *emptyFilter = [SCFilter emptyFilter];
-//        emptyFilter.name = @"#nofilter";
-//        
-//        self.filterSwitcherView.filters = @[
-//                                            emptyFilter,
-//                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectNoir"],
-//                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectChrome"],
-//                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectInstant"],
-//                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectTonal"],
-//                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectFade"],
-//                                            // Adding a filter created using CoreImageShop
-//                                            [SCFilter filterWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"a_filter" withExtension:@"cisf"]],
-//                                            ];
-//        self.player.SCImageView = self.filterSwitcherView;
-//        //        [self.filterSwitcherView addObserver:self forKeyPath:@"selectedFilter" options:NSKeyValueObservingOptionNew context:nil];
-//    } else {
-//        SCVideoPlayerView *playerView = [[SCVideoPlayerView alloc] initWithPlayer:self.player];
-//        playerView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-//        playerView.frame = self.filterSwitcherView.frame;
-//        playerView.autoresizingMask = self.filterSwitcherView.autoresizingMask;
-//        [self.filterSwitcherView.superview insertSubview:playerView aboveSubview:self.filterSwitcherView];
-//        [self.filterSwitcherView removeFromSuperview];
-//    }
+    if ([[NSProcessInfo processInfo] activeProcessorCount] > 1) {
+        //        self.filterSwitcherView.contentMode = UIViewContentModeScaleAspectFill;
+        
+        SCFilter *emptyFilter = [SCFilter emptyFilter];
+        emptyFilter.name = @"#nofilter";
+        
+        self.filterSwitcherView.filters = @[
+                                            emptyFilter,
+                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectNoir"],
+                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectChrome"],
+                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectInstant"],
+                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectTonal"],
+                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectFade"],
+                                            // Adding a filter created using CoreImageShop
+                                            [SCFilter filterWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"a_filter" withExtension:@"cisf"]],
+                                            ];
+        self.player.SCImageView = self.filterSwitcherView;
+        //        [self.filterSwitcherView addObserver:self forKeyPath:@"selectedFilter" options:NSKeyValueObservingOptionNew context:nil];
+    } else {
+        SCVideoPlayerView *playerView = [[SCVideoPlayerView alloc] initWithPlayer:self.player];
+        playerView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+        playerView.frame = self.filterSwitcherView.frame;
+        playerView.autoresizingMask = self.filterSwitcherView.autoresizingMask;
+        [self.filterSwitcherView.superview insertSubview:playerView aboveSubview:self.filterSwitcherView];
+        [self.filterSwitcherView removeFromSuperview];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {

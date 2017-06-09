@@ -8,18 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
-#import "GPUImageVideoCamera.h"
 
-@interface LZMovieWriter : NSObject<AVCaptureVideoDataOutputSampleBufferDelegate,AVCaptureAudioDataOutputSampleBufferDelegate>
+@interface LZMovieWriter : NSObject
 
 @property (strong, nonatomic) AVAssetWriter *assetWriter;
 @property (strong, nonatomic) AVAssetWriterInput *assetWriterAudioInput;
 @property (strong, nonatomic) AVAssetWriterInput *assetWriterVideoInput;
 @property (strong, nonatomic) AVAssetWriterInputPixelBufferAdaptor *adaptor;
-
-//@property (strong, nonatomic) AVCaptureSession *session;
-//@property (strong, nonatomic) AVCaptureVideoDataOutput *videoOutput;
-//@property (strong, nonatomic) AVCaptureAudioDataOutput *audioOutput;
 
 
 - (id)initWithMovieURL:(NSURL *)newMovieURL size:(CGSize)newSize;
