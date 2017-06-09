@@ -8,25 +8,19 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
+#import "GPUImageVideoCamera.h"
 
 @interface LZMovieWriter : NSObject<AVCaptureVideoDataOutputSampleBufferDelegate,AVCaptureAudioDataOutputSampleBufferDelegate>
-{
-//    BOOL alreadyFinishedRecording;
-//    
-//    NSURL *movieURL;
-//    NSString *fileType;
-    AVAssetWriterInput *assetWriterAudioInput;
-    AVAssetWriterInput *assetWriterVideoInput;
-}
 
 @property (strong, nonatomic) AVAssetWriter *assetWriter;
-@property (strong, nonatomic) AVAssetWriterInput *videoWriterInput;
+@property (strong, nonatomic) AVAssetWriterInput *assetWriterAudioInput;
+@property (strong, nonatomic) AVAssetWriterInput *assetWriterVideoInput;
 @property (strong, nonatomic) AVAssetWriterInputPixelBufferAdaptor *adaptor;
-@property (strong, nonatomic) AVAssetWriterInput *audioWriterInput;
 
-@property (strong, nonatomic) AVCaptureSession *session;
-@property (strong, nonatomic) AVCaptureVideoDataOutput *videoOutput;
-@property (strong, nonatomic) AVCaptureAudioDataOutput *audioOutput;
+//@property (strong, nonatomic) AVCaptureSession *session;
+//@property (strong, nonatomic) AVCaptureVideoDataOutput *videoOutput;
+//@property (strong, nonatomic) AVCaptureAudioDataOutput *audioOutput;
+
 
 - (id)initWithMovieURL:(NSURL *)newMovieURL size:(CGSize)newSize;
 

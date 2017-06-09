@@ -275,6 +275,7 @@
 		FB69C5421EC01CA1007B38BD /* a_filter.cisf in Resources */ = {isa = PBXBuildFile; fileRef = FB69C5411EC01CA1007B38BD /* a_filter.cisf */; };
 		FB69C5451EC1667F007B38BD /* SCWatermarkOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C5441EC1667F007B38BD /* SCWatermarkOverlayView.m */; };
 		FB69D44D1EC5956300953C9E /* RecordProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69D44C1EC5956300953C9E /* RecordProgressView.m */; };
+		FBBD9FA61EE8FC11000F7032 /* LZAssetWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = FBBD9FA51EE8FC11000F7032 /* LZAssetWriter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -841,6 +842,8 @@
 		FB69C5441EC1667F007B38BD /* SCWatermarkOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCWatermarkOverlayView.m; sourceTree = "<group>"; };
 		FB69D44B1EC5956300953C9E /* RecordProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordProgressView.h; sourceTree = "<group>"; };
 		FB69D44C1EC5956300953C9E /* RecordProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordProgressView.m; sourceTree = "<group>"; };
+		FBBD9FA41EE8FC11000F7032 /* LZAssetWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZAssetWriter.h; sourceTree = "<group>"; };
+		FBBD9FA51EE8FC11000F7032 /* LZAssetWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZAssetWriter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1477,6 +1480,7 @@
 			isa = PBXGroup;
 			children = (
 				FB69C4591EB97467007B38BD /* View */,
+				FBBD9F911EE8E2D1000F7032 /* AVAssetWriter */,
 				FB69C4301EB96ED1007B38BD /* LZNewPromotionVC.h */,
 				FB69C4311EB96ED1007B38BD /* LZNewPromotionVC.m */,
 				FB69C4321EB96ED1007B38BD /* LZNewPromotionVC.xib */,
@@ -1736,6 +1740,15 @@
 			path = Tools;
 			sourceTree = "<group>";
 		};
+		FBBD9F911EE8E2D1000F7032 /* AVAssetWriter */ = {
+			isa = PBXGroup;
+			children = (
+				FBBD9FA41EE8FC11000F7032 /* LZAssetWriter.h */,
+				FBBD9FA51EE8FC11000F7032 /* LZAssetWriter.m */,
+			);
+			path = AVAssetWriter;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1932,6 +1945,7 @@
 				FB4D359F1EE64007000A92C8 /* GPUImageLinearBurnBlendFilter.m in Sources */,
 				FB69C5451EC1667F007B38BD /* SCWatermarkOverlayView.m in Sources */,
 				FB4D35A71EE64007000A92C8 /* GPUImageLuminosityBlendFilter.m in Sources */,
+				FBBD9FA61EE8FC11000F7032 /* LZAssetWriter.m in Sources */,
 				FB69C4511EB96ED2007B38BD /* LZVideoDetailsVC.m in Sources */,
 				FB4D35881EE64007000A92C8 /* GPUImageGrayscaleFilter.m in Sources */,
 				FB4D35B81EE64007000A92C8 /* GPUImageOverlayBlendFilter.m in Sources */,

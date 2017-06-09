@@ -121,7 +121,7 @@
         counter++;
     }
     
-    [writer finishWriting];
+    [writer finishWritingWithCompletionHandler:^{}];
     
     progressHandle(1.00);
     

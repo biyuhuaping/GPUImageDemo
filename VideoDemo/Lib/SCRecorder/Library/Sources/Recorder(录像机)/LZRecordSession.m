@@ -8,13 +8,14 @@
 
 #import "LZRecordSession.h"
 
-@interface LZRecordSession ()
+@interface LZRecordSession ()<GPUImageVideoCameraDelegate>
 {
     CMTime _currentSegmentDuration;
     CMTime _lastMovieFileOutputTime;
 //    NSTimer *_movieOutputProgressTimer;
     CADisplayLink *_displayLink;
 }
+@property (strong, nonatomic) dispatch_queue_t writeQueue;
 
 @end
 
@@ -25,22 +26,44 @@
     if (self) {
         _segments = [[NSMutableArray alloc] init];
         _segmentsDuration = kCMTimeZero;
+        _writeQueue = dispatch_queue_create("com.5miles", DISPATCH_QUEUE_SERIAL);
     }
     
     return self;
 }
 
-- (GPUImageMovieWriter *)movieWriter {
+- (GPUImageVideoCamera *)videoCamera{
+    if (_videoCamera == nil) {
+        _videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
+        
+        //输出方向为竖屏
+        _videoCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
+        [_videoCamera addAudioInputsAndOutputs];
+        //相机开始运行
+        [_videoCamera startCameraCapture];
+        _videoCamera.delegate = self;
+    }
+    return _videoCamera;
+}
+
+//- (GPUImageMovieWriter *)movieWriter {
+//    if (_movieWriter == nil) {
+//        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
+//        _movieWriter.encodingLiveVideo = YES;
+//    }
+//    return _movieWriter;
+//}
+
+- (LZMovieWriter *)movieWriter {
     if (_movieWriter == nil) {
-        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
-        _movieWriter.encodingLiveVideo = YES;
+        _movieWriter = [[LZMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
     }
     return _movieWriter;
 }
 
-//- (LZMovieWriter *)movieWriter {
+//- (LZAssetWriter *)movieWriter {
 //    if (_movieWriter == nil) {
-//        _movieWriter = [[LZMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
+//        _movieWriter = [[LZAssetWriter alloc] initWithURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
 //    }
 //    return _movieWriter;
 //}
@@ -83,7 +106,7 @@
 
 //触发计时器
 - (void)updateProgress{
-//    CMTime recordedDuration = _movieWriter.duration;
+//    CMTime recordedDuration = _movieWriter.mutableCopy;
 //    if (CMTIME_COMPARE_INLINE(recordedDuration, !=, _lastMovieFileOutputTime)) {
 //        if ([self.delegate respondsToSelector:@selector(didAppendVideoSampleBufferInSession:)]) {
 //            dispatch_async(dispatch_get_main_queue(), ^{
@@ -336,5 +359,26 @@
     return [NSURL fileURLWithPath:tempPath];
 }
 
+#pragma mark - GPUImageVideoCameraDelegate
+- (void)willOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer{
+    
+}
+
+- (void)myCaptureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
+    CFRetain(sampleBuffer);
+    dispatch_async(self.writeQueue, ^{
+        if ([captureOutput isKindOfClass:[AVCaptureVideoDataOutput class]]) {
+            if (self.movieWriter.assetWriter.status != 0) {
+                [self.movieWriter.assetWriterVideoInput appendSampleBuffer:sampleBuffer];
+            }
+        }
+        if ([captureOutput isKindOfClass:[AVCaptureAudioDataOutput class]]) {
+            if (self.movieWriter.assetWriter.status != 0) {
+                [self.movieWriter.assetWriterAudioInput appendSampleBuffer:sampleBuffer];
+            }
+        }
+        CFRelease(sampleBuffer);
+    });
+}
 
 @end

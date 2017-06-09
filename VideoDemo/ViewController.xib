@@ -20,7 +20,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tuO-Rd-s7W">
-                    <rect key="frame" x="136" y="315.5" width="102" height="36"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
                     <state key="normal" title="去制作视频"/>
                     <connections>
@@ -29,7 +29,11 @@
                 </button>
             </subviews>
             <constraints>
+                <constraint firstItem="tuO-Rd-s7W" firstAttribute="top" secondItem="Q1W-lr-pDV" secondAttribute="top" id="4zr-Wb-IQI"/>
+                <constraint firstAttribute="bottom" secondItem="tuO-Rd-s7W" secondAttribute="bottom" id="h1B-GS-JGC"/>
                 <constraint firstItem="tuO-Rd-s7W" firstAttribute="centerX" secondItem="Q1W-lr-pDV" secondAttribute="centerX" id="kui-Ti-OOX"/>
+                <constraint firstAttribute="trailing" secondItem="tuO-Rd-s7W" secondAttribute="trailing" id="nTA-RB-1NT"/>
+                <constraint firstItem="tuO-Rd-s7W" firstAttribute="leading" secondItem="Q1W-lr-pDV" secondAttribute="leading" id="saJ-4j-iAH"/>
                 <constraint firstItem="tuO-Rd-s7W" firstAttribute="centerY" secondItem="Q1W-lr-pDV" secondAttribute="centerY" id="y7e-nk-7du"/>
             </constraints>
             <point key="canvasLocation" x="-163" y="12"/>

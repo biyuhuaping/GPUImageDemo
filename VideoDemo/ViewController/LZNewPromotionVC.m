@@ -32,12 +32,13 @@
 #import "UINavigationController+FDFullscreenPopGesture.h"
 
 #import "LZRecordSession.h"
+#import "LZAssetWriter.h"
 
 @interface LZNewPromotionVC ()<LZRecorderDelegate>
 
 @property (strong, nonatomic) IBOutlet GPUImageView *filterView;
 @property (strong, nonatomic) GPUImageOutput<GPUImageInput> *filter;
-@property (strong, nonatomic) GPUImageVideoCamera *videoCamera;
+//@property (strong, nonatomic) GPUImageVideoCamera *videoCamera;
 //@property (strong, nonatomic) GPUImageMovieWriterEx *movieWriter;
 @property (strong, nonatomic) LZRecordSession *recordSession;
 
@@ -86,17 +87,10 @@
     self.recordSession = [[LZRecordSession alloc]init];
     self.recordSession.delegate = self;
     [self configGPUImageView];
+    
 }
 
 - (void)configGPUImageView {
-    self.videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
-    
-    //输出方向为竖屏
-    self.videoCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
-    //相机开始运行
-    [self.videoCamera startCameraCapture];
-    
-    
     //显示view、freme
     GPUImageView *filterView = [[GPUImageView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH)];
     [self.filterView setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
@@ -110,23 +104,11 @@
 //    [cropFilter addTarget:self.recordSession.movieWriter];
     [self.filter addTarget:cropFilter];
     [self.filter addTarget:self.filterView];
-    
-//    [self.videoCamera addTarget:cropFilter];
-    [self.videoCamera addTarget:self.filter];
+    [self.recordSession.videoCamera addTarget:self.filter];
 
     //设置声音
 //    self.videoCamera.audioEncodingTarget = self.recordSession.movieWriter;
 }
-
-//- (GPUImageVideoCamera *)videoCamera {
-//    if (!_videoCamera) {
-//        _videoCamera = [[GPUImageVideoCameraEx alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
-//        //输出方向为竖屏
-//        _videoCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
-//        [_videoCamera addAudioInputsAndOutputs];
-//    }
-//    return _videoCamera;
-//}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -360,13 +342,13 @@
     sender.selected = !sender.selected;
 }
 
-- (void)changeFilter{
-    [self.videoCamera removeAllTargets];
-    self.filter = [[GPUImageSobelEdgeDetectionFilter alloc]init];
-    [self.videoCamera addTarget:self.filter];
-    [self.filter addTarget:self.filterView];
+//- (void)changeFilter{
+//    [self.videoCamera removeAllTargets];
+//    self.filter = [[GPUImageSobelEdgeDetectionFilter alloc]init];
+//    [self.videoCamera addTarget:self.filter];
+//    [self.filter addTarget:self.filterView];
 //    [self.filter addTarget:self.recordSession.movieWriter];
-}
+//}
 
 - (void)stopWrite {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -406,7 +388,7 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-//选择滤镜
+/*/选择滤镜
 - (IBAction)changeFilterButton:(UIButton *)sender {
     sender.selected = !sender.selected;
     //滤镜
@@ -418,14 +400,14 @@
 
     //组合
     GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
-    [cropFilter addTarget:self.recordSession.movieWriter];
+//    [cropFilter addTarget:self.recordSession.movieWriter];
     [self.filter addTarget:cropFilter];
     [self.filter addTarget:self.filterView];
     [self.videoCamera addTarget:self.filter];
     
     //设置声音
-    self.videoCamera.audioEncodingTarget = self.recordSession.movieWriter;
-}
+//    self.videoCamera.audioEncodingTarget = self.recordSession.movieWriter;
+}*/
 
 //切换摄像头按钮
 - (IBAction)changeButton:(UIButton *)sender {
@@ -487,21 +469,20 @@
     if (sender.selected == NO) {
         sender.selected = YES;
         self.recorder.flashMode = SCFlashModeLight;
-        [self.videoCamera.inputCamera lockForConfiguration:nil];
-        [self.videoCamera.inputCamera setTorchMode:AVCaptureTorchModeOn];
-        [self.videoCamera.inputCamera unlockForConfiguration];
+        [self.recordSession.videoCamera.inputCamera lockForConfiguration:nil];
+        [self.recordSession.videoCamera.inputCamera setTorchMode:AVCaptureTorchModeOn];
+        [self.recordSession.videoCamera.inputCamera unlockForConfiguration];
     }
     else {
         sender.selected = NO;
         self.recorder.flashMode = SCFlashModeOff;
-        [self.videoCamera.inputCamera lockForConfiguration:nil];
-        [self.videoCamera.inputCamera setTorchMode:AVCaptureTorchModeOff];
-        [self.videoCamera.inputCamera unlockForConfiguration];
+        [self.recordSession.videoCamera.inputCamera lockForConfiguration:nil];
+        [self.recordSession.videoCamera.inputCamera setTorchMode:AVCaptureTorchModeOff];
+        [self.recordSession.videoCamera.inputCamera unlockForConfiguration];
     }
 }
 
--(void)changeEffct:(GPUImageFilter *)mFilter withBtn:(UIButton *)btn{
-    
+/*- (void)changeEffct:(GPUImageFilter *)mFilter withBtn:(UIButton *)btn{
     //移除上一个效果
     [self.videoCamera removeTarget:self.filter];
     
@@ -510,7 +491,7 @@
     // 添加滤镜到相机上
     [self.videoCamera addTarget:self.filter];
     [self.filter addTarget:self.filterView];
-}
+}*/
 
 /**
  *以下的滤镜是GPUImage自带的滤镜，后面有几个效果不是很明显，我只是拿来做测试用。
@@ -689,6 +670,10 @@
     //    int hours = totalSeconds / 3600;
     
     return [NSString stringWithFormat:@"%02d:%02d", minutes, seconds];
+}
+
+- (void)willOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer{
+    
 }
 
 #pragma mark - SCRecorderDelegate
