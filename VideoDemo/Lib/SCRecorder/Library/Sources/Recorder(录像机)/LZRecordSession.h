@@ -14,7 +14,7 @@
 @class LZRecordSession;
 @protocol LZRecorderDelegate <NSObject>
 @optional
-- (void)didAppendVideoSampleBufferInSession:(LZRecordSession *_Nullable)recordSession;
+- (void)didAppendVideoSampleBufferInSession:(Float64)time;
 @end
 
 @interface LZRecordSession : NSObject

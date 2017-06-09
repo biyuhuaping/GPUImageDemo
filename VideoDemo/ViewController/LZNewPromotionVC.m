@@ -651,15 +651,15 @@
 }*/
 
 #pragma mark - LZRecorderDelegate 更新进度条
-- (void)didAppendVideoSampleBufferInSession:(LZRecordSession *)recordSession {
+- (void)didAppendVideoSampleBufferInSession:(Float64)time {
 //    Float64 time1 = CMTimeGetSeconds(self.recordSession.segmentsDuration);
 //    Float64 time2 = CMTimeGetSeconds(self.recordSession.movieWriter.duration);
 //    DLog(@"%f,%f",time1,time2);
-//    
-//    CGFloat progress = (time1+time2) / MAX_VIDEO_DUR;
-//    [self.progressView updateProgressWithValue:progress];
-//    
-//    self.labelTime.text = [self timeFormatted:(time1 + time2)];
+    
+    CGFloat progress = time / MAX_VIDEO_DUR;
+    [self.progressView updateProgressWithValue:progress];
+    
+    self.labelTime.text = [self timeFormatted:time];
     self.labelCount.text = [NSString stringWithFormat:@"%lu",self.recordSession.segments.count + 1];
 }
 
