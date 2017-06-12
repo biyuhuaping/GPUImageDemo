@@ -8,12 +8,12 @@
 
 #import "LZRecordSession.h"
 
-@interface LZRecordSession ()<GPUImageVideoCameraDelegate>
+@interface LZRecordSession ()<GPUImageVideoCameraDelegateEx>
 {
     CMTime _lastMovieFileOutputTime;
     CMTime _startTime;
     CMTime _endTime;
-    Float64 _currentSegmentDuration;//当前片段的时长
+    CMTime _currentSegmentDuration;//当前片段的时长
 
     CADisplayLink *_displayLink;
 }
@@ -34,21 +34,36 @@
         _endTime = kCMTimeZero;
 
         _writeQueue = dispatch_queue_create("LZWriteQueue", DISPATCH_QUEUE_SERIAL);
-        [self initVideoCamera];
+        [self initVideoCamera:AVCaptureDevicePositionBack];
     }
     
     return self;
 }
-
-- (void)initVideoCamera{
-    _videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
+- (void)switchCaptureDevices {
+    [self switchCaptureDevices];
+    return;
+    [self.videoCamera stopCameraCapture];
+    self.videoCamera = nil;
+    if (self.videoCamera.cameraPosition == AVCaptureDevicePositionBack) {
+        [self initVideoCamera:AVCaptureDevicePositionFront];
+//        _videoCamera = [self.videoCamera initWithSessionPreset:AVCaptureSessionPresetPhoto cameraPosition:AVCaptureDevicePositionFront];
+    } else {
+        [self initVideoCamera:AVCaptureDevicePositionBack];
+    }
+//    [self setBeginGestureScale:1.0f];//在转换摄像头的时候把摄像头的焦距调回1.0
+//    [self setEffectiveScale:1.0f];
+    
+//    [self.videoCamera startCameraCapture];
+}
+- (void)initVideoCamera:(AVCaptureDevicePosition)position{
+    _videoCamera = [[GPUImageVideoCameraEx alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:position];
     
     //输出方向为竖屏
     _videoCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
     [_videoCamera addAudioInputsAndOutputs];
     //相机开始运行
     [_videoCamera startCameraCapture];
-    _videoCamera.delegate = self;
+    _videoCamera.delegateEx = self;
 }
 
 - (LZMovieWriter *)movieWriter {
@@ -80,6 +95,10 @@
     return asset;
 }
 
+- (CMTime)duration {
+    return CMTimeAdd(_segmentsDuration, _currentSegmentDuration);
+}
+
 #pragma mark - Action
 //开始录制
 - (void)startRecording{
@@ -97,7 +116,7 @@
 - (void)updateProgress{
     if ([self.delegate respondsToSelector:@selector(didAppendVideoSampleBufferInSession:)]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate didAppendVideoSampleBufferInSession:_currentSegmentDuration];
+            [self.delegate didAppendVideoSampleBufferInSession:CMTimeGetSeconds(self.duration)];
         });
     }
 }
@@ -341,40 +360,45 @@
     return [NSURL fileURLWithPath:tempPath];
 }
 
-#pragma mark - GPUImageVideoCameraDelegate
-- (void)willOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer{
-    
-}
-
+#pragma mark - GPUImageVideoCameraDelegateEx
 - (void)myCaptureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
     CFRetain(sampleBuffer);
-    __weak __typeof(self)weakSelf = self;
     dispatch_async(self.writeQueue, ^{
 //        if (self.movieWriter.assetWriter == AVAssetWriterStatusUnknown) {
         if (self.canWrite){
             CMTime startTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
             _startTime = startTime;
-            [weakSelf.movieWriter.assetWriter startWriting];
-            [weakSelf.movieWriter.assetWriter startSessionAtSourceTime:startTime];
-            weakSelf.canWrite = NO;
+            [self.movieWriter.assetWriter startWriting];
+            [self.movieWriter.assetWriter startSessionAtSourceTime:startTime];
+            self.canWrite = NO;
         }
         
         if ([captureOutput isKindOfClass:[AVCaptureVideoDataOutput class]]) {
-            if (weakSelf.movieWriter.assetWriter.status == AVAssetWriterStatusWriting) {
-                [weakSelf.movieWriter.assetWriterVideoInput appendSampleBuffer:sampleBuffer];
+            if (self.movieWriter.assetWriter.status == AVAssetWriterStatusWriting && [self.movieWriter.assetWriterVideoInput isReadyForMoreMediaData]) {
+                [self.movieWriter.assetWriterVideoInput appendSampleBuffer:sampleBuffer];
                 _endTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
-                _currentSegmentDuration = CMTimeGetSeconds(CMTimeSubtract(_endTime, _startTime));
-                DLog(@"%f",_currentSegmentDuration);
-                [weakSelf updateProgress];
+//                _currentSegmentDuration = CMTimeGetSeconds(CMTimeSubtract(_endTime, _startTime));
+                _currentSegmentDuration = CMTimeSubtract(_endTime, _startTime);
+                DLog(@"%lld",_currentSegmentDuration.value/_currentSegmentDuration.timescale);
+                [self updateProgress];
             }
         }
         if ([captureOutput isKindOfClass:[AVCaptureAudioDataOutput class]]) {
-            if (weakSelf.movieWriter.assetWriter.status == AVAssetWriterStatusWriting) {
-                [weakSelf.movieWriter.assetWriterAudioInput appendSampleBuffer:sampleBuffer];
+            if (self.movieWriter.assetWriter.status == AVAssetWriterStatusWriting  && [self.movieWriter.assetWriterAudioInput isReadyForMoreMediaData]) {
+                [self.movieWriter.assetWriterAudioInput appendSampleBuffer:sampleBuffer];
             }
         }
         CFRelease(sampleBuffer);
     });
 }
-
+//- (void)switchCaptureDevicesInPosition:(AVCaptureDevicePosition)position{
+//    NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+//    for (AVCaptureDevice *device in devices) {
+//        if ([device position] == position) {
+//            return device;
+//        }
+//    }
+//    
+//    return nil;
+//}
 @end

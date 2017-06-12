@@ -26,15 +26,13 @@
 #import "ClearCacheTool.h"
 
 #import "GPUImage.h"
-//#import "GPUImageVideoCameraEx.h"
-//#import "GPUImageMovieWriterEx.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "UINavigationController+FDFullscreenPopGesture.h"
 
 #import "LZRecordSession.h"
-#import "LZAssetWriter.h"
+#import "LZCameraFilterCollectionView.h"
 
-@interface LZNewPromotionVC ()<LZRecorderDelegate>
+@interface LZNewPromotionVC ()<LZRecorderDelegate,LZCameraFilterViewDelegate>
 
 @property (strong, nonatomic) IBOutlet GPUImageView *filterView;
 @property (strong, nonatomic) GPUImageOutput<GPUImageInput> *filter;
@@ -67,6 +65,10 @@
 @property (strong, nonatomic) UILabel *labelCount;//段数
 
 @property (strong, nonatomic) IBOutlet UIView *maskView;//遮罩View
+@property (strong, nonatomic) IBOutlet UIView *chooseFilterView;//遮罩View
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *toTopDistance;
+@property (strong, nonatomic) IBOutlet LZCameraFilterCollectionView *cameraFilterView;
+
 @end
 
 @implementation LZNewPromotionVC
@@ -87,7 +89,8 @@
     self.recordSession = [[LZRecordSession alloc]init];
     self.recordSession.delegate = self;
     [self configGPUImageView];
-    
+//    [self addCameraFilterView];
+    [self performSelectorInBackground:@selector(addCameraFilterView) withObject:nil];
 }
 
 - (void)configGPUImageView {
@@ -98,15 +101,15 @@
     
     
     //滤镜
-    self.filter = [[GPUImageSepiaFilter alloc] init];
-    
-    GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
+    self.filter = [[GPUImageFilter alloc] init];
+//
+//    GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
 //    [cropFilter addTarget:self.recordSession.movieWriter];
-    [self.filter addTarget:cropFilter];
+//    [self.filter addTarget:cropFilter];
     [self.filter addTarget:self.filterView];
     [self.recordSession.videoCamera addTarget:self.filter];
-
-    //设置声音
+//
+//    //设置声音
 //    self.videoCamera.audioEncodingTarget = self.recordSession.movieWriter;
 }
 
@@ -175,7 +178,7 @@
     label2.layer.masksToBounds = YES;
     label2.layer.cornerRadius = 10;
     label2.adjustsFontSizeToFitWidth = YES;
-    label2.text = @"1ß";
+    label2.text = @"1";
     self.labelCount = label2;
     
     UIView *titleView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 84, 44)];
@@ -191,7 +194,6 @@
 }
 
 - (void)enumVideoUrl {
-    WS(weakSelf);
     [self.videoListSegmentArrays removeAllObjects];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -200,21 +202,37 @@
             [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {//从group里面
                 NSString* assetType = [result valueForProperty:ALAssetPropertyType];
                 if([assetType isEqualToString:ALAssetTypeVideo]){
-                    DLog(@"Video");
+//                    DLog(@"Video");
                     NSDictionary *assetUrls = [result valueForProperty:ALAssetPropertyURLs];
-                    NSUInteger assetCounter = 0;
                     for (NSString *assetURLKey in assetUrls) {
-                        DLog(@"Asset URL %lu = %@",(unsigned long)assetCounter, assetUrls[assetURLKey]);
                         SCRecordSessionSegment * segment = [[SCRecordSessionSegment alloc] initWithURL:assetUrls[assetURLKey] info:nil];
-                        [weakSelf.videoListSegmentArrays addObject:segment];
+                        [self.videoListSegmentArrays addObject:segment];
                     }
-                    DLog(@"Representation Size = %lld",[[result defaultRepresentation]size]);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                       //在主线程里更新UI
+                    });
+//                    DLog(@"Representation Size = %lld",[[result defaultRepresentation]size]);
                 }
             }];
         } failureBlock:^(NSError *error) {
-            DLog(@"Enumerate the asset groups failed.");
+//            DLog(@"Enumerate the asset groups failed.");
         }];
     });
+}
+
+//添加选择滤镜的CollectionView
+- (void)addCameraFilterView {
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    _cameraFilterView = [[LZCameraFilterCollectionView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, 100) collectionViewLayout:layout];
+    NSMutableArray *filterNameArray = [[NSMutableArray alloc] initWithCapacity:9];
+    for (NSInteger index = 0; index < 9; index++) {
+        UIImage *image = [UIImage imageNamed:@"filter0"];
+        [filterNameArray addObject:image];
+    }
+    _cameraFilterView.cameraFilterDelegate = self;
+    _cameraFilterView.picArray = filterNameArray;
+    [self.chooseFilterView addSubview:_cameraFilterView];
 }
 
 //更新进度条
@@ -248,23 +266,25 @@
 }
 
 - (void)changeToRecordStyle {
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.25 animations:^{
         self.recordBtnWidth.constant = 28;
         self.recordBtn.layer.cornerRadius = 4;
+        [self.view layoutIfNeeded];
     }];
 }
 
 - (void)changeToStopStyle {
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.25 animations:^{
         self.recordBtnWidth.constant = 52;
         self.recordBtn.layer.cornerRadius = 26;
+        [self.view layoutIfNeeded];
     }];
 }
 
 //更新快照
 - (void)updateGhostImage {
-    if (self.snapshotButton.selected && self.recorder.session.segments.count > 0) {
-        SCRecordSessionSegment *segment = [self.recorder.session.segments lastObject];
+    if (self.snapshotButton.selected && self.recordSession.segments.count > 0) {
+        LZSessionSegment *segment = self.recordSession.segments.lastObject;
         self.ghostImageView.image = segment.lastImage;
         self.ghostImageView.hidden = NO;
     }else{
@@ -316,22 +336,20 @@
     if (sender.selected == NO) {
         self.ghostImageView.hidden = YES;
         self.cancelButton.enabled = NO;
+        
 //        [self.recorder record];//开始录制
         [self changeToRecordStyle];
 
         [self.recordSession startRecording];
     }else {
         self.cancelButton.enabled = YES;
+        self.confirmButton.enabled = YES;
 //        [self.recorder pause];//暂停录制
         [self changeToStopStyle];
 
         [self.recordSession endRecordingFilter:self.filter Completion:^(NSMutableArray<NSURL *> *segments) {
             DLog("===================== %@",segments);
-            GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
-//            [cropFilter addTarget:self.recordSession.movieWriter];
-            [self.filter addTarget:cropFilter];
-            //设置声音
-//            self.videoCamera.audioEncodingTarget = self.recordSession.movieWriter;
+            [self updateGhostImage];
         }];
     }
     self.fd_interactivePopDisabled = !sender.selected;
@@ -388,42 +406,39 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-/*/选择滤镜
-- (IBAction)changeFilterButton:(UIButton *)sender {
-    sender.selected = !sender.selected;
-    //滤镜
-    self.filter = [[GPUImageGrayscaleFilter alloc] init];
+//show选择滤镜
+- (IBAction)showChangeFilterView:(UIButton *)sender {
+    [UIView animateWithDuration:0.25 animations:^{
+        self.toTopDistance.constant = 0;
+        [self.chooseFilterView layoutIfNeeded];
+    }];
+}
 
-    [self.filter removeAllTargets];
-    [self.videoCamera removeAllTargets];
-    
-
-    //组合
-    GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
-//    [cropFilter addTarget:self.recordSession.movieWriter];
-    [self.filter addTarget:cropFilter];
-    [self.filter addTarget:self.filterView];
-    [self.videoCamera addTarget:self.filter];
-    
-    //设置声音
-//    self.videoCamera.audioEncodingTarget = self.recordSession.movieWriter;
-}*/
+//hidden选择滤镜
+- (IBAction)hiddenChangeFilterView:(id)sender {
+    [UIView animateWithDuration:0.25 animations:^{
+        self.toTopDistance.constant = 300;
+        [self.chooseFilterView layoutIfNeeded];
+    }];
+}
 
 //切换摄像头按钮
-- (IBAction)changeButton:(UIButton *)sender {
-    [UIView animateWithDuration:0.7 animations:^{
+- (IBAction)turnCameraPositionButton:(UIButton *)sender {
+    [UIView animateWithDuration:0.5 animations:^{
         CATransition *animation = [CATransition animation];
-        animation.duration = 0.7f;
+        animation.duration = 0.5f;
         animation.type = @"oglFlip";
         animation.subtype = kCATransitionFromLeft;
         animation.timingFunction = UIViewAnimationOptionCurveEaseInOut;
         [self.previewView.layer addAnimation:animation forKey:@"animation"];
     } completion:^(BOOL finished) {
         if (finished) {
-            [self.recorder switchCaptureDevices];
+//            [self.recorder switchCaptureDevices];
+            [self.recordSession.videoCamera switchCaptureDevices];
         }
     }];
 }
+
 
 //设置声音
 - (IBAction)setVoice:(UIButton *)sender {
@@ -493,65 +508,11 @@
     [self.filter addTarget:self.filterView];
 }*/
 
-/**
- *以下的滤镜是GPUImage自带的滤镜，后面有几个效果不是很明显，我只是拿来做测试用。
- *GPUImage自带的滤镜很多，大家可以都试试看，当然也可以自己写滤镜，这就需要后续深入学习了
- *对checkViewController中filtercode属性的说明：filtercode是在选择滤镜的时候设置，
- *在拍照的时候传值给CheckViewController，实际上拍照传递给CheckVC的是原图加上当前设置的filtercode，
- *所以在后续CheckVC中改变滤镜的时候是基于原图进行改变。
- 
-- (void)switchCameraFilter:(NSInteger)index {
-    [self.videoCamera removeAllTargets];
-    switch (index) {
-        case 0:
-            _filter = [[GPUImageFilter alloc] init];//原图
-            [_checkVC setFilterCode:0];
-            break;
-        case 1:
-            _filter = [[GPUImageHueFilter alloc] init];//绿巨人
-            [_checkVC setFilterCode:1];
-            break;
-        case 2:
-            _filter = [[GPUImageColorInvertFilter alloc] init];//负片
-            [_checkVC setFilterCode:2];
-            break;
-        case 3:
-            _filter = [[GPUImageSepiaFilter alloc] init];//老照片
-            [_checkVC setFilterCode:3];
-            break;
-        case 4: {
-            _filter = [[GPUImageGaussianBlurPositionFilter alloc] init];
-            [(GPUImageGaussianBlurPositionFilter*)_filter setBlurRadius:40.0/320.0];
-            [_checkVC setFilterCode:4];
-        }
-            break;
-        case 5:
-            _filter = [[GPUImageSketchFilter alloc] init];//素描
-            [_checkVC setFilterCode:5];
-            break;
-        case 6:
-            _filter = [[GPUImageVignetteFilter alloc] init];//黑晕
-            [_checkVC setFilterCode:6];
-            break;
-        case 7:
-            _filter = [[GPUImageGrayscaleFilter alloc] init];//灰度
-            [_checkVC setFilterCode:7];
-            break;
-        case 8:
-            _filter = [[GPUImageToonFilter alloc] init];//卡通效果 黑色粗线描边
-            [_checkVC setFilterCode:8];
-        default:
-            _filter = [[GPUImageFilter alloc] init];
-            [_checkVC setFilterCode:9];
-            break;
-    }
-    
-    [self.cameraManager addTarget:_filter];
-    [_filter addTarget:_filterView];
-}
+
+
 
 #pragma mark - 调整焦距方法
-//调整焦距方法
+/*/调整焦距方法
 -(void)focusDisdance:(UIPinchGestureRecognizer*)pinch {
     self.effectiveScale = self.beginGestureScale * pinch.scale;
     if (self.effectiveScale < 1.0f) {
@@ -676,25 +637,46 @@
     
 }
 
-#pragma mark - SCRecorderDelegate
-- (void)recorder:(SCRecorder *)recorder didSkipVideoSampleBufferInSession:(SCRecordSession *)recordSession {
-    DLog(@"Skipped video buffer(跳过视频缓冲)");
+#pragma mark - cameraFilterView delegate
+- (void)switchCameraFilter:(NSInteger)index {
+    [self.recordSession.videoCamera removeAllTargets];
+    
+    switch (index) {
+        case 0:
+            _filter = [[GPUImageFilter alloc] init];//原图
+            break;
+        case 1:
+            _filter = [[GPUImageHueFilter alloc] init];//绿巨人
+            break;
+        case 2:
+            _filter = [[GPUImageColorInvertFilter alloc] init];//负片
+            break;
+        case 3:
+            _filter = [[GPUImageSepiaFilter alloc] init];//老照片
+            break;
+        case 4: {
+            _filter = [[GPUImageGaussianBlurPositionFilter alloc] init];
+            [(GPUImageGaussianBlurPositionFilter*)_filter setBlurRadius:40.0/320.0];
+        }
+            break;
+        case 5:
+            _filter = [[GPUImageSketchFilter alloc] init];//素描
+            break;
+        case 6:
+            _filter = [[GPUImageVignetteFilter alloc] init];//黑晕
+            break;
+        case 7:
+            _filter = [[GPUImageGrayscaleFilter alloc] init];//灰度
+            break;
+        case 8:
+            _filter = [[GPUImageBilateralFilter alloc] init];
+            break;
+    }
+    
+    [self.filter addTarget:self.filterView];
+    [self.recordSession.videoCamera addTarget:self.filter];
 }
 
-- (void)recorder:(SCRecorder *)recorder didReconfigureAudioInput:(NSError *)audioInputError {
-    DLog(@"Reconfigured audio input: %@", audioInputError);
-}
-
-- (void)recorder:(SCRecorder *)recorder didReconfigureVideoInput:(NSError *)videoInputError {
-    DLog(@"Reconfigured video input: %@", videoInputError);
-}
-
-//启动录制
-- (void)recorder:(SCRecorder *__nonnull)recorder didBeginSegmentInSession:(SCRecordSession *__nonnull)session error:(NSError *__nullable)error {
-//    [self.progressBar addProgressView];
-//    [self.progressBar stopShining];
-//    self.cancelButton.enabled = YES;
-}
 
 //更新进度条
 - (void)recorder:(SCRecorder *)recorder didAppendVideoSampleBufferInSession:(SCRecordSession *)recordSession {

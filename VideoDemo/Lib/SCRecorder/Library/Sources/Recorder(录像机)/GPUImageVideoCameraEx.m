@@ -7,7 +7,6 @@
 //
 
 #import "GPUImageVideoCameraEx.h"
-#import "HYAVCaptureUtilities.h"
 
 @implementation GPUImageVideoCameraEx
 
@@ -71,6 +70,34 @@
     }
     
     return nil;
+}
+
+- (void)switchCaptureDevices {
+    if (self.cameraPosition == AVCaptureDevicePositionBack) {
+        self.cameraPosition = AVCaptureDevicePositionFront;
+    } else {
+        self.cameraPosition = AVCaptureDevicePositionBack;
+    }
+}
+
+- (void)setCameraPosition:(AVCaptureDevicePosition)device {
+    [self willChangeValueForKey:@"cameraPosition"];
+    
+//    if (_resetZoomOnChangeDevice) {
+//        self.videoZoomFactor = 1;
+//    }
+//    if (_captureSession != nil) {
+//        [self reconfigureVideoInput:self.videoConfiguration.enabled audioInput:NO];
+//    }
+    
+    [self didChangeValueForKey:@"cameraPosition"];
+}
+
+#pragma mark - 重写AVCaptureVideoDataOutputSampleBufferDelegate
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
+{
+    [self.delegateEx myCaptureOutput:captureOutput didOutputSampleBuffer:sampleBuffer fromConnection:connection];
+    [super captureOutput:captureOutput didOutputSampleBuffer:sampleBuffer fromConnection:connection];
 }
 
 @end
