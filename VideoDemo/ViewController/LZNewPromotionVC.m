@@ -36,8 +36,6 @@
 
 @property (strong, nonatomic) IBOutlet GPUImageView *filterView;
 @property (strong, nonatomic) GPUImageOutput<GPUImageInput> *filter;
-//@property (strong, nonatomic) GPUImageVideoCamera *videoCamera;
-//@property (strong, nonatomic) GPUImageMovieWriterEx *movieWriter;
 @property (strong, nonatomic) LZRecordSession *recordSession;
 
 
@@ -89,8 +87,7 @@
     self.recordSession = [[LZRecordSession alloc]init];
     self.recordSession.delegate = self;
     [self configGPUImageView];
-//    [self addCameraFilterView];
-    [self performSelectorInBackground:@selector(addCameraFilterView) withObject:nil];
+    [self addCameraFilterView];
 }
 
 - (void)configGPUImageView {
@@ -115,9 +112,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self enumVideoUrl];
+    [self.recordSession.videoCamera startCameraCapture];
     [self updateGhostImage];
     [self updateProgressBar];
+    [self enumVideoUrl];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -127,12 +125,12 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [_recorder startRunning];
+//    [self.recordSession.videoCamera startCameraCapture];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [_recorder stopRunning];
+    [self.recordSession.videoCamera stopCameraCapture];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -237,19 +235,15 @@
 
 //更新进度条
 - (void)updateProgressBar {
-    if (self.recordSession.segments.count == 0) {
+//    if (CMTimeGetSeconds(self.recordSession.duration) >= 3) {
+    if (self.recordSession.segments.count > 0) {
+        self.confirmButton.enabled = YES;
+    }else{
+        self.confirmButton.enabled = NO;
         [self.progressView updateProgressWithValue:0];
         return;
     }
     
-//    self.cancelButton.enabled = YES;
-    if (CMTimeGetSeconds(self.recordSession.segmentsDuration) >= 3) {
-        self.confirmButton.enabled = YES;
-    } else {
-        self.confirmButton.enabled = NO;
-    }
-    
-//    [self.progressBar removeAllSubViews];
     CGFloat progress = 0;
     for (int i = 0; i < self.recordSession.segments.count; i++) {
         LZSessionSegment * segment = self.recordSession.segments[i];
@@ -259,7 +253,6 @@
         if (segment) {
             currentTime = segment.duration;
             progress += CMTimeGetSeconds(currentTime) / MAX_VIDEO_DUR;
-//            [self.progressBar setCurrentProgressToWidth:progress];
         }
     }
     [self.progressView updateProgressWithValue:progress];
@@ -308,7 +301,8 @@
 
 //滑动调整景深
 - (IBAction)sliderAction:(UISlider *)sender {
-    _recorder.videoZoomFactor = sender.value;
+//    _recorder.videoZoomFactor = sender.value;
+    self.recordSession.videoCamera.videoZoomFactor = sender.value;
 }
 
 //取消/删除视频按钮
@@ -319,6 +313,7 @@
     else if (sender.selected == YES) {//第二次按下删除按钮
         [self.recordSession removeLastSegment];
         [self updateProgressBar];
+        [self updateGhostImage];
         if (self.recordSession.segments.count > 0) {
             sender.selected = NO;
             sender.enabled = YES;
@@ -332,21 +327,15 @@
 
 //开始录制按钮
 - (IBAction)recordButton:(UIControl *)sender {
-    
     if (sender.selected == NO) {
         self.ghostImageView.hidden = YES;
         self.cancelButton.enabled = NO;
-        
-//        [self.recorder record];//开始录制
         [self changeToRecordStyle];
-
         [self.recordSession startRecording];
     }else {
         self.cancelButton.enabled = YES;
         self.confirmButton.enabled = YES;
-//        [self.recorder pause];//暂停录制
         [self changeToStopStyle];
-
         [self.recordSession endRecordingFilter:self.filter Completion:^(NSMutableArray<NSURL *> *segments) {
             DLog("===================== %@",segments);
             [self updateGhostImage];
@@ -360,21 +349,13 @@
     sender.selected = !sender.selected;
 }
 
-//- (void)changeFilter{
-//    [self.videoCamera removeAllTargets];
-//    self.filter = [[GPUImageSobelEdgeDetectionFilter alloc]init];
-//    [self.videoCamera addTarget:self.filter];
-//    [self.filter addTarget:self.filterView];
-//    [self.filter addTarget:self.recordSession.movieWriter];
-//}
-
 - (void)stopWrite {
     dispatch_async(dispatch_get_main_queue(), ^{
         ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
         NSArray *segments = self.recordSession.segments;
         for (int i = 0; i < segments.count; i++) {
             LZSessionSegment *segment = (LZSessionSegment *)segments[i];
-            NSURL *url = segment.url;//segments[i];
+            NSURL *url = segment.url;
             DLog(@"+++++++:url:%@",url);
             
             if ([library videoAtPathIsCompatibleWithSavedPhotosAlbum:url]) {
@@ -398,8 +379,6 @@
 
 //确认按钮
 - (IBAction)confirmButton:(UIButton *)sender {
-//    [self stopWrite];
-//    [self recordButton:nil];
     //视频详情
     LZVideoDetailsVC * vc = [[LZVideoDetailsVC alloc]initWithNibName:@"LZVideoDetailsVC" bundle:nil];
     vc.recordSession = self.recordSession;
@@ -410,7 +389,7 @@
 - (IBAction)showChangeFilterView:(UIButton *)sender {
     [UIView animateWithDuration:0.25 animations:^{
         self.toTopDistance.constant = 0;
-        [self.chooseFilterView layoutIfNeeded];
+        [self.view layoutIfNeeded];
     }];
 }
 
@@ -418,7 +397,7 @@
 - (IBAction)hiddenChangeFilterView:(id)sender {
     [UIView animateWithDuration:0.25 animations:^{
         self.toTopDistance.constant = 300;
-        [self.chooseFilterView layoutIfNeeded];
+        [self.view layoutIfNeeded];
     }];
 }
 
@@ -430,15 +409,13 @@
         animation.type = @"oglFlip";
         animation.subtype = kCATransitionFromLeft;
         animation.timingFunction = UIViewAnimationOptionCurveEaseInOut;
-        [self.previewView.layer addAnimation:animation forKey:@"animation"];
+        [self.filterView.layer addAnimation:animation forKey:@"animation"];
     } completion:^(BOOL finished) {
         if (finished) {
-//            [self.recorder switchCaptureDevices];
-            [self.recordSession.videoCamera switchCaptureDevices];
+            [self.recordSession switchCaptureDevices:_filter];
         }
     }];
 }
-
 
 //设置声音
 - (IBAction)setVoice:(UIButton *)sender {
@@ -483,32 +460,13 @@
 - (IBAction)flashButton:(UIButton *)sender {
     if (sender.selected == NO) {
         sender.selected = YES;
-        self.recorder.flashMode = SCFlashModeLight;
-        [self.recordSession.videoCamera.inputCamera lockForConfiguration:nil];
-        [self.recordSession.videoCamera.inputCamera setTorchMode:AVCaptureTorchModeOn];
-        [self.recordSession.videoCamera.inputCamera unlockForConfiguration];
+        [self.recordSession.videoCamera setFlash:YES];
     }
     else {
         sender.selected = NO;
-        self.recorder.flashMode = SCFlashModeOff;
-        [self.recordSession.videoCamera.inputCamera lockForConfiguration:nil];
-        [self.recordSession.videoCamera.inputCamera setTorchMode:AVCaptureTorchModeOff];
-        [self.recordSession.videoCamera.inputCamera unlockForConfiguration];
+        [self.recordSession.videoCamera setFlash:NO];
     }
 }
-
-/*- (void)changeEffct:(GPUImageFilter *)mFilter withBtn:(UIButton *)btn{
-    //移除上一个效果
-    [self.videoCamera removeTarget:self.filter];
-    
-    self.filter = mFilter;
-    
-    // 添加滤镜到相机上
-    [self.videoCamera addTarget:self.filter];
-    [self.filter addTarget:self.filterView];
-}*/
-
-
 
 
 #pragma mark - 调整焦距方法
@@ -613,10 +571,6 @@
 
 #pragma mark - LZRecorderDelegate 更新进度条
 - (void)didAppendVideoSampleBufferInSession:(Float64)time {
-//    Float64 time1 = CMTimeGetSeconds(self.recordSession.segmentsDuration);
-//    Float64 time2 = CMTimeGetSeconds(self.recordSession.movieWriter.duration);
-//    DLog(@"%f,%f",time1,time2);
-    
     CGFloat progress = time / MAX_VIDEO_DUR;
     [self.progressView updateProgressWithValue:progress];
     
@@ -631,10 +585,6 @@
     //    int hours = totalSeconds / 3600;
     
     return [NSString stringWithFormat:@"%02d:%02d", minutes, seconds];
-}
-
-- (void)willOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer{
-    
 }
 
 #pragma mark - cameraFilterView delegate
@@ -675,99 +625,6 @@
     
     [self.filter addTarget:self.filterView];
     [self.recordSession.videoCamera addTarget:self.filter];
-}
-
-
-//更新进度条
-- (void)recorder:(SCRecorder *)recorder didAppendVideoSampleBufferInSession:(SCRecordSession *)recordSession {
-    CMTime recorderTime = kCMTimeZero;
-    CMTime currentTime = kCMTimeZero;
-    if (recordSession != nil) {
-        currentTime = recordSession.currentSegmentDuration;
-        recorderTime = recordSession.duration;
-    }
-    
-    DLog(@"%@", [NSString stringWithFormat:@"current:%.2f sec, all:%.2f sec", CMTimeGetSeconds(currentTime), CMTimeGetSeconds(recorderTime)]);
-    
-    CGFloat width = CMTimeGetSeconds(currentTime) / MAX_VIDEO_DUR;
-//    [self.progressBar setLastProgressToWidth:width];
-    [self.progressView updateProgressWithValue:width];
-    
-    if (CMTimeGetSeconds(recorderTime) >= 3) {
-        self.confirmButton.enabled = YES;
-    } else {
-        self.confirmButton.enabled = NO;
-    }
-}
-
-//更新快照
-- (void)recorder:(SCRecorder *)recorder didCompleteSegment:(SCRecordSessionSegment *)segment inSession:(SCRecordSession *)recordSession error:(NSError *)error {
-//    [self.progressBar startShining];
-    DLog(@"Completed record segment at %@: %@ (frameRate: %f)", segment.url, error, segment.frameRate);
-    [self updateGhostImage];
-}
-
-//录制完成
-- (void)recorder:(SCRecorder *)recorder didCompleteSession:(SCRecordSession *)recordSession {
-    DLog(@"didCompleteSession:");
-    self.cancelButton.enabled = YES;
-}
-
-
-#pragma mark - UICollectionViewDataSource
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return 1;
-}
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 8;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *identify = @"VideoEditCollectionCell";
-    LZVideoEditCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identify forIndexPath:indexPath];
-//    SCRecordSessionSegment * segment = self.recordSegments[indexPath.row];
-//    NSAssert(segment.url != nil, @"segment must be non-nil");
-//    if (segment) {
-//        cell.imageView.image = segment.thumbnail;
-//        if ([segment.isSelect boolValue] == YES) {
-//            cell.markView.hidden = YES;
-//            cell.imageView.layer.borderWidth = 2;
-//            cell.imageView.layer.borderColor = UIColorFromRGB(0x554c9a, 1).CGColor;
-//        }
-//        else {
-//            cell.markView.hidden = NO;
-//            cell.imageView.layer.borderWidth = 0;
-//            cell.imageView.layer.borderColor = [UIColor clearColor].CGColor;
-//        }
-//    }
-
-    return cell;
-}
-
-#pragma mark - UICollectionViewDelegate
-
-- (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath didMoveToIndexPath:(NSIndexPath *)toIndexPath {
-//    SCRecordSessionSegment * segment = self.recordSegments[fromIndexPath.row];
-//    NSAssert(segment.url != nil, @"segment must be non-nil");
-//    [self.recordSegments removeObject:segment];
-//    [self.recordSegments insertObject:segment atIndex:toIndexPath.row];
-//    
-//    //更新bar位置
-//    [self.videoEditAuxiliary updateProgressBar:self.progressBar :self.recordSegments];
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-//    if (self.currentSelected == indexPath.row) {
-//        return;
-//    }
-//    self.currentSelected = indexPath.row;
-//    
-//    //显示当前片段
-//    [self showVideo:self.currentSelected];
-//    
-//    //更新片段
-//    [self.videoEditAuxiliary updateTrimmerView:self.trimmerView recordSegments:self.recordSegments index:self.currentSelected];
 }
 
 @end

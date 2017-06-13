@@ -22,9 +22,9 @@ typedef enum {
 @end
 
 @interface GPUImageVideoCameraEx : GPUImageVideoCamera
-@property(nonatomic, assign) id<GPUImageVideoCameraDelegateEx> delegateEx;
-@property (nonatomic, assign, getter = isFlash)BOOL flash;
-@property (nonatomic)GPUImageVideoStatus status;
+@property (assign, nonatomic) id<GPUImageVideoCameraDelegateEx> delegateEx;
+@property (assign, nonatomic, getter = isFlash)BOOL flash;
+@property (assign, nonatomic) GPUImageVideoStatus status;
+@property (assign, nonatomic) CGFloat videoZoomFactor;
 
-- (void)switchCaptureDevices;
 @end

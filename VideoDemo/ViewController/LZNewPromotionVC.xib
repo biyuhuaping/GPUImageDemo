@@ -202,10 +202,10 @@
                             <rect key="frame" x="0.0" y="322" width="375" height="292"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Ll-2Q-ctY">
-                                    <rect key="frame" x="147" y="240" width="80" height="40"/>
+                                    <rect key="frame" x="27" y="240" width="320" height="40"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="BhV-oM-f1q"/>
-                                        <constraint firstAttribute="width" constant="80" id="bjQ-4L-SFS"/>
+                                        <constraint firstAttribute="width" constant="320" id="bjQ-4L-SFS"/>
                                     </constraints>
                                     <state key="normal" image="收起"/>
                                     <connections>

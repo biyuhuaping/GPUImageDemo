@@ -52,11 +52,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VideoDemo/ViewController/LZNewPromotionVC.m"
-            timestampString = "518946674.29503"
+            timestampString = "519028308.689676"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "383"
-            endingLineNumber = "383"
+            startingLineNumber = "367"
+            endingLineNumber = "367"
             landmarkName = "-stopWrite"
             landmarkType = "7">
          </BreakpointContent>
@@ -68,11 +68,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VideoDemo/ViewController/LZNewPromotionVC.m"
-            timestampString = "518946674.29503"
+            timestampString = "519028308.689676"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "381"
-            endingLineNumber = "381"
+            startingLineNumber = "365"
+            endingLineNumber = "365"
             landmarkName = "-stopWrite"
             landmarkType = "7">
             <Locations>
@@ -84,11 +84,11 @@
                   moduleName = "VideoDemo"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/biyuhuaping/GPUImageDemo/VideoDemo/ViewController/LZNewPromotionVC.m"
-                  timestampString = "518953129.268488"
+                  timestampString = "519017310.424824"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "381"
-                  endingLineNumber = "381"
+                  startingLineNumber = "365"
+                  endingLineNumber = "365"
                   offsetFromSymbolStart = "404">
                </Location>
                <Location
@@ -99,11 +99,11 @@
                   moduleName = "VideoDemo"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/biyuhuaping/GPUImageDemo/VideoDemo/ViewController/LZNewPromotionVC.m"
-                  timestampString = "518953129.270133"
+                  timestampString = "519017310.426484"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "381"
-                  endingLineNumber = "381"
+                  startingLineNumber = "365"
+                  endingLineNumber = "365"
                   offsetFromSymbolStart = "24">
                </Location>
             </Locations>
@@ -484,28 +484,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VideoDemo/Lib/SCRecorder/Library/Sources/Recorder(&#x5f55;&#x50cf;&#x673a;)/GPUImageVideoCameraEx.m"
-            timestampString = "518953128.537674"
+            timestampString = "519011884.682331"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
-            landmarkName = "-switchCaptureDevices"
+            startingLineNumber = "88"
+            endingLineNumber = "88"
+            landmarkName = "-setCameraPosition:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "VideoDemo/Lib/SCRecorder/Library/Sources/Recorder(&#x5f55;&#x50cf;&#x673a;)/GPUImageVideoCameraEx.m"
-            timestampString = "518953136.370014"
+            filePath = "VideoDemo/Lib/SCRecorder/Library/Sources/Recorder(&#x5f55;&#x50cf;&#x673a;)/LZRecordSession.m"
+            timestampString = "519026797.859727"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "84"
-            endingLineNumber = "84"
-            landmarkName = "-setCameraPosition:"
+            startingLineNumber = "365"
+            endingLineNumber = "365"
+            landmarkName = "-myCaptureOutput:didOutputSampleBuffer:fromConnection:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

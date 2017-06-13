@@ -14,8 +14,6 @@
     CMTime _startTime;
     CMTime _endTime;
     CMTime _currentSegmentDuration;//当前片段的时长
-
-    CADisplayLink *_displayLink;
 }
 @property (strong, nonatomic) dispatch_queue_t writeQueue;
 @property (nonatomic, assign) BOOL canWrite;
@@ -39,22 +37,7 @@
     
     return self;
 }
-- (void)switchCaptureDevices {
-    [self switchCaptureDevices];
-    return;
-    [self.videoCamera stopCameraCapture];
-    self.videoCamera = nil;
-    if (self.videoCamera.cameraPosition == AVCaptureDevicePositionBack) {
-        [self initVideoCamera:AVCaptureDevicePositionFront];
-//        _videoCamera = [self.videoCamera initWithSessionPreset:AVCaptureSessionPresetPhoto cameraPosition:AVCaptureDevicePositionFront];
-    } else {
-        [self initVideoCamera:AVCaptureDevicePositionBack];
-    }
-//    [self setBeginGestureScale:1.0f];//在转换摄像头的时候把摄像头的焦距调回1.0
-//    [self setEffectiveScale:1.0f];
-    
-//    [self.videoCamera startCameraCapture];
-}
+
 - (void)initVideoCamera:(AVCaptureDevicePosition)position{
     _videoCamera = [[GPUImageVideoCameraEx alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:position];
     
@@ -102,10 +85,6 @@
 #pragma mark - Action
 //开始录制
 - (void)startRecording{
-//    _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateProgress)];
-//    [_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-//    [_displayLink setPaused:NO];
-    
     dispatch_async(dispatch_get_main_queue(), ^{
 //        [self.movieWriter startRecording];
         self.canWrite = YES;
@@ -124,21 +103,20 @@
 //结束录制
 - (void)endRecordingFilter:(GPUImageOutput<GPUImageInput> * _Nullable)filter Completion:(void (^)(NSMutableArray * _Nullable segments))completion {
     DLog(@"保存地址：%@",_movieURL);
-    dispatch_async(dispatch_get_main_queue(), ^{
         AVAssetWriter *writer = self.movieWriter.assetWriter;
-//        [writer endSessionAtSourceTime:CMTimeAdd(self.currentSegmentDuration, kCMTimeZero)];
         DLog(@"writer.outputURL:----%@",filter);
-        [_displayLink invalidate];
 
         
 //        [self.movieWriter finishRecordingWithCompletionHandler:^{
         [self finishRecordingWithCompletionHandler:^{
             [self appendRecordSegmentUrl:writer.outputURL filter:filter Completion:^(LZSessionSegment *segment) {
-                completion(_segments);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    //在主线程里更新UI
+                    completion(_segments);
+                });
+                
             }];
         }];
-        
-    });
 }
 
 - (void)finishRecordingWithCompletionHandler:(void (^)(void))handler{
@@ -359,6 +337,28 @@
     
     return [NSURL fileURLWithPath:tempPath];
 }
+#pragma mark -
+#pragma mark 转置摄像头
+- (void)switchCaptureDevices:(GPUImageOutput<GPUImageInput>*)filter {
+    [self.videoCamera stopCameraCapture];
+    if (self.videoCamera.cameraPosition == AVCaptureDevicePositionFront) {
+        _videoCamera = [_videoCamera initWithSessionPreset:AVCaptureSessionPresetPhoto cameraPosition:AVCaptureDevicePositionBack];
+    }
+    else if(self.videoCamera.cameraPosition == AVCaptureDevicePositionBack)
+    {
+        _videoCamera = [_videoCamera initWithSessionPreset:AVCaptureSessionPresetPhoto cameraPosition:AVCaptureDevicePositionFront];
+    }
+    self.videoCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
+    self.videoCamera.horizontallyMirrorFrontFacingCamera = YES;
+    self.videoCamera.horizontallyMirrorRearFacingCamera = NO;
+    
+    [self.videoCamera addTarget:filter];
+    
+    //    [self setBeginGestureScale:1.0f];//在转换摄像头的时候把摄像头的焦距调回1.0
+    //    [self setEffectiveScale:1.0f];
+    
+    [self.videoCamera startCameraCapture];
+}
 
 #pragma mark - GPUImageVideoCameraDelegateEx
 - (void)myCaptureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
@@ -391,14 +391,5 @@
         CFRelease(sampleBuffer);
     });
 }
-//- (void)switchCaptureDevicesInPosition:(AVCaptureDevicePosition)position{
-//    NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
-//    for (AVCaptureDevice *device in devices) {
-//        if ([device position] == position) {
-//            return device;
-//        }
-//    }
-//    
-//    return nil;
-//}
+
 @end

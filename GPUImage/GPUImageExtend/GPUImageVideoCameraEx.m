@@ -7,7 +7,6 @@
 //
 
 #import "GPUImageVideoCameraEx.h"
-//#import "HYAVCaptureUtilities.h"
 
 @implementation GPUImageVideoCameraEx
 

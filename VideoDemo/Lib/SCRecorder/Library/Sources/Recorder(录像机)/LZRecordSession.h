@@ -44,9 +44,6 @@
  from this record session. This can be called anytime.
  */
 - (AVAsset *__nonnull)assetRepresentingSegments;
-- (void)switchCaptureDevices;
-
-
 
 
 
@@ -59,5 +56,8 @@
 
 #pragma mark -
 - (void)removeLastSegment;
+
+#pragma mark -
+- (void)switchCaptureDevices:(GPUImageOutput<GPUImageInput>*_Nullable)filter;
 
 @end

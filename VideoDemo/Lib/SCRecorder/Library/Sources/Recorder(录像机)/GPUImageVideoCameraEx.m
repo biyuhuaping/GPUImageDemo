@@ -72,14 +72,6 @@
     return nil;
 }
 
-- (void)switchCaptureDevices {
-    if (self.cameraPosition == AVCaptureDevicePositionBack) {
-        self.cameraPosition = AVCaptureDevicePositionFront;
-    } else {
-        self.cameraPosition = AVCaptureDevicePositionBack;
-    }
-}
-
 - (void)setCameraPosition:(AVCaptureDevicePosition)device {
     [self willChangeValueForKey:@"cameraPosition"];
     
@@ -92,6 +84,27 @@
     
     [self didChangeValueForKey:@"cameraPosition"];
 }
+
+- (void)setVideoZoomFactor:(CGFloat)videoZoomFactor {
+//    AVCaptureDevice *device = [self cameraInPosition:AVCaptureDevicePositionBack];
+    AVCaptureDevice *device = self.inputCamera;
+    if ([device respondsToSelector:@selector(videoZoomFactor)]) {
+        NSError *error;
+        if ([device lockForConfiguration:&error]) {
+            if (videoZoomFactor <= device.activeFormat.videoMaxZoomFactor) {
+                device.videoZoomFactor = videoZoomFactor;
+            } else {
+                NSLog(@"Unable to set videoZoom: (max %f, asked %f)", device.activeFormat.videoMaxZoomFactor, videoZoomFactor);
+            }
+            
+            [device unlockForConfiguration];
+        } else {
+            NSLog(@"Unable to set videoZoom: %@", error.localizedDescription);
+        }
+    }
+}
+
+
 
 #pragma mark - 重写AVCaptureVideoDataOutputSampleBufferDelegate
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
