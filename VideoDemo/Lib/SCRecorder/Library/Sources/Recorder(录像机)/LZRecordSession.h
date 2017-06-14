@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "GPUImage.h"
-#import "LZSessionSegment.h"
 #import "GPUImageVideoCameraEx.h"
+#import "LZSessionSegment.h"
 #import "LZMovieWriter.h"
 
 @class LZRecordSession;
@@ -21,6 +21,7 @@
 @interface LZRecordSession : NSObject
 
 @property (strong, nonatomic) GPUImageVideoCameraEx * _Nullable videoCamera;
+@property (strong, nonatomic) GPUImageMovieWriter * _Nullable movieWriterFilter;
 @property (strong, nonatomic) LZMovieWriter * _Nullable movieWriter;
 
 @property (strong, nonatomic) NSMutableArray * _Nullable segments;

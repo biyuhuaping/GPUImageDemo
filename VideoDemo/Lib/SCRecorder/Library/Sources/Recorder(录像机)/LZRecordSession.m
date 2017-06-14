@@ -49,6 +49,13 @@
     _videoCamera.delegateEx = self;
 }
 
+- (GPUImageMovieWriter *)movieWriterFilter {
+    if (_movieWriterFilter == nil) {
+        _movieWriterFilter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
+    }
+    return _movieWriterFilter;
+}
+
 - (LZMovieWriter *)movieWriter {
     if (_movieWriter == nil) {
         _movieWriter = [[LZMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
@@ -344,8 +351,7 @@
     if (self.videoCamera.cameraPosition == AVCaptureDevicePositionFront) {
         _videoCamera = [_videoCamera initWithSessionPreset:AVCaptureSessionPresetPhoto cameraPosition:AVCaptureDevicePositionBack];
     }
-    else if(self.videoCamera.cameraPosition == AVCaptureDevicePositionBack)
-    {
+    else if(self.videoCamera.cameraPosition == AVCaptureDevicePositionBack) {
         _videoCamera = [_videoCamera initWithSessionPreset:AVCaptureSessionPresetPhoto cameraPosition:AVCaptureDevicePositionFront];
     }
     self.videoCamera.outputImageOrientation = UIInterfaceOrientationPortrait;

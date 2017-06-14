@@ -10,60 +10,74 @@
 #import "LZVideoEditClipVC.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "LZVideoTools.h"
-#import "SCWatermarkOverlayView.h"
 
-@interface LZVideoDetailsVC ()<SCPlayerDelegate>
-@property (strong, nonatomic) IBOutlet SCSwipeableFilterView *filterSwitcherView;
+@interface LZVideoDetailsVC ()<SCPlayerDelegate,GPUImageMovieDelegate>
+{
+//    GPUImageOutput<GPUImageInput> *filter;
+    GPUImageMovieWriter *movieWriter;
+    GPUImageVideoCamera *videoCamera;
+}
+@property (strong, nonatomic) IBOutlet GPUImageView *videoPlayerView;
+@property (strong, nonatomic) GPUImageMovie *movieFile;
+
 @property (strong, nonatomic) SCPlayer *player;
 @end
 
 @implementation LZVideoDetailsVC
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = LZLocalizedString(@"video_details", nil);
-    [self configNavigationBar];
+    // 播放
+    _movieFile = [[GPUImageMovie alloc] initWithAsset:self.recordSession.assetRepresentingSegments];
+    _movieFile.delegate = self;
+    _movieFile.runBenchmark = YES;
+    _movieFile.playAtActualSpeed = YES;
+    _movieFile.shouldRepeat = YES;
     
-    _player = [SCPlayer player];
-    [self.player setLoopEnabled:YES];
+//    filter = [[GPUImageSketchFilter alloc] init];
+    GPUImageToonFilter *filter = [[GPUImageToonFilter alloc] init];//胶片效果
+    //    [(GPUImageDissolveBlendFilter *)filter setMix:0.5];
+    [_movieFile addTarget:filter];
+
+    NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Movie.m4v"];
+    unlink([pathToMovie UTF8String]);
+    NSURL *movieURL = [NSURL fileURLWithPath:pathToMovie];
     
-    if ([[NSProcessInfo processInfo] activeProcessorCount] > 1) {
-        //        self.filterSwitcherView.contentMode = UIViewContentModeScaleAspectFill;
-        
-        SCFilter *emptyFilter = [SCFilter emptyFilter];
-        emptyFilter.name = @"#nofilter";
-        
-        self.filterSwitcherView.filters = @[
-                                            emptyFilter,
-                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectNoir"],
-                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectChrome"],
-                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectInstant"],
-                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectTonal"],
-                                            [SCFilter filterWithCIFilterName:@"CIPhotoEffectFade"],
-                                            // Adding a filter created using CoreImageShop
-                                            [SCFilter filterWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"a_filter" withExtension:@"cisf"]],
-                                            ];
-        self.player.SCImageView = self.filterSwitcherView;
-        //        [self.filterSwitcherView addObserver:self forKeyPath:@"selectedFilter" options:NSKeyValueObservingOptionNew context:nil];
-    } else {
-        SCVideoPlayerView *playerView = [[SCVideoPlayerView alloc] initWithPlayer:self.player];
-        playerView.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-        playerView.frame = self.filterSwitcherView.frame;
-        playerView.autoresizingMask = self.filterSwitcherView.autoresizingMask;
-        [self.filterSwitcherView.superview insertSubview:playerView aboveSubview:self.filterSwitcherView];
-        [self.filterSwitcherView removeFromSuperview];
-    }
+    movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:movieURL size:CGSizeMake(480.0, 480.0)];
+    movieWriter.shouldPassthroughAudio = YES;
+    _movieFile.audioEncodingTarget = movieWriter;
+    [_movieFile enableSynchronizedEncodingUsingMovieWriter:movieWriter];
+    
+    // 显示到界面
+    [filter addTarget:self.videoPlayerView];
+//    [filter addTarget:movieWriter];
+
+//    [movieWriter startRecording];
+    [_movieFile startProcessing];
+    
+//    __weak typeof(self) weakSelf = self;
+//    [movieWriter setCompletionBlock:^{
+//        __strong typeof(self) strongSelf = weakSelf;
+//        [strongSelf->filter removeTarget:strongSelf->movieWriter];
+//        [strongSelf->movieWriter finishRecording];
+//    }];
+}
+
+- (void)didCompletePlayingMovie {
+    NSLog(@"已完成播放");
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.player setItemByAsset:self.recordSession.assetRepresentingSegments];
-    [self.player play];
+//    [self.player setItemByAsset:self.recordSession.assetRepresentingSegments];
+//    [self.player play];
+//    [self.videoPlayerView.player setItemByAsset:self.recordSession.assetRepresentingSegments];
+//    [self.videoPlayerView.player play];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.player pause];
+//    [self.player pause];
+//    [self.videoPlayerView.player pause];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -89,9 +103,6 @@
 
 #pragma mark - Event
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
-    [self saveToCameraRoll];
-    return;
-    
     NSURL *tempPath = [LZVideoTools filePathWithFileName:@"ConponVideo.m4v"];
 
 //    4.导出
@@ -113,73 +124,12 @@
 }
 
 - (IBAction)cutVideoButton:(UIButton *)sender {
+    _movieFile.runBenchmark = YES;
+    _movieFile.playAtActualSpeed = YES;
+    return;
     LZVideoEditClipVC * vc = [[LZVideoEditClipVC alloc] initWithNibName:@"LZVideoEditClipVC" bundle:nil];
     vc.recordSession = self.recordSession;
     [self.navigationController pushViewController:vc animated:YES];
-}
-
-//保存到相机卷
-- (void)saveToCameraRoll {
-    /*self.navigationItem.rightBarButtonItem.enabled = NO;
-    SCFilter *currentFilter = [self.filterSwitcherView.selectedFilter copy];
-    [_player pause];
-    
-    SCAssetExportSession *exportSession = [[SCAssetExportSession alloc] initWithAsset:self.recordSession.assetRepresentingSegments];
-    exportSession.videoConfiguration.filter = currentFilter;
-    exportSession.videoConfiguration.preset = SCPresetHighestQuality;
-    exportSession.audioConfiguration.preset = SCPresetHighestQuality;
-    exportSession.videoConfiguration.maxFrameRate = 35;
-    exportSession.outputUrl = self.recordSession.outputUrl;
-    exportSession.outputFileType = AVFileTypeMPEG4;
-//    exportSession.delegate = self;
-    exportSession.contextType = SCContextTypeAuto;
-    
-//    exportView.hidden = NO;
-//    exportView.alpha = 0;
-    
-    SCWatermarkOverlayView *overlay = [SCWatermarkOverlayView new];
-    overlay.date = self.recordSession.date;
-    exportSession.videoConfiguration.overlay = overlay;
-    
-    CFTimeInterval time = CACurrentMediaTime();
-    __weak typeof(self) wSelf = self;
-    [exportSession exportAsynchronouslyWithCompletionHandler:^{
-        __strong typeof(self) strongSelf = wSelf;
-        
-        if (!exportSession.cancelled) {
-            NSLog(@"Completed compression in %fs", CACurrentMediaTime() - time);
-        }
-        
-        if (strongSelf != nil) {
-            [strongSelf.player play];
-            strongSelf.navigationItem.rightBarButtonItem.enabled = YES;
-            
-//            [UIView animateWithDuration:0.3 animations:^{
-//                strongSelf.exportView.alpha = 0;
-//            }];
-        }
-        
-        NSError *error = exportSession.error;
-        if (exportSession.cancelled) {
-            NSLog(@"Export was cancelled");
-        } else if (error == nil) {
-            [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-            [exportSession.outputUrl saveToCameraRollWithCompletion:^(NSString * _Nullable path, NSError * _Nullable error) {
-                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                
-                if (error == nil) {
-                    [[[UIAlertView alloc] initWithTitle:@"已保存到相机卷" message:@"" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-                    [self.navigationController popViewControllerAnimated:YES];
-                } else {
-                    [[[UIAlertView alloc] initWithTitle:@"保存失败" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-                }
-            }];
-        } else {
-            if (!exportSession.cancelled) {
-                [[[UIAlertView alloc] initWithTitle:@"保存失败" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-            }
-        }
-    }];*/
 }
 
 @end

@@ -273,7 +273,6 @@
 		FB69C52E1EBC4588007B38BD /* LZVideoTools.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C52D1EBC4588007B38BD /* LZVideoTools.m */; };
 		FB69C5311EBC45A5007B38BD /* ClearCacheTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C5301EBC45A5007B38BD /* ClearCacheTool.m */; };
 		FB69C5421EC01CA1007B38BD /* a_filter.cisf in Resources */ = {isa = PBXBuildFile; fileRef = FB69C5411EC01CA1007B38BD /* a_filter.cisf */; };
-		FB69C5451EC1667F007B38BD /* SCWatermarkOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C5441EC1667F007B38BD /* SCWatermarkOverlayView.m */; };
 		FB69D44D1EC5956300953C9E /* RecordProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69D44C1EC5956300953C9E /* RecordProgressView.m */; };
 		FB6EAD721EEE3E1B00FAFD97 /* LZCameraFilterCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB6EAD711EEE3E1B00FAFD97 /* LZCameraFilterCollectionView.m */; };
 		FB6EAD851EEE8B6900FAFD97 /* GPUImageVideoCameraEx.m in Sources */ = {isa = PBXBuildFile; fileRef = FB6EAD841EEE8B6900FAFD97 /* GPUImageVideoCameraEx.m */; };
@@ -839,8 +838,6 @@
 		FB69C52F1EBC45A5007B38BD /* ClearCacheTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClearCacheTool.h; sourceTree = "<group>"; };
 		FB69C5301EBC45A5007B38BD /* ClearCacheTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClearCacheTool.m; sourceTree = "<group>"; };
 		FB69C5411EC01CA1007B38BD /* a_filter.cisf */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = a_filter.cisf; sourceTree = "<group>"; };
-		FB69C5431EC1667F007B38BD /* SCWatermarkOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCWatermarkOverlayView.h; sourceTree = "<group>"; };
-		FB69C5441EC1667F007B38BD /* SCWatermarkOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCWatermarkOverlayView.m; sourceTree = "<group>"; };
 		FB69D44B1EC5956300953C9E /* RecordProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordProgressView.h; sourceTree = "<group>"; };
 		FB69D44C1EC5956300953C9E /* RecordProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordProgressView.m; sourceTree = "<group>"; };
 		FB6EAD701EEE3E1B00FAFD97 /* LZCameraFilterCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZCameraFilterCollectionView.h; sourceTree = "<group>"; };
@@ -1522,8 +1519,6 @@
 				FB69C43C1EB96ED2007B38BD /* LZVideoDetailsVC.h */,
 				FB69C43D1EB96ED2007B38BD /* LZVideoDetailsVC.m */,
 				FB69C43E1EB96ED2007B38BD /* LZVideoDetailsVC.xib */,
-				FB69C5431EC1667F007B38BD /* SCWatermarkOverlayView.h */,
-				FB69C5441EC1667F007B38BD /* SCWatermarkOverlayView.m */,
 			);
 			path = "VideoDetail(视频详情)";
 			sourceTree = "<group>";
@@ -1940,7 +1935,6 @@
 				FB4D35C41EE64007000A92C8 /* GPUImageRawDataOutput.m in Sources */,
 				FB0E9ACA1EC2E268005FE237 /* SCMediaTypeConfiguration.m in Sources */,
 				FB4D359F1EE64007000A92C8 /* GPUImageLinearBurnBlendFilter.m in Sources */,
-				FB69C5451EC1667F007B38BD /* SCWatermarkOverlayView.m in Sources */,
 				FB4D35A71EE64007000A92C8 /* GPUImageLuminosityBlendFilter.m in Sources */,
 				FB69C4511EB96ED2007B38BD /* LZVideoDetailsVC.m in Sources */,
 				FB4D35881EE64007000A92C8 /* GPUImageGrayscaleFilter.m in Sources */,

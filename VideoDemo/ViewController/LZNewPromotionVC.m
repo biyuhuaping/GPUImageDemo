@@ -78,36 +78,32 @@
     [_gridOrlineButton setLoopImages:@[[UIImage imageNamed:@"lz_recorder_grid"], [UIImage imageNamed:@"lz_recorder_grid_hd"], [UIImage imageNamed:@"lz_recorder_line_hd"]] ];
     
     [self configNavigationBar];
-//    [self initSCRecorder];
-//    [self.progressView resetProgress];
     
     self.recordBtn.layer.cornerRadius = 26;
     self.recordBtn.layer.masksToBounds = YES;
     
     self.recordSession = [[LZRecordSession alloc]init];
     self.recordSession.delegate = self;
+    
+    //显示view、freme
+    [self.filterView setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
+    
+    //滤镜
+    self.filter = [[GPUImageFilter alloc] init];
+    
     [self configGPUImageView];
     [self addCameraFilterView];
 }
 
 - (void)configGPUImageView {
-    //显示view、freme
-    GPUImageView *filterView = [[GPUImageView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH)];
-    [self.filterView setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
-    [self.filterView addSubview:filterView];
-    
-    
-    //滤镜
-    self.filter = [[GPUImageFilter alloc] init];
-//
-//    GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
-//    [cropFilter addTarget:self.recordSession.movieWriter];
-//    [self.filter addTarget:cropFilter];
+    GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
+    [cropFilter addTarget:self.recordSession.movieWriterFilter];
+    [self.filter addTarget:cropFilter];
     [self.filter addTarget:self.filterView];
     [self.recordSession.videoCamera addTarget:self.filter];
-//
+
 //    //设置声音
-//    self.videoCamera.audioEncodingTarget = self.recordSession.movieWriter;
+//    self.videoCamera.audioEncodingTarget = self.recordSession.movieWriterFilter;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -362,12 +358,10 @@
                 [library writeVideoAtPathToSavedPhotosAlbum:url completionBlock:^(NSURL *assetURL, NSError *error) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         if (error) {
-                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Video Saving Failed"
-                                                                           delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Video Saving Failed" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                             [alert show];
                         } else {
-                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Video Saved" message:@"Saved To Photo Album"
-                                                                           delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Video Saved" message:@"Saved To Photo Album" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                             [alert show];
                         }
                     });
