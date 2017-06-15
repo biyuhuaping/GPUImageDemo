@@ -33,8 +33,8 @@
         
         NSDictionary *videoSet = @{AVVideoCodecKey:AVVideoCodecH264,
                                    AVVideoScalingModeKey : AVVideoScalingModeResizeAspectFill,
-                                   AVVideoWidthKey:[NSNumber numberWithInt:_outputSize.height],
-                                   AVVideoHeightKey:[NSNumber numberWithInt:_outputSize.width],
+                                   AVVideoWidthKey:[NSNumber numberWithInt:_outputSize.width],
+                                   AVVideoHeightKey:[NSNumber numberWithInt:_outputSize.height],
                                    };
         
         self.assetWriterVideoInput = [[AVAssetWriterInput alloc] initWithMediaType:AVMediaTypeVideo outputSettings:videoSet];

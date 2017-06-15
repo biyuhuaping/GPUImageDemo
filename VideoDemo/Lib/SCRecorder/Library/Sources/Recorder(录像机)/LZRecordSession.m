@@ -49,12 +49,22 @@
     _videoCamera.delegateEx = self;
 }
 
-- (GPUImageMovieWriter *)movieWriterFilter {
-    if (_movieWriterFilter == nil) {
-        _movieWriterFilter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
-    }
-    return _movieWriterFilter;
+- (void)initGPUImageView:(GPUImageOutput<GPUImageInput> * _Nullable)filter {
+    GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
+//    [cropFilter addTarget:self.movieWriter];
+    [filter addTarget:cropFilter];
+    [self.videoCamera addTarget:filter];
+    
+    //设置声音
+//    self.videoCamera.audioEncodingTarget = self.movieWriterFilter;
 }
+
+//- (GPUImageMovieWriter *)movieWriterFilter {
+//    if (_movieWriterFilter == nil) {
+//        _movieWriterFilter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURLFilter size:CGSizeMake(480.0, 480.0)];
+//    }
+//    return _movieWriterFilter;
+//}
 
 - (LZMovieWriter *)movieWriter {
     if (_movieWriter == nil) {
@@ -66,10 +76,18 @@
 - (NSURL *)movieURL{
     if (_movieURL == nil) {
         NSString *filename = [NSString stringWithFormat:@"LZVideoEdit-%ld.m4v", (long)_segments.count];
-        _movieURL = [self filePathWithFileName:filename];
+        _movieURL = [self filePathWithFileName:filename isFilter:NO];
     }
     return _movieURL;
 }
+
+//- (NSURL *)movieURLFilter{
+//    if (_movieURLFilter == nil) {
+//        NSString *filename = [NSString stringWithFormat:@"LZVideoEdit-%ld.m4v", (long)_segments.count];
+//        _movieURLFilter = [self filePathWithFileName:filename isFilter:YES];
+//    }
+//    return _movieURLFilter;
+//}
 
 - (AVAsset *)assetRepresentingSegments {
     __block AVAsset *asset = nil;
@@ -93,7 +111,7 @@
 //开始录制
 - (void)startRecording{
     dispatch_async(dispatch_get_main_queue(), ^{
-//        [self.movieWriter startRecording];
+//        [self.movieWriterFilter startRecording];
         self.canWrite = YES;
     });
     DLog(@"开始录制");
@@ -121,9 +139,17 @@
                     //在主线程里更新UI
                     completion(_segments);
                 });
-                
             }];
         }];
+    
+//    [self.movieWriterFilter finishRecordingWithCompletionHandler:^{
+//        [self appendRecordSegmentUrl:_movieURLFilter filter:filter Completion:^(LZSessionSegment *segment) {
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                //在主线程里更新UI
+//                completion(_segmentsFilter);
+//            });
+//        }];
+//    }];
 }
 
 - (void)finishRecordingWithCompletionHandler:(void (^)(void))handler{
@@ -327,10 +353,16 @@
  配置文件路径
  
  @param fileName 文件名称
+ @param isFilter 是否加滤镜
  @return 文件路径：..LZVideo/fileName
  */
-- (NSURL *)filePathWithFileName:(NSString *)fileName {
-    NSString * tempPath = [tempPath = NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideo"];
+- (NSURL *)filePathWithFileName:(NSString *)fileName isFilter:(BOOL)isFilter{
+    NSString *tempPath = @"";
+    if (isFilter) {
+        tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideoFilter"];
+    }else{
+        tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideo"];
+    }
     NSFileManager *manager = [NSFileManager defaultManager];
     BOOL exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
     if (!exists) {
@@ -338,12 +370,13 @@
     }
     
     tempPath = [tempPath stringByAppendingPathComponent:fileName];
+    exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
     if (exists) {
         [manager removeItemAtPath:tempPath error:NULL];
     }
-    
     return [NSURL fileURLWithPath:tempPath];
 }
+
 #pragma mark -
 #pragma mark 转置摄像头
 - (void)switchCaptureDevices:(GPUImageOutput<GPUImageInput>*)filter {

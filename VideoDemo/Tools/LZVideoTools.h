@@ -42,7 +42,7 @@
  @return 文件路径
  */
 + (NSURL *)filePathWithFileName:(NSString *)fileName;
-
++ (NSURL *)filePathWithFileName:(NSString *)fileName isFilter:(BOOL)isFilter;
 
 //声音淡出
 + (AVPlayerItem *)audioFadeOut:(SCRecordSessionSegment *)selectSegment;

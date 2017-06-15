@@ -90,21 +90,28 @@
     
     //滤镜
     self.filter = [[GPUImageFilter alloc] init];
-    
-    [self configGPUImageView];
-    [self addCameraFilterView];
-}
+    [self.filter addTarget:self.filterView];
 
-- (void)configGPUImageView {
     GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
-    [cropFilter addTarget:self.recordSession.movieWriterFilter];
+//    [cropFilter addTarget:self.recordSession.movieWriter];
     [self.filter addTarget:cropFilter];
     [self.filter addTarget:self.filterView];
     [self.recordSession.videoCamera addTarget:self.filter];
-
-//    //设置声音
-//    self.videoCamera.audioEncodingTarget = self.recordSession.movieWriterFilter;
+    
+//    [self.recordSession initGPUImageView:self.filter];
+    [self addCameraFilterView];
 }
+
+//- (void)configGPUImageView {
+//    GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
+//    [cropFilter addTarget:self.recordSession.movieWriterFilter];
+//    [self.filter addTarget:cropFilter];
+//    [self.filter addTarget:self.filterView];
+//    [self.recordSession.videoCamera addTarget:self.filter];
+//
+////    //设置声音
+////    self.videoCamera.audioEncodingTarget = self.recordSession.movieWriterFilter;
+//}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];

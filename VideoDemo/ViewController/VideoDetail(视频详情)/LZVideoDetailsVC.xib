@@ -12,7 +12,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LZVideoDetailsVC">
             <connections>
-                <outlet property="videoPlayerView" destination="kNV-rV-W2U" id="qHW-Sf-UNp"/>
+                <outlet property="filterView" destination="kNV-rV-W2U" id="iRj-HT-71U"/>
+                <outlet property="videoPlayerView" destination="ues-Mk-lt0" id="n9Q-A9-tbg"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -26,6 +27,13 @@
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="kNV-rV-W2U" secondAttribute="height" multiplier="1:1" id="JWv-Be-agn"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ues-Mk-lt0" customClass="SCVideoPlayerView">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="ues-Mk-lt0" secondAttribute="height" multiplier="1:1" id="Xex-t7-COu"/>
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fKH-Qp-nqO">
@@ -42,7 +50,10 @@
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="fKH-Qp-nqO" secondAttribute="bottom" id="06s-Wd-EMb"/>
+                <constraint firstItem="ues-Mk-lt0" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="7Vc-V9-JRl"/>
                 <constraint firstItem="kNV-rV-W2U" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="QuG-oN-HvP"/>
+                <constraint firstAttribute="trailing" secondItem="ues-Mk-lt0" secondAttribute="trailing" id="aKj-e1-Hww"/>
+                <constraint firstItem="ues-Mk-lt0" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="ieU-Nf-MXY"/>
                 <constraint firstItem="kNV-rV-W2U" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="jrv-d3-jfe"/>
                 <constraint firstAttribute="trailing" secondItem="kNV-rV-W2U" secondAttribute="trailing" id="rjA-xb-afL"/>
                 <constraint firstItem="fKH-Qp-nqO" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="xhV-PJ-uKi"/>

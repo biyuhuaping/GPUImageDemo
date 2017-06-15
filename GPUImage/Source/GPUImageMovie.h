@@ -16,7 +16,7 @@
 
 @property (readwrite, retain) AVAsset *asset;
 @property (readwrite, retain) AVPlayerItem *playerItem;
-@property(readwrite, retain) NSURL *url;
+@property (readwrite, retain) NSURL *url;
 
 /** This enables the benchmarking mode, which logs out instantaneous and average frame times to the console
  */

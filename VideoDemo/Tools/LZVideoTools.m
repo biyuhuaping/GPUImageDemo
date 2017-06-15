@@ -137,8 +137,23 @@
  @return 文件路径：..LZVideo/fileName
  */
 + (NSURL *)filePathWithFileName:(NSString *)fileName {
-    NSString * tempPath = NSTemporaryDirectory();
-    tempPath = [tempPath stringByAppendingPathComponent:@"LZVideo"];
+    return [self filePathWithFileName:fileName isFilter:NO];
+}
+
+/**
+ 配置文件路径
+ 
+ @param fileName 文件名称
+ @param isFilter 是否加滤镜
+ @return 文件路径：..LZVideo/fileName
+ */
++ (NSURL *)filePathWithFileName:(NSString *)fileName isFilter:(BOOL)isFilter{
+    NSString *tempPath = @"";
+    if (isFilter) {
+        tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideoFilter"];
+    }else{
+        tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideo"];
+    }
     NSFileManager *manager = [NSFileManager defaultManager];
     BOOL exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
     if (!exists) {
@@ -146,7 +161,8 @@
     }
     
     tempPath = [tempPath stringByAppendingPathComponent:fileName];
-    if ([manager fileExistsAtPath:tempPath isDirectory:NULL]) {
+    exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
+    if (exists) {
         [manager removeItemAtPath:tempPath error:NULL];
     }
     return [NSURL fileURLWithPath:tempPath];
