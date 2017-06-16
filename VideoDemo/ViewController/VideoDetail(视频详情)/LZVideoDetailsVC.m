@@ -29,7 +29,6 @@
 @implementation LZVideoDetailsVC
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.videoPlayerView.tapToPauseEnabled = YES;
     _writeQueue = dispatch_queue_create("LZWriteQueue", DISPATCH_QUEUE_SERIAL);
 
     // 播放
@@ -80,12 +79,16 @@
             LZSessionSegment *segment = self.recordSession.segments[i];
             GPUImageFilter *filter = (GPUImageFilter *)segment.filter;
             
+            NSString *filename = [NSString stringWithFormat:@"LZVideoEdit-%d.m4v", i];
+            NSURL *movieURL = [LZVideoTools getFilePathWithFileName:filename isFilter:NO];
+            NSURL *movieURLFilter = [LZVideoTools filePathWithFileName:filename isFilter:YES];
+            
 //            AVPlayer *mainPlayer = [[AVPlayer alloc] init];
 //            AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithAsset:segment.asset];
 //            [mainPlayer replaceCurrentItemWithPlayerItem:playerItem];
             
             // 播放
-            _movieFile = [[GPUImageMovie alloc] initWithURL:segment.url];
+            _movieFile = [[GPUImageMovie alloc] initWithURL:movieURL];
             _movieFile.delegate = self;
             _movieFile.runBenchmark = YES;
             _movieFile.playAtActualSpeed = YES;
@@ -93,11 +96,10 @@
             [_movieFile addTarget:filter];
             
             
-            NSString *filename = [NSString stringWithFormat:@"LZVideoEdit-%d.m4v", i];
-            NSURL *movieURL = [LZVideoTools filePathWithFileName:filename isFilter:YES];
             
             
-            movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:movieURL size:CGSizeMake(480.0, 480.0)];
+            
+            movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:movieURLFilter size:CGSizeMake(480.0, 480.0)];
             movieWriter.transform = CGAffineTransformMakeRotation(M_PI_2);
             movieWriter.shouldPassthroughAudio = YES;
             _movieFile.audioEncodingTarget = movieWriter;
@@ -156,6 +158,7 @@
 //    [self.player setItemByAsset:self.recordSession.assetRepresentingSegments];
 //    [self.player play];
     [self.videoPlayerView.player setItemByAsset:self.recordSession.assetRepresentingSegments];
+    self.videoPlayerView.tapToPauseEnabled = YES;
     [self.videoPlayerView.player play];
 }
 

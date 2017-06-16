@@ -92,13 +92,8 @@
     self.filter = [[GPUImageFilter alloc] init];
     [self.filter addTarget:self.filterView];
 
-    GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
-//    [cropFilter addTarget:self.recordSession.movieWriter];
-    [self.filter addTarget:cropFilter];
-    [self.filter addTarget:self.filterView];
-    [self.recordSession.videoCamera addTarget:self.filter];
-    
-//    [self.recordSession initGPUImageView:self.filter];
+//    [self configGPUImageView];
+    [self.recordSession initGPUImageView:self.filter];
     [self addCameraFilterView];
 }
 
@@ -110,7 +105,7 @@
 //    [self.recordSession.videoCamera addTarget:self.filter];
 //
 ////    //设置声音
-////    self.videoCamera.audioEncodingTarget = self.recordSession.movieWriterFilter;
+//    self.recordSession.videoCamera.audioEncodingTarget = self.recordSession.movieWriterFilter;
 //}
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -342,6 +337,7 @@
         [self.recordSession endRecordingFilter:self.filter Completion:^(NSMutableArray<NSURL *> *segments) {
             DLog("===================== %@",segments);
             [self updateGhostImage];
+            [self.recordSession initGPUImageView:self.filter];
         }];
     }
     self.fd_interactivePopDisabled = !sender.selected;
@@ -625,7 +621,7 @@
     }
     
     [self.filter addTarget:self.filterView];
-    [self.recordSession.videoCamera addTarget:self.filter];
+    [self.recordSession initGPUImageView:self.filter];
 }
 
 @end

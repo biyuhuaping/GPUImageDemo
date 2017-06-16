@@ -109,8 +109,8 @@
 #pragma mark - 重写AVCaptureVideoDataOutputSampleBufferDelegate
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
-    [self.delegateEx myCaptureOutput:captureOutput didOutputSampleBuffer:sampleBuffer fromConnection:connection];
     [super captureOutput:captureOutput didOutputSampleBuffer:sampleBuffer fromConnection:connection];
+    [self.delegateEx myCaptureOutput:captureOutput didOutputSampleBuffer:sampleBuffer fromConnection:connection];
 }
 
 @end

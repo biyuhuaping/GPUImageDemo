@@ -168,6 +168,26 @@
     return [NSURL fileURLWithPath:tempPath];
 }
 
++ (NSURL *)getFilePathWithFileName:(NSString *)fileName isFilter:(BOOL)isFilter{
+    NSString *tempPath = @"";
+    if (isFilter) {
+        tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideoFilter"];
+    }else{
+        tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideo"];
+    }
+    NSFileManager *manager = [NSFileManager defaultManager];
+    BOOL exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
+    if (exists) {
+        tempPath = [tempPath stringByAppendingPathComponent:fileName];
+        exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
+        if (exists) {
+            return [NSURL fileURLWithPath:tempPath];
+        }
+    }
+    
+    return nil;
+}
+
 //声音淡出
 + (AVPlayerItem *)audioFadeOut:(SCRecordSessionSegment *)selectSegment {
     //    1.将素材拖入到素材库中
