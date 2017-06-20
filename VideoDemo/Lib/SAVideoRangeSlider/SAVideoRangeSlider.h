@@ -44,6 +44,7 @@
 @property (nonatomic, assign) CGFloat minGap;
 
 - (void)getMovieFrame:(NSURL *)videoUrl;
+- (void)getMovieFrameWithAsset:(AVAsset *)myAsset;
 
 - (void)setNewLeftPosition:(CGFloat)newleftPosition;
 - (void)setNewRightPosition:(CGFloat)newrightPosition;

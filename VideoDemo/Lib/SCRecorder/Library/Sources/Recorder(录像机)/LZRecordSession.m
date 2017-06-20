@@ -169,7 +169,7 @@
     completion(segment);
 }
 
-- (void)addSegment:(LZSessionSegment *)segment {
+- (void)addSegment:(LZSessionSegment *_Nullable)segment {
     [_segments addObject:segment];
     _segmentsDuration = CMTimeAdd(_segmentsDuration, segment.duration);
 }

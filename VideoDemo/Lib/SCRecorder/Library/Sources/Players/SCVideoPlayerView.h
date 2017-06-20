@@ -8,14 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "SCPlayer.h"
-#import "SCImageView.h"
 
 @class SCVideoPlayerView;
 
 @protocol SCVideoPlayerViewDelegate <NSObject>
 
 - (void)videoPlayerViewTappedToPlay:(SCVideoPlayerView *__nonnull)videoPlayerView;
-
 - (void)videoPlayerViewTappedToPause:(SCVideoPlayerView *__nonnull)videoPlayerView;
 
 @end

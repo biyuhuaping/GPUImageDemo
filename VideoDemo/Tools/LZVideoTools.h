@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "SCRecorder.h"
-#import "SCRecordSessionSegment+LZAdd.h"
+
+#import "LZRecordSession.h"
+#import "LZSessionSegment.h"
 
 @interface LZVideoTools : NSObject
 
@@ -19,7 +21,7 @@
  @param filePath 文件路径
  @param completion 完成回调
  */
-+ (void)cutVideoWith:(SCRecordSessionSegment *)selectSegment filePath:(NSURL *)filePath completion:(void (^)(void))completion;
++ (void)cutVideoWith:(LZSessionSegment *)selectSegment filePath:(NSURL *)filePath completion:(void (^)(void))completion;
 
 
 /**
@@ -45,9 +47,9 @@
 + (NSURL *)filePathWithFileName:(NSString *)fileName isFilter:(BOOL)isFilter;
 + (NSURL *)getFilePathWithFileName:(NSString *)fileName isFilter:(BOOL)isFilter;
 //声音淡出
-+ (AVPlayerItem *)audioFadeOut:(SCRecordSessionSegment *)selectSegment;
++ (AVPlayerItem *)audioFadeOut:(LZSessionSegment *)selectSegment;
 
 //视频淡出
-+ (AVPlayerItem *)videoFadeOut:(SCRecordSessionSegment *)selectSegment;
++ (AVPlayerItem *)videoFadeOut:(LZSessionSegment *)selectSegment;
 
 @end

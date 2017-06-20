@@ -17,7 +17,7 @@
  @param filePath 文件路径
  @param completion 完成回调
  */
-+ (void)cutVideoWith:(SCRecordSessionSegment *)selectSegment filePath:(NSURL *)filePath completion:(void (^)(void))completion{
++ (void)cutVideoWith:(LZSessionSegment *)selectSegment filePath:(NSURL *)filePath completion:(void (^)(void))completion{
     
 //    1.将素材拖入到素材库中
     AVAsset *asset = selectSegment.asset;
@@ -78,8 +78,8 @@
     
     
 //    4.导出
-    CMTime start = CMTimeMakeWithSeconds(selectSegment.startTime.floatValue, selectSegment.duration.timescale);
-    CMTime duration = CMTimeMakeWithSeconds(selectSegment.endTime.floatValue - selectSegment.startTime.floatValue, selectSegment.asset.duration.timescale);
+    CMTime start = CMTimeMakeWithSeconds(selectSegment.startTime, selectSegment.duration.timescale);
+    CMTime duration = CMTimeMakeWithSeconds(selectSegment.endTime - selectSegment.startTime, selectSegment.asset.duration.timescale);
     CMTimeRange range = CMTimeRangeMake(start, duration);
 
     
@@ -189,7 +189,7 @@
 }
 
 //声音淡出
-+ (AVPlayerItem *)audioFadeOut:(SCRecordSessionSegment *)selectSegment {
++ (AVPlayerItem *)audioFadeOut:(LZSessionSegment *)selectSegment {
     //    1.将素材拖入到素材库中
     AVAsset *asset = selectSegment.asset;
     AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] firstObject];//素材的视频轨
@@ -222,7 +222,7 @@
 }
 
 //视频淡出
-+ (AVPlayerItem *)videoFadeOut:(SCRecordSessionSegment *)selectSegment {
++ (AVPlayerItem *)videoFadeOut:(LZSessionSegment *)selectSegment {
     //    1.将素材拖入到素材库中
     AVAsset *asset = selectSegment.asset;
     AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] firstObject];//素材的视频轨

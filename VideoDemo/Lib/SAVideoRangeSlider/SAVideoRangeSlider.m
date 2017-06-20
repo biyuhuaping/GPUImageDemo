@@ -276,7 +276,12 @@
 
 #pragma mark - Video
 
-- (void)getMovieFrame:(NSURL *)videoUrl {
+- (void)getMovieFrame:(NSURL *)videoUrl{
+    AVAsset *myAsset = [[AVURLAsset alloc] initWithURL:videoUrl options:nil];
+    [self getMovieFrameWithAsset:myAsset];
+}
+
+- (void)getMovieFrameWithAsset:(AVAsset *)myAsset{
     if ([self.bgView subviews].count > 0) {
         for (UIView * v in [self.bgView subviews]) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -285,7 +290,7 @@
         }
     }
     
-    AVAsset *myAsset = [[AVURLAsset alloc] initWithURL:videoUrl options:nil];
+//    AVAsset *myAsset = [[AVURLAsset alloc] initWithURL:videoUrl options:nil];
     self.imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:myAsset];
     
     if ([self isRetina]){

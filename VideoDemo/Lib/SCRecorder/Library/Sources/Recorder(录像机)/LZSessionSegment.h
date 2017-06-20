@@ -58,6 +58,12 @@
  */
 @property (readonly, nonatomic) BOOL fileUrlExists;
 
+
+@property (assign, nonatomic) CGFloat startTime;
+@property (assign, nonatomic) CGFloat endTime;
+
+
+
 /**
  Initialize from a dictionaryRepresentation
  */

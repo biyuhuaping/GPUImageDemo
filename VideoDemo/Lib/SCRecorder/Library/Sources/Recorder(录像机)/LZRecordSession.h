@@ -59,7 +59,10 @@
 - (void)endRecordingFilter:(GPUImageOutput<GPUImageInput> * _Nullable)filter Completion:(void (^_Nullable)(NSMutableArray * _Nullable segments))completion;
 
 #pragma mark -
+- (void)addSegment:(LZSessionSegment *_Nullable)segment;
 - (void)removeLastSegment;
+- (void)removeAllSegments;
+- (void)removeAllSegments:(BOOL)removeFiles;
 
 #pragma mark -
 - (void)switchCaptureDevices:(GPUImageOutput<GPUImageInput>*_Nullable)filter;

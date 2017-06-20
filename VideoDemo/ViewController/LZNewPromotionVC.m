@@ -601,10 +601,8 @@
         case 3:
             _filter = [[GPUImageSepiaFilter alloc] init];//老照片
             break;
-        case 4: {
-            _filter = [[GPUImageGaussianBlurPositionFilter alloc] init];
-            [(GPUImageGaussianBlurPositionFilter*)_filter setBlurRadius:40.0/320.0];
-        }
+        case 4:
+            _filter = [[GPUImageToonFilter alloc] init];//卡通滤镜
             break;
         case 5:
             _filter = [[GPUImageSketchFilter alloc] init];//素描

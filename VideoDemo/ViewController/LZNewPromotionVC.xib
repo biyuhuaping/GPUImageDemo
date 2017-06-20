@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -101,7 +101,7 @@
                             <constraints>
                                 <constraint firstAttribute="height" constant="30" id="bG4-wr-zxi"/>
                             </constraints>
-                            <state key="normal" image="滤镜"/>
+                            <state key="normal" image="滤镜灰色"/>
                             <connections>
                                 <action selector="showChangeFilterView:" destination="-1" eventType="touchUpInside" id="Z6a-2h-dnq"/>
                             </connections>
@@ -302,6 +302,6 @@
         <image name="lz_videoedit_voice_off" width="20" height="17"/>
         <image name="lz_videoedit_voice_on" width="20" height="17"/>
         <image name="收起" width="12" height="11"/>
-        <image name="滤镜" width="45" height="45"/>
+        <image name="滤镜灰色" width="21" height="20"/>
     </resources>
 </document>
