@@ -276,6 +276,7 @@
 		FB69D44D1EC5956300953C9E /* RecordProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69D44C1EC5956300953C9E /* RecordProgressView.m */; };
 		FB6EAD721EEE3E1B00FAFD97 /* LZCameraFilterCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB6EAD711EEE3E1B00FAFD97 /* LZCameraFilterCollectionView.m */; };
 		FB6EAD851EEE8B6900FAFD97 /* GPUImageVideoCameraEx.m in Sources */ = {isa = PBXBuildFile; fileRef = FB6EAD841EEE8B6900FAFD97 /* GPUImageVideoCameraEx.m */; };
+		FB8341711EFA38650010F690 /* LZPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB8341701EFA38650010F690 /* LZPlayerView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -844,6 +845,8 @@
 		FB6EAD711EEE3E1B00FAFD97 /* LZCameraFilterCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZCameraFilterCollectionView.m; sourceTree = "<group>"; };
 		FB6EAD831EEE8B6900FAFD97 /* GPUImageVideoCameraEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageVideoCameraEx.h; sourceTree = "<group>"; };
 		FB6EAD841EEE8B6900FAFD97 /* GPUImageVideoCameraEx.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImageVideoCameraEx.m; sourceTree = "<group>"; };
+		FB83416F1EFA38650010F690 /* LZPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZPlayerView.h; sourceTree = "<group>"; };
+		FB8341701EFA38650010F690 /* LZPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZPlayerView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1516,6 +1519,8 @@
 		FB69C43B1EB96ED2007B38BD /* VideoDetail(视频详情) */ = {
 			isa = PBXGroup;
 			children = (
+				FB83416F1EFA38650010F690 /* LZPlayerView.h */,
+				FB8341701EFA38650010F690 /* LZPlayerView.m */,
 				FB69C43C1EB96ED2007B38BD /* LZVideoDetailsVC.h */,
 				FB69C43D1EB96ED2007B38BD /* LZVideoDetailsVC.m */,
 				FB69C43E1EB96ED2007B38BD /* LZVideoDetailsVC.xib */,
@@ -1923,6 +1928,7 @@
 				FB4D35741EE64007000A92C8 /* GPUImageEmbossFilter.m in Sources */,
 				FB69C4DE1EB975EE007B38BD /* LZImageView.m in Sources */,
 				FB4D35501EE64007000A92C8 /* GPUImageAddBlendFilter.m in Sources */,
+				FB8341711EFA38650010F690 /* LZPlayerView.m in Sources */,
 				FB4D355B1EE64007000A92C8 /* GPUImageCGAColorspaceFilter.m in Sources */,
 				FB4D35D01EE64007000A92C8 /* GPUImageSingleComponentGaussianBlurFilter.m in Sources */,
 				FB4D35631EE64007000A92C8 /* GPUImageColorInvertFilter.m in Sources */,

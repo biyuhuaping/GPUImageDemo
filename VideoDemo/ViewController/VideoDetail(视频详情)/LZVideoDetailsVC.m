@@ -11,21 +11,12 @@
 #import "SAVideoRangeSlider.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "LZVideoTools.h"
+#import "LZPlayerView.h"
 
-@interface LZVideoDetailsVC ()<SCPlayerDelegate,GPUImageMovieDelegate,SAVideoRangeSliderDelegate>
-{
-    GPUImageMovieWriter *movieWriter;
-    GPUImageVideoCamera *videoCamera;
-    BOOL _isRunning;
-}
-@property (strong, nonatomic) IBOutlet GPUImageView *filterView;
-@property (strong, nonatomic) IBOutlet SCVideoPlayerView *videoPlayerView;
-@property (strong, nonatomic) GPUImageMovie *movieFile;
-@property (strong, nonatomic) dispatch_queue_t writeQueue;
+@interface LZVideoDetailsVC ()<SAVideoRangeSliderDelegate>
 
-@property (strong, nonatomic) SCPlayer *player;
-
-
+@property (strong, nonatomic) IBOutlet LZPlayerView *playerView;
+@property (strong, nonatomic) IBOutlet UIImageView *imageView;
 @property (strong, nonatomic) IBOutlet SAVideoRangeSlider *trimmerView;     //微调视图
 @property (strong, nonatomic) AVAsset *asset;
 
@@ -36,84 +27,50 @@
 @property (strong, nonatomic) IBOutlet UIView *subView;
 @property (strong, nonatomic) IBOutlet UIButton *clipsButton;//剪辑按钮
 
-@property (strong, nonatomic) LZSessionSegment *segment;
+//@property (strong, nonatomic) LZSessionSegment *segment;
+@property (assign, nonatomic) CGFloat startTime;
+@property (assign, nonatomic) CGFloat endTime;
 
 @end
 
 @implementation LZVideoDetailsVC
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _writeQueue = dispatch_queue_create("LZWriteQueue", DISPATCH_QUEUE_SERIAL);
     self.timeLabel.layer.masksToBounds = YES;
     self.timeLabel.layer.cornerRadius = 10;
 
     self.asset = self.recordSession.assetRepresentingSegments;
-    self.segment = self.recordSession.segments[0];//初始化segment，随意指向一个LZSessionSegment类型，只要不为空就行。
-
+//    self.segment = self.recordSession.segments[0];//初始化segment，随意指向一个LZSessionSegment类型，只要不为空就行。
+    self.startTime = 0;
+    self.endTime = CMTimeGetSeconds(self.asset.duration);
+    
     [self.trimmerView getMovieFrameWithAsset:self.asset];
     self.trimmerView.delegate = self;
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playOrPause)];
+    [self.playerView addGestureRecognizer:tap];
+
     
     [self configNavigationBar];
 }
 
-- (void)didCompletePlayingMovie {
-    NSLog(@"已完成播放");
-//    _movieFile = nil;
-}
-
-- (void)processingVideo{
-    for (int i = 0; i < self.recordSession.segments.count; i++) {
-        dispatch_async(self.writeQueue, ^{
-            LZSessionSegment *segment = self.recordSession.segments[i];
-            GPUImageFilter *filter = (GPUImageFilter *)segment.filter;
-            
-            NSString *filename = [NSString stringWithFormat:@"LZVideoEdit-%d.m4v", i];
-            NSURL *movieURL = [LZVideoTools getFilePathWithFileName:filename isFilter:NO];
-            NSURL *movieURLFilter = [LZVideoTools filePathWithFileName:filename isFilter:YES];
-            
-//            AVPlayer *mainPlayer = [[AVPlayer alloc] init];
-//            AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithAsset:segment.asset];
-//            [mainPlayer replaceCurrentItemWithPlayerItem:playerItem];
-            
-            // 播放
-            _movieFile = [[GPUImageMovie alloc] initWithURL:movieURL];
-            _movieFile.delegate = self;
-            _movieFile.runBenchmark = YES;
-            _movieFile.playAtActualSpeed = YES;
-            _movieFile.shouldRepeat = YES;
-            [_movieFile addTarget:filter];
-            
-            
-            movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:movieURLFilter size:CGSizeMake(480.0, 480.0)];
-            movieWriter.transform = CGAffineTransformMakeRotation(M_PI_2);
-            movieWriter.shouldPassthroughAudio = YES;
-            _movieFile.audioEncodingTarget = movieWriter;
-            [_movieFile enableSynchronizedEncodingUsingMovieWriter:movieWriter];
-            
-            // 显示到界面
-            [filter addTarget:self.filterView];
-            [filter addTarget:movieWriter];
-        
-            [movieWriter startRecording];
-            [_movieFile startProcessing];
-            
-            __weak typeof(self) weakSelf = self;
-            [movieWriter setCompletionBlock:^{
-                __strong typeof(self) strongSelf = weakSelf;
-                [filter removeTarget:strongSelf->movieWriter];
-                [strongSelf->movieWriter finishRecording];
-            }];
-        });
-    }
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    [self.player setItemByAsset:self.asset];
-//    [self.player play];
-    [self.videoPlayerView.player setItemByAsset:self.asset];
-    self.videoPlayerView.tapToPauseEnabled = YES;
-    [self.videoPlayerView.player play];
+    
+    AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:self.asset];
+    self.playerView.player = [AVPlayer playerWithPlayerItem:item];
+    
+    WS(weakSelf);
+    [self.playerView.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+        float current = CMTimeGetSeconds(time);
+//        float total = CMTimeGetSeconds(weakSelf.asset.duration);
+        DLog(@"当前已经播放%.2fs.",current);
+        if (current >= _endTime) {
+            DLog(@"播放完毕");
+            [weakSelf.playerView.player pause];
+            weakSelf.imageView.hidden = NO;
+        }
+    }];
     
     CGFloat durationSeconds = CMTimeGetSeconds(self.asset.duration);
     if (durationSeconds > MAX_VIDEO_DUR) {
@@ -126,44 +83,12 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.player pause];
-    [self.videoPlayerView.player pause];
+    [self.playerView.player pause];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - 
-- (IBAction)pushButton {
-    if (!_isRunning) {
-        _isRunning = YES;
-        [self loadVideo:nil];
-    }
-}
-
-- (void)loadVideo:(NSURL *)videoUrl {
-//    _playerItem = [[AVPlayerItem alloc]initWithURL:sampleURL];
-    videoUrl = self.recordSession.segments[0];
-    [self.player setItemByAsset:self.asset];
-    _movieFile = [[GPUImageMovie alloc] initWithURL:videoUrl];
-    
-    _movieFile.runBenchmark = YES;
-    _movieFile.playAtActualSpeed = NO;
-    
-    GPUImageToonFilter *filter = [[GPUImageToonFilter alloc] init];//胶片效果
-    
-    [_movieFile addTarget:filter];
-    [filter addTarget:self.filterView];
-    
-    [_movieFile startProcessing];
-    _player.rate = 2.0;
-    
-    
-    _player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
-    
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didCompletePlayingMovie) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
 }
 
 #pragma mark - configViews
@@ -199,8 +124,8 @@
     NSURL *tempPath = [LZVideoTools filePathWithFileName:@"LZVideoEdit-0.m4v" isFilter:YES];
     [self.recordSession removeAllSegments];
     
-    CMTime start = CMTimeMakeWithSeconds(self.segment.startTime, self.asset.duration.timescale);
-    CMTime duration = CMTimeMakeWithSeconds(self.segment.endTime - self.segment.startTime, self.asset.duration.timescale);
+    CMTime start = CMTimeMakeWithSeconds(self.startTime, self.asset.duration.timescale);
+    CMTime duration = CMTimeMakeWithSeconds(self.endTime - self.startTime, self.asset.duration.timescale);
     CMTimeRange range = CMTimeRangeMake(start, duration);
     
     [LZVideoTools exportVideo:self.asset videoComposition:nil filePath:tempPath timeRange:range completion:^(NSURL *savedPath) {
@@ -234,31 +159,44 @@
     self.subView.hidden = NO;
 }
 
+//播放或暂停
+- (void)playOrPause{
+    if (!(self.playerView.player.rate > 0)) {
+        CMTime time = CMTimeMakeWithSeconds(self.startTime, self.asset.duration.timescale);
+        [self.playerView.player seekToTime:time];
+        [self.playerView.player play];
+        _imageView.hidden = YES;
+    }else{
+        [self.playerView.player pause];
+        _imageView.hidden = NO;
+    }
+}
+
 #pragma mark - SAVideoRangeSliderDelegate
 - (void)videoRange:(SAVideoRangeSlider *)videoRange isLeft:(BOOL)isLeft didChangeLeftPosition:(CGFloat)leftPosition rightPosition:(CGFloat)rightPosition
 {
-    NSAssert(self.segment.url != nil, @"segment must be non-nil");
-    if(self.segment) {
-        [self.segment setStartTime:leftPosition];
-        [self.segment setEndTime:rightPosition];
-        
-        CGFloat screenWidth = (rightPosition-leftPosition) / MAX_VIDEO_DUR * SCREEN_WIDTH;
-        CGFloat durationSeconds = rightPosition - leftPosition;
-        
-        DLog(@"startTime:%f, endTime:%f, width:%f", self.segment.startTime, self.segment.endTime, durationSeconds);
-        
-        self.timeLabel.text = [NSString stringWithFormat:@" 00:%02ld ", lround(durationSeconds)];
-        
-        //控制快进，后退
-        float f = 0;
-        if (isLeft) {
-            f = self.segment.startTime;
-        }else{
-            f = self.segment.endTime;
-        }
-        CMTime time = CMTimeMakeWithSeconds(f, self.videoPlayerView.player.currentTime.timescale);
-        [self.videoPlayerView.player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+    [self.playerView.player pause];
+    self.imageView.hidden = NO;
+    self.startTime = leftPosition;
+    self.endTime = rightPosition;
+    
+//    CGFloat screenWidth = (rightPosition-leftPosition) / MAX_VIDEO_DUR * SCREEN_WIDTH;
+    CGFloat durationSeconds = rightPosition - leftPosition;
+    
+    DLog(@"startTime:%f, endTime:%f, width:%f", self.startTime, self.endTime, durationSeconds);
+//    DLog(@"%f", CMTimeGetSeconds(self.playerView.player.playableDuration));
+    
+    self.timeLabel.text = [NSString stringWithFormat:@" 00:%02ld ", lround(durationSeconds)];
+    
+    //控制快进，后退
+    float f = 0;
+    if (isLeft) {
+        f = self.startTime;
+    }else{
+        f = self.endTime;
     }
+    CMTime time = CMTimeMakeWithSeconds(f, self.asset.duration.timescale);
+    [self.playerView.player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
 }
 
 #warning  暂时弃用
