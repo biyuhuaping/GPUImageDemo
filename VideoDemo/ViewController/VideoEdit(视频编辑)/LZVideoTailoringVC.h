@@ -11,7 +11,6 @@
 
 @interface LZVideoTailoringVC : UIViewController
 
-//@property (strong, nonatomic) LZRecordSession * recordSession;
-@property (strong, nonatomic) LZSessionSegment *segment;
-
+@property (strong, nonatomic) LZRecordSession * recordSession;
+@property (assign, nonatomic) NSInteger currentSelected;
 @end

@@ -76,7 +76,7 @@
 
 - (NSURL *)movieURL{
     if (_movieURL == nil) {
-        NSString *filename = [NSString stringWithFormat:@"LZVideoEdit-%ld.m4v", (long)_segments.count];
+        NSString *filename = [NSString stringWithFormat:@"Video-%ld.m4v", (long)_segments.count];
         _movieURL = [LZVideoTools filePathWithFileName:filename isFilter:NO];
     }
     return _movieURL;
@@ -84,7 +84,7 @@
 
 - (NSURL *)movieURLFilter{
     if (_movieURLFilter == nil) {
-        NSString *filename = [NSString stringWithFormat:@"LZVideoEdit-%ld.m4v", (long)_segments.count];
+        NSString *filename = [NSString stringWithFormat:@"Video-%ld.m4v", (long)_segments.count];
         _movieURLFilter = [LZVideoTools filePathWithFileName:filename isFilter:YES];
     }
     return _movieURLFilter;

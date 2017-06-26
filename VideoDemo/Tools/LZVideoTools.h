@@ -45,7 +45,23 @@
  */
 + (NSURL *)filePathWithFileName:(NSString *)fileName;
 + (NSURL *)filePathWithFileName:(NSString *)fileName isFilter:(BOOL)isFilter;
+
+/**
+ 生成文件路径名称
+ 
+ @param fileName 文件名
+ @param isFilter 是否有滤镜（存了两份文件：有滤镜和无滤镜文件）
+ @return 返回完整路径
+ */
 + (NSURL *)getFilePathWithFileName:(NSString *)fileName isFilter:(BOOL)isFilter;
+
+/**
+ 移除文件
+ 
+ @param path 路径
+ */
++ (void)removeFileAtPath:(NSString *)path;
+
 //声音淡出
 + (AVPlayerItem *)audioFadeOut:(LZSessionSegment *)selectSegment;
 

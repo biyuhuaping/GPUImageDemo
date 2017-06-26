@@ -121,8 +121,4 @@
     _asset = nil;
 }
 
-- (BOOL)fileUrlExists {
-    return [[NSFileManager defaultManager] fileExistsAtPath:self.url.path];
-}
-
 @end

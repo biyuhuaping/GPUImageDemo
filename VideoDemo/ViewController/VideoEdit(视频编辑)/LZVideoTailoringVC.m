@@ -9,8 +9,11 @@
 #import "LZVideoTailoringVC.h"
 #import "SAVideoRangeSlider.h"
 #import "LZPlayerView.h"
+#import "LZVideoTools.h"
+#import <AssetsLibrary/AssetsLibrary.h>
 
 @interface LZVideoTailoringVC ()<SAVideoRangeSliderDelegate>
+@property (strong, nonatomic) LZSessionSegment *segment;
 
 @property (strong, nonatomic) IBOutlet LZPlayerView *playerView;
 @property (strong, nonatomic) IBOutlet UIImageView *imageView;
@@ -18,6 +21,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *timeLabel;//计时显示
 
 @property (strong, nonatomic) id timeObser;
+@property (strong, nonatomic) NSMutableArray *recordSegments;
 
 @end
 
@@ -25,6 +29,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.recordSegments = [NSMutableArray arrayWithArray:self.recordSession.segments];
+    self.segment = self.recordSession.segments[self.currentSelected];
+    
     [self.trimmerView getMovieFrameWithAsset:self.segment.asset];
     self.trimmerView.delegate = self;
     
@@ -82,33 +89,41 @@
 
 #pragma mark - Event
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
-    DLog(@"该方法还没实现");
+    [self cutVideo];
 }
 
-//- (void)cutVideo {
-//    NSURL *tempPath = [LZVideoTools filePathWithFileName:@"LZVideoEdit-0.m4v" isFilter:YES];
-//    [self.recordSession removeAllSegments];
-//    
-//    CMTime start = CMTimeMakeWithSeconds(self.startTime, self.asset.duration.timescale);
-//    CMTime duration = CMTimeMakeWithSeconds(self.endTime - self.startTime, self.asset.duration.timescale);
-//    CMTimeRange range = CMTimeRangeMake(start, duration);
-//    
-//    [LZVideoTools exportVideo:self.asset videoComposition:nil filePath:tempPath timeRange:range completion:^(NSURL *savedPath) {
-//        if(savedPath) {
-//            DLog(@"导出视频路径：%@", savedPath);
-//            LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:tempPath filter:nil];
-//            [self.recordSession addSegment:newSegment];
-//            //保存到本地
-//            ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
-//            if ([assetsLibrary videoAtPathIsCompatibleWithSavedPhotosAlbum:savedPath]) {
-//                [assetsLibrary writeVideoAtPathToSavedPhotosAlbum:savedPath completionBlock:NULL];
-//            }
-//        }
-//        else {
-//            DLog(@"导出视频路径出错：%@", savedPath);
-//        }
-//    }];
-//}
+- (void)cutVideo {
+    NSURL *tempPath = self.segment.url;
+    [LZVideoTools removeFileAtPath:[tempPath absoluteString]];
+    
+    [self.recordSession removeAllSegments:NO];
+
+    CMTime start = CMTimeMakeWithSeconds(self.segment.startTime, self.segment.duration.timescale);
+    CMTime duration = CMTimeMakeWithSeconds(self.segment.endTime - self.segment.startTime, self.segment.duration.timescale);
+    CMTimeRange range = CMTimeRangeMake(start, duration);
+    
+    [LZVideoTools exportVideo:self.segment.asset videoComposition:nil filePath:tempPath timeRange:range completion:^(NSURL *savedPath) {
+        if(savedPath) {
+            DLog(@"导出视频路径：%@", savedPath);
+            LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:tempPath filter:self.segment.filter];
+            [self.recordSegments removeObject:self.segment];
+            [self.recordSegments insertObject:newSegment atIndex:self.currentSelected];
+            
+            for (int i = 0; i < self.recordSegments.count; i++) {
+                LZSessionSegment * segment = self.recordSegments[i];
+                NSAssert(segment.url != nil, @"segment url must be non-nil");
+                if (segment.url != nil) {
+                    [self.recordSession insertSegment:segment atIndex:i];
+                }
+            }
+            
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+        else {
+            DLog(@"导出视频路径出错：%@", savedPath);
+        }
+    }];
+}
 
 //播放或暂停
 - (void)playOrPause{

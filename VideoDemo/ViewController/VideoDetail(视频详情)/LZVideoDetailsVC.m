@@ -38,25 +38,12 @@
 @implementation LZVideoDetailsVC
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.asset = self.recordSession.assetRepresentingSegments;
-    self.startTime = 0.00;
-    self.endTime = CMTimeGetSeconds(self.asset.duration);
-    
-    [self.trimmerView getMovieFrameWithAsset:self.asset];
-    self.trimmerView.delegate = self;
-    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playOrPause)];
     [self.playerView addGestureRecognizer:tap];
-
-    
-    //show playView----------------
-    AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:self.asset];
-    self.playerView.player = [AVPlayer playerWithPlayerItem:item];
-    
     WS(weakSelf);
     _timeObser = [self.playerView.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time){
         double current = CMTimeGetSeconds(time);
-//        float total = CMTimeGetSeconds(weakSelf.asset.duration);
+        //        float total = CMTimeGetSeconds(weakSelf.asset.duration);
         DLog(@"当前已经播放%.2fs.",current);
         if (current >= self.endTime) {
             DLog(@"播放完毕");
@@ -66,12 +53,26 @@
     }];
     
     [self configNavigationBar];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.startTime = 0.00;
+    self.endTime = CMTimeGetSeconds(self.asset.duration);
+    
+    [self.trimmerView getMovieFrameWithAsset:self.asset];
+    self.trimmerView.delegate = self;
+    
+    AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:self.asset];
+    self.playerView.player = [AVPlayer playerWithPlayerItem:item];
+    
     [self configTimeLabel];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.playerView.player pause];
+    self.asset = nil;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -81,6 +82,13 @@
 
 - (void)dealloc{
     [self.playerView.player removeTimeObserver:_timeObser];
+}
+
+- (AVAsset *)asset{
+    if (!_asset) {
+        _asset = self.recordSession.assetRepresentingSegments;
+    }
+    return _asset;
 }
 
 #pragma mark - configViews
@@ -125,6 +133,7 @@
     DLog(@"该方法还没实现");
 }
 
+//剪裁视频，保存到本地
 - (void)cutVideo {
     NSURL *tempPath = [LZVideoTools filePathWithFileName:@"LZVideoEdit-0.m4v" isFilter:YES];
     [self.recordSession removeAllSegments];

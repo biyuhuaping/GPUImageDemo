@@ -60,31 +60,20 @@
     _hintLabel.text = LZLocalizedString(@"all_video_delete", nil);
     self.currentSelected = 0;
     self.videoEditAuxiliary = [[LZVideoEditAuxiliary alloc]init];
-    self.recordSegments = [NSMutableArray arrayWithArray:self.recordSession.segments];
 
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(lzPlayOrPause)];
     [self.playerView addGestureRecognizer:tap];
     
     [self configNavigationBar];
     [self configCollectionView];
-    [self configTimeLabel];
-    [self configPlayVideo:self.currentSelected];
-
-
-    //--------------------------------
-//    _videoCamera = [[GPUImageVideoCameraEx alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
-//    _videoCamera.outputImageOrientation = [UIApplication sharedApplication].statusBarOrientation;
-//    
-//    _filter = [[GPUImageSepiaFilter alloc] init];
-//    
-//    [_videoCamera addTarget:_filter];
-//    [_filter addTarget:self.filterView];
-//    [_videoCamera startCameraCapture];
 }
 
-//- (void)viewWillAppear:(BOOL)animated {
-//    [super viewWillAppear:animated];
-//}
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.recordSegments = [NSMutableArray arrayWithArray:self.recordSession.segments];
+    [self configPlayVideo:self.currentSelected];
+    [self configTimeLabel];
+}
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -268,10 +257,12 @@
         _imageView.hidden = NO;
     }
 }
+
 //剪裁
 - (IBAction)lzTailoringButtonAction:(id)sender {
     LZVideoTailoringVC *tailoringView = [[LZVideoTailoringVC alloc]initWithNibName:@"LZVideoTailoringVC" bundle:nil];
-    tailoringView.segment = self.recordSession.segments[self.currentSelected];
+    tailoringView.recordSession = self.recordSession;
+    tailoringView.currentSelected = self.currentSelected;
     [self.navigationController pushViewController:tailoringView animated:YES];
 }
 
