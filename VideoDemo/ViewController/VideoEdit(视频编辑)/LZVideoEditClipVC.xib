@@ -101,7 +101,7 @@
                             <rect key="frame" x="53.5" y="0.0" width="53.5" height="49"/>
                             <state key="normal" image="分割"/>
                             <connections>
-                                <action selector="lzSegmentationButtonAction:" destination="-1" eventType="touchUpInside" id="1pR-Fx-tCT"/>
+                                <action selector="lzSplitButtonAction:" destination="-1" eventType="touchUpInside" id="8oJ-Ac-Ead"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="huv-mn-5XT">

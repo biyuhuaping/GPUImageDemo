@@ -37,7 +37,6 @@
 
 @property (nonatomic, weak) id <SAVideoRangeSliderDelegate> delegate;
 
-@property (nonatomic, strong) UILabel *bubleText;
 @property (nonatomic, strong) UIView *topBorder;
 @property (nonatomic, strong) UIView *bottomBorder;
 @property (nonatomic, assign) CGFloat maxGap;

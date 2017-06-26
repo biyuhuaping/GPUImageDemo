@@ -24,6 +24,7 @@
 #import "LZPlayerView.h"
 
 #import "LZVideoTailoringVC.h"//剪裁VC
+#import "LZVideoSplitVC.h"//分割VC
 
 
 @interface LZVideoEditClipVC ()<LewReorderableLayoutDelegate, LewReorderableLayoutDataSource, SAVideoRangeSliderDelegate>
@@ -267,7 +268,11 @@
 }
 
 //分割
-- (IBAction)lzSegmentationButtonAction:(id)sender {
+- (IBAction)lzSplitButtonAction:(id)sender {
+    LZVideoSplitVC *splitView = [[LZVideoSplitVC alloc]initWithNibName:@"LZVideoSplitVC" bundle:nil];
+    splitView.recordSession = self.recordSession;
+    splitView.currentSelected = self.currentSelected;
+    [self.navigationController pushViewController:splitView animated:YES];
 }
 
 //复制

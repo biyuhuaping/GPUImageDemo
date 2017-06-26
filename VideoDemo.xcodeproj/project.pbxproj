@@ -279,6 +279,9 @@
 		FB8341711EFA38650010F690 /* LZPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB8341701EFA38650010F690 /* LZPlayerView.m */; };
 		FB8341791EFCEAB30010F690 /* LZVideoTailoringVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FB8341771EFCEAB30010F690 /* LZVideoTailoringVC.m */; };
 		FB83417A1EFCEAB30010F690 /* LZVideoTailoringVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB8341781EFCEAB30010F690 /* LZVideoTailoringVC.xib */; };
+		FB83418F1F00EF0E0010F690 /* LZVideoSplitVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FB83418D1F00EF0E0010F690 /* LZVideoSplitVC.m */; };
+		FB8341901F00EF0E0010F690 /* LZVideoSplitVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB83418E1F00EF0E0010F690 /* LZVideoSplitVC.xib */; };
+		FB8341931F00F4D80010F690 /* LZVideoCropperSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = FB8341921F00F4D80010F690 /* LZVideoCropperSlider.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -852,6 +855,11 @@
 		FB8341761EFCEAB30010F690 /* LZVideoTailoringVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZVideoTailoringVC.h; sourceTree = "<group>"; };
 		FB8341771EFCEAB30010F690 /* LZVideoTailoringVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZVideoTailoringVC.m; sourceTree = "<group>"; };
 		FB8341781EFCEAB30010F690 /* LZVideoTailoringVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LZVideoTailoringVC.xib; sourceTree = "<group>"; };
+		FB83418C1F00EF0E0010F690 /* LZVideoSplitVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZVideoSplitVC.h; sourceTree = "<group>"; };
+		FB83418D1F00EF0E0010F690 /* LZVideoSplitVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZVideoSplitVC.m; sourceTree = "<group>"; };
+		FB83418E1F00EF0E0010F690 /* LZVideoSplitVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LZVideoSplitVC.xib; sourceTree = "<group>"; };
+		FB8341911F00F4D80010F690 /* LZVideoCropperSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZVideoCropperSlider.h; sourceTree = "<group>"; };
+		FB8341921F00F4D80010F690 /* LZVideoCropperSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZVideoCropperSlider.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1544,6 +1552,7 @@
 				FB69C4431EB96ED2007B38BD /* LZVideoEditClipVC.m */,
 				FB69C4441EB96ED2007B38BD /* LZVideoEditClipVC.xib */,
 				FB8341751EFCE9680010F690 /* 裁剪 */,
+				FB83417B1F00E29C0010F690 /* 分割 */,
 			);
 			path = "VideoEdit(视频编辑)";
 			sourceTree = "<group>";
@@ -1639,6 +1648,8 @@
 				FB69C48A1EB975EE007B38BD /* LZImageView.m */,
 				FB69C48B1EB975EE007B38BD /* SAVideoRangeSlider.h */,
 				FB69C48C1EB975EE007B38BD /* SAVideoRangeSlider.m */,
+				FB8341911F00F4D80010F690 /* LZVideoCropperSlider.h */,
+				FB8341921F00F4D80010F690 /* LZVideoCropperSlider.m */,
 			);
 			path = SAVideoRangeSlider;
 			sourceTree = "<group>";
@@ -1760,6 +1771,16 @@
 				FB8341781EFCEAB30010F690 /* LZVideoTailoringVC.xib */,
 			);
 			name = "裁剪";
+			sourceTree = "<group>";
+		};
+		FB83417B1F00E29C0010F690 /* 分割 */ = {
+			isa = PBXGroup;
+			children = (
+				FB83418C1F00EF0E0010F690 /* LZVideoSplitVC.h */,
+				FB83418D1F00EF0E0010F690 /* LZVideoSplitVC.m */,
+				FB83418E1F00EF0E0010F690 /* LZVideoSplitVC.xib */,
+			);
+			name = "分割";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1906,6 +1927,7 @@
 				FB4D35F71EE64007000A92C8 /* Info.plist in Resources */,
 				FB69C4091EB96ADC007B38BD /* Assets.xcassets in Resources */,
 				FB69C4521EB96ED2007B38BD /* LZVideoDetailsVC.xib in Resources */,
+				FB8341901F00EF0E0010F690 /* LZVideoSplitVC.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1994,6 +2016,7 @@
 				FB4D35CB1EE64007000A92C8 /* GPUImageSaturationFilter.m in Sources */,
 				FB4D35A61EE64007000A92C8 /* GPUImageLuminosity.m in Sources */,
 				FB4D35B21EE64007000A92C8 /* GPUImageNobleCornerDetectionFilter.m in Sources */,
+				FB8341931F00F4D80010F690 /* LZVideoCropperSlider.m in Sources */,
 				FB0E9ACE1EC2E268005FE237 /* SCFilterImageView.m in Sources */,
 				FB4D35A11EE64007000A92C8 /* GPUImageLocalBinaryPatternFilter.m in Sources */,
 				FB69C4DB1EB975EE007B38BD /* View+MASAdditions.m in Sources */,
@@ -2078,6 +2101,7 @@
 				FB4D356C1EE64007000A92C8 /* GPUImageCrosshatchFilter.m in Sources */,
 				FB4D358A1EE64007000A92C8 /* GPUImageHardLightBlendFilter.m in Sources */,
 				FB4D35671EE64007000A92C8 /* GPUImageColourFASTFeatureDetector.m in Sources */,
+				FB83418F1F00EF0E0010F690 /* LZVideoSplitVC.m in Sources */,
 				FB4D35B61EE64007000A92C8 /* GPUImageOpeningFilter.m in Sources */,
 				FB4D358F1EE64007000A92C8 /* GPUImageHighPassFilter.m in Sources */,
 				FB4D35AE1EE64007000A92C8 /* GPUImageMotionDetector.m in Sources */,

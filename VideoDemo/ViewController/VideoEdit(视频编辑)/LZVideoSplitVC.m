@@ -1,30 +1,30 @@
 //
-//  LZVideoTailoringVC.m
+//  LZVideoSplitVC.m
 //  VideoDemo
 //
-//  Created by biyuhuaping on 2017/6/23.
+//  Created by biyuhuaping on 2017/6/26.
 //  Copyright © 2017年 biyuhuaping. All rights reserved.
-//
+//  视频分割
 
+#import "LZVideoSplitVC.h"
 #import "LZVideoTailoringVC.h"
-#import "SAVideoRangeSlider.h"
+#import "LZVideoCropperSlider.h"
 #import "LZPlayerView.h"
 #import "LZVideoTools.h"
 
-@interface LZVideoTailoringVC ()<SAVideoRangeSliderDelegate>
+@interface LZVideoSplitVC ()<LZVideoCropperSliderDelegate>
 @property (strong, nonatomic) LZSessionSegment *segment;
 
 @property (strong, nonatomic) IBOutlet LZPlayerView *playerView;
 @property (strong, nonatomic) IBOutlet UIImageView *imageView;
-@property (strong, nonatomic) IBOutlet SAVideoRangeSlider *trimmerView;     //微调视图
-@property (strong, nonatomic) IBOutlet UILabel *timeLabel;//计时显示
+@property (strong, nonatomic) IBOutlet LZVideoCropperSlider *trimmerView;     //微调视图
 
 @property (strong, nonatomic) id timeObser;
 @property (strong, nonatomic) NSMutableArray *recordSegments;
 
 @end
 
-@implementation LZVideoTailoringVC
+@implementation LZVideoSplitVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -50,9 +50,8 @@
         }
     }];
     
-
+    
     [self configNavigationBar];
-    [self configTimeLabel];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -76,16 +75,6 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:button];
 }
 
-- (void)configTimeLabel{
-    self.timeLabel.layer.masksToBounds = YES;
-    self.timeLabel.layer.cornerRadius = 10;
-    
-    CGFloat durationSeconds = CMTimeGetSeconds(self.segment.asset.duration);
-    int seconds = lround(durationSeconds) % 60;
-    int minutes = (lround(durationSeconds) / 60) % 60;
-    self.timeLabel.text = [NSString stringWithFormat:@" %02d:%02d ", minutes, seconds];
-}
-
 #pragma mark - Event
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
     [self cutVideo];
@@ -96,7 +85,7 @@
     [LZVideoTools removeFileAtPath:[tempPath absoluteString]];
     
     [self.recordSession removeAllSegments:NO];
-
+    
     CMTime start = CMTimeMakeWithSeconds(self.segment.startTime, self.segment.duration.timescale);
     CMTime duration = CMTimeMakeWithSeconds(self.segment.endTime - self.segment.startTime, self.segment.duration.timescale);
     CMTimeRange range = CMTimeRangeMake(start, duration);
@@ -138,19 +127,14 @@
 }
 
 #pragma mark - SAVideoRangeSliderDelegate
-- (void)videoRange:(SAVideoRangeSlider *)videoRange isLeft:(BOOL)isLeft didChangeLeftPosition:(CGFloat)leftPosition rightPosition:(CGFloat)rightPosition
-{
+- (void)videoRange:(LZVideoCropperSlider *)videoRange didChangePosition:(CGFloat)position{
     [self.playerView.player pause];
     self.imageView.hidden = NO;
-    self.segment.startTime = leftPosition;
-    self.segment.endTime = rightPosition;
-    
-    CGFloat durationSeconds = rightPosition - leftPosition;
-    self.timeLabel.text = [NSString stringWithFormat:@" 00:%02ld ", lround(durationSeconds)];
+    self.segment.startTime = 0;
+    self.segment.endTime = position;
     
     //控制快进，后退
-    double f = isLeft?leftPosition:rightPosition;
-    CMTime time = CMTimeMakeWithSeconds(f, self.segment.asset.duration.timescale);
+    CMTime time = CMTimeMakeWithSeconds(position, self.segment.asset.duration.timescale);
     [self.playerView.player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
 }
 
