@@ -27,21 +27,19 @@
 @property (strong, nonatomic) IBOutlet UIView *subView;
 @property (strong, nonatomic) IBOutlet UIButton *clipsButton;//剪辑按钮
 
-//@property (strong, nonatomic) LZSessionSegment *segment;
-@property (assign, nonatomic) CGFloat startTime;
-@property (assign, nonatomic) CGFloat endTime;
+@property (assign, nonatomic) double startTime;
+@property (assign, nonatomic) double endTime;
+
+@property (strong, nonatomic) id timeObser;
+
 
 @end
 
 @implementation LZVideoDetailsVC
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.timeLabel.layer.masksToBounds = YES;
-    self.timeLabel.layer.cornerRadius = 10;
-
     self.asset = self.recordSession.assetRepresentingSegments;
-//    self.segment = self.recordSession.segments[0];//初始化segment，随意指向一个LZSessionSegment类型，只要不为空就行。
-    self.startTime = 0;
+    self.startTime = 0.00;
     self.endTime = CMTimeGetSeconds(self.asset.duration);
     
     [self.trimmerView getMovieFrameWithAsset:self.asset];
@@ -51,34 +49,24 @@
     [self.playerView addGestureRecognizer:tap];
 
     
-    [self configNavigationBar];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
+    //show playView----------------
     AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:self.asset];
     self.playerView.player = [AVPlayer playerWithPlayerItem:item];
     
     WS(weakSelf);
-    [self.playerView.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
-        float current = CMTimeGetSeconds(time);
+    _timeObser = [self.playerView.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time){
+        double current = CMTimeGetSeconds(time);
 //        float total = CMTimeGetSeconds(weakSelf.asset.duration);
         DLog(@"当前已经播放%.2fs.",current);
-        if (current >= _endTime) {
+        if (current >= self.endTime) {
             DLog(@"播放完毕");
             [weakSelf.playerView.player pause];
             weakSelf.imageView.hidden = NO;
         }
     }];
     
-    CGFloat durationSeconds = CMTimeGetSeconds(self.asset.duration);
-    if (durationSeconds > MAX_VIDEO_DUR) {
-        self.trimmerView.maxGap = MAX_VIDEO_DUR;
-        self.timeLabel.text = @" 00:15 ";
-    }else{
-        self.timeLabel.text = [NSString stringWithFormat:@" 00:%02ld ", lround(durationSeconds)];
-    }
+    [self configNavigationBar];
+    [self configTimeLabel];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -89,6 +77,10 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)dealloc{
+    [self.playerView.player removeTimeObserver:_timeObser];
 }
 
 #pragma mark - configViews
@@ -113,6 +105,19 @@
     [button1 addTarget:self action:@selector(cutVideo) forControlEvents:UIControlEventTouchUpInside];
     
     self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc]initWithCustomView:button],[[UIBarButtonItem alloc]initWithCustomView:button1]];
+}
+
+- (void)configTimeLabel{
+    self.timeLabel.layer.masksToBounds = YES;
+    self.timeLabel.layer.cornerRadius = 10;
+    
+    CGFloat durationSeconds = CMTimeGetSeconds(self.asset.duration);
+    if (durationSeconds > MAX_VIDEO_DUR) {
+        self.trimmerView.maxGap = MAX_VIDEO_DUR;
+        self.timeLabel.text = @" 00:15 ";
+    }else{
+        self.timeLabel.text = [NSString stringWithFormat:@" 00:%02ld ", lround(durationSeconds)];
+    }
 }
 
 #pragma mark - Event
@@ -177,11 +182,9 @@
 {
     [self.playerView.player pause];
     self.imageView.hidden = NO;
-    self.startTime = leftPosition;
-    self.endTime = rightPosition;
-    
-//    CGFloat screenWidth = (rightPosition-leftPosition) / MAX_VIDEO_DUR * SCREEN_WIDTH;
-    CGFloat durationSeconds = rightPosition - leftPosition;
+
+    //    CGFloat screenWidth = (rightPosition-leftPosition) / MAX_VIDEO_DUR * SCREEN_WIDTH;
+    double durationSeconds = rightPosition - leftPosition;
     
     DLog(@"startTime:%f, endTime:%f, width:%f", self.startTime, self.endTime, durationSeconds);
 //    DLog(@"%f", CMTimeGetSeconds(self.playerView.player.playableDuration));
@@ -189,21 +192,45 @@
     self.timeLabel.text = [NSString stringWithFormat:@" 00:%02ld ", lround(durationSeconds)];
     
     //控制快进，后退
-    float f = 0;
-    if (isLeft) {
-        f = self.startTime;
-    }else{
-        f = self.endTime;
-    }
+    double f = isLeft?leftPosition:rightPosition;
     CMTime time = CMTimeMakeWithSeconds(f, self.asset.duration.timescale);
-    [self.playerView.player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+    [self.playerView.player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
+        self.startTime = leftPosition;
+        self.endTime = rightPosition;
+    }];
 }
 
-#warning  暂时弃用
-- (void)nextView {
-    LZVideoEditClipVC * vc = [[LZVideoEditClipVC alloc] initWithNibName:@"LZVideoEditClipVC" bundle:nil];
-    vc.recordSession = self.recordSession;
-    [self.navigationController pushViewController:vc animated:YES];
+#pragma mark - 剪辑按钮们
+- (IBAction)clipsButtonActions:(UIButton *)sender {
+    DLog(@"%ld",(long)sender.tag);
+    switch (sender.tag) {
+        case 100:{//Clips edit
+            LZVideoEditClipVC * vc = [[LZVideoEditClipVC alloc] initWithNibName:@"LZVideoEditClipVC" bundle:nil];
+            vc.recordSession = self.recordSession;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        case 101:{//Text
+            
+        }
+            break;
+        case 102:{//Filter
+            
+        }
+            break;
+        case 103:{//Transition
+            
+        }
+            break;
+        case 104:{//End Frame
+            
+        }
+            break;
+        case 105:{//Add clips
+            [self.navigationController popViewControllerAnimated:YES]; 
+        }
+            break;
+    }
 }
 
 @end

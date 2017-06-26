@@ -277,6 +277,8 @@
 		FB6EAD721EEE3E1B00FAFD97 /* LZCameraFilterCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB6EAD711EEE3E1B00FAFD97 /* LZCameraFilterCollectionView.m */; };
 		FB6EAD851EEE8B6900FAFD97 /* GPUImageVideoCameraEx.m in Sources */ = {isa = PBXBuildFile; fileRef = FB6EAD841EEE8B6900FAFD97 /* GPUImageVideoCameraEx.m */; };
 		FB8341711EFA38650010F690 /* LZPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB8341701EFA38650010F690 /* LZPlayerView.m */; };
+		FB8341791EFCEAB30010F690 /* LZVideoTailoringVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FB8341771EFCEAB30010F690 /* LZVideoTailoringVC.m */; };
+		FB83417A1EFCEAB30010F690 /* LZVideoTailoringVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB8341781EFCEAB30010F690 /* LZVideoTailoringVC.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -847,6 +849,9 @@
 		FB6EAD841EEE8B6900FAFD97 /* GPUImageVideoCameraEx.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImageVideoCameraEx.m; sourceTree = "<group>"; };
 		FB83416F1EFA38650010F690 /* LZPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZPlayerView.h; sourceTree = "<group>"; };
 		FB8341701EFA38650010F690 /* LZPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZPlayerView.m; sourceTree = "<group>"; };
+		FB8341761EFCEAB30010F690 /* LZVideoTailoringVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZVideoTailoringVC.h; sourceTree = "<group>"; };
+		FB8341771EFCEAB30010F690 /* LZVideoTailoringVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZVideoTailoringVC.m; sourceTree = "<group>"; };
+		FB8341781EFCEAB30010F690 /* LZVideoTailoringVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LZVideoTailoringVC.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1538,6 +1543,7 @@
 				FB69C4421EB96ED2007B38BD /* LZVideoEditClipVC.h */,
 				FB69C4431EB96ED2007B38BD /* LZVideoEditClipVC.m */,
 				FB69C4441EB96ED2007B38BD /* LZVideoEditClipVC.xib */,
+				FB8341751EFCE9680010F690 /* 裁剪 */,
 			);
 			path = "VideoEdit(视频编辑)";
 			sourceTree = "<group>";
@@ -1746,6 +1752,16 @@
 			path = Tools;
 			sourceTree = "<group>";
 		};
+		FB8341751EFCE9680010F690 /* 裁剪 */ = {
+			isa = PBXGroup;
+			children = (
+				FB8341761EFCEAB30010F690 /* LZVideoTailoringVC.h */,
+				FB8341771EFCEAB30010F690 /* LZVideoTailoringVC.m */,
+				FB8341781EFCEAB30010F690 /* LZVideoTailoringVC.xib */,
+			);
+			name = "裁剪";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1880,6 +1896,7 @@
 			files = (
 				FB69C5231EB9B690007B38BD /* ViewController.xib in Resources */,
 				FB69C40C1EB96ADD007B38BD /* LaunchScreen.storyboard in Resources */,
+				FB83417A1EFCEAB30010F690 /* LZVideoTailoringVC.xib in Resources */,
 				FB69C5421EC01CA1007B38BD /* a_filter.cisf in Resources */,
 				FB69C44D1EB96ED2007B38BD /* LZNewPromotionVC.xib in Resources */,
 				FB69C4FD1EB975EE007B38BD /* LICENSE in Resources */,
@@ -1958,6 +1975,7 @@
 				FB4D35801EE64007000A92C8 /* GPUImageFourInputFilter.m in Sources */,
 				FB4D35A81EE64007000A92C8 /* GPUImageMaskFilter.m in Sources */,
 				FB4D359B1EE64007000A92C8 /* GPUImageLanczosResamplingFilter.m in Sources */,
+				FB8341791EFCEAB30010F690 /* LZVideoTailoringVC.m in Sources */,
 				FB4D35E21EE64007000A92C8 /* GPUImageThresholdEdgeDetectionFilter.m in Sources */,
 				FB69C4D71EB975EE007B38BD /* MASViewAttribute.m in Sources */,
 				FB69C4661EB97467007B38BD /* LZGridView.m in Sources */,

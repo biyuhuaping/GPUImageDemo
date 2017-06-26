@@ -11,6 +11,6 @@
 
 @interface LZVideoDetailsVC : UIViewController
 
-@property (nonatomic, strong) LZRecordSession * recordSession;
+@property (strong, nonatomic) LZRecordSession * recordSession;
 
 @end

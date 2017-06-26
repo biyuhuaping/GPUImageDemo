@@ -11,6 +11,6 @@
 
 @interface LZVideoEditClipVC : UIViewController
 
-@property (strong, nonatomic) LZRecordSession *recordSession;
+@property (strong, nonatomic) LZRecordSession * recordSession;
 
 @end

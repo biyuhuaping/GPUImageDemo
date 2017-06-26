@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SCRecordSessionSegment+LZAdd.h"
+#import "LZSessionSegment.h"
 #import "ProgressBar.h"
 #import "SAVideoRangeSlider.h"              //视频剪切
 
@@ -20,7 +20,7 @@
  @param idx <#idx description#>
  @return <#return value description#>
  */
-- (SCRecordSessionSegment *)getCurrentSegment:(NSArray *)recordSegments index:(NSInteger)idx;
+- (LZSessionSegment *)getCurrentSegment:(NSArray *)recordSegments index:(NSInteger)idx;
 
 
 /**

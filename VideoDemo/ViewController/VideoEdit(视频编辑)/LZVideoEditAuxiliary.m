@@ -18,13 +18,13 @@
  @param idx <#idx description#>
  @return <#return value description#>
  */
-- (SCRecordSessionSegment *)getCurrentSegment:(NSArray *)recordSegments index:(NSInteger)idx {
+- (LZSessionSegment *)getCurrentSegment:(NSArray *)recordSegments index:(NSInteger)idx {
     
     if (recordSegments.count == 0) {
         return nil;
     }
     
-    SCRecordSessionSegment * segment = recordSegments[idx];
+    LZSessionSegment * segment = recordSegments[idx];
     NSAssert(segment.url != nil, @"segment must be non-nil");
     return segment;
 }
@@ -41,9 +41,9 @@
     
     float time = 0;
     for (int i = 0; i < recordSegments.count; i++) {
-        SCRecordSessionSegment * segment = recordSegments[i];
-        if ([segment.startTime floatValue] > 0 || [segment.endTime floatValue] > 0) {
-            time += ([segment.endTime floatValue]-[segment.startTime floatValue]);
+        LZSessionSegment * segment = recordSegments[i];
+        if (segment.startTime > 0 || segment.endTime > 0) {
+            time += (segment.endTime - segment.startTime);
         } else {
             time += CMTimeGetSeconds(segment.duration);
         }
@@ -63,14 +63,14 @@
     [progressBar removeAllSubViews];
     
     for (int i = 0; i < recordSegments.count; i++) {
-        SCRecordSessionSegment * segment = recordSegments[i];
+        LZSessionSegment * segment = recordSegments[i];
         NSAssert(segment != nil, @"segment must be non-nil");
         CMTime currentTime = kCMTimeZero;
         if (segment) {
             
             CGFloat width = 0;
-            if ([segment.startTime floatValue] > 0 || [segment.endTime floatValue] > 0) {
-                width = ([segment.endTime floatValue] - [segment.startTime floatValue]) / MAX_VIDEO_DUR * SCREEN_WIDTH;
+            if (segment.startTime > 0 || segment.endTime > 0) {
+                width = (segment.endTime - segment.startTime) / MAX_VIDEO_DUR * SCREEN_WIDTH;
             } else {
                 currentTime = segment.duration;
                 width = CMTimeGetSeconds(currentTime) / MAX_VIDEO_DUR * SCREEN_WIDTH;
@@ -78,7 +78,7 @@
             
             [progressBar setCurrentProgressToWidth:width];
             
-            if ([segment.isSelect boolValue] == YES) {
+            if (segment.isSelect == YES) {
                 [progressBar setCurrentProgressToStyle:ProgressBarProgressStyleSelect andIndex:i];
             }
             else {
@@ -99,35 +99,35 @@
  @param currentSelected <#currentSelected description#>
  */
 - (void)updateTrimmerView:(SAVideoRangeSlider *)trimmerView recordSegments:(NSArray *)recordSegments index:(NSInteger)currentSelected{
-    SCRecordSessionSegment *sessionSegment = [self getCurrentSegment:recordSegments index:currentSelected];
+    LZSessionSegment *sessionSegment = [self getCurrentSegment:recordSegments index:currentSelected];
     [trimmerView getMovieFrame:sessionSegment.url];
     
-    SCRecordSessionSegment * segment = sessionSegment;
-    DLog(@"\r starttime:%f, \r endtime:%f \r url:%@ \r maximun: %f",
-         segment.startTime.floatValue,
-         segment.endTime.floatValue,
-         segment.url,
-         segment.maximum.floatValue);
+    LZSessionSegment * segment = sessionSegment;
+//    DLog(@"\r starttime:%f, \r endtime:%f \r url:%@ \r maximun: %f",
+//         segment.startTime,
+//         segment.endTime,
+//         segment.url,
+//         segment.maximum);
     
     //剩余秒数
     float timeToSpare = 15 - [self getAllVideoTimesRecordSegments:recordSegments];
     //当前视频秒数
     float currentVideoTime = CMTimeGetSeconds(segment.duration);
     //当前视频截取的秒数
-    float cutVideotime = [segment.endTime floatValue]-[segment.startTime floatValue];
+    float cutVideotime = segment.endTime - segment.startTime;
     
     DLog(@"timeToSpare:%f, currentVideoTime:%f, cutVideotime:%f", timeToSpare, currentVideoTime, cutVideotime);
     
     //设置当前能移动的最大限度
-    if (([segment.startTime floatValue] > 0 || [segment.endTime floatValue] > 0) && cutVideotime+timeToSpare < currentVideoTime) {
+    if ((segment.startTime > 0 || segment.endTime > 0) && cutVideotime+timeToSpare < currentVideoTime) {
         [trimmerView setMaxGap:cutVideotime+timeToSpare];
     }
     else {
         [trimmerView setMaxGap:currentVideoTime];
     }
     
-    [trimmerView setNewLeftPosition:[segment.startTime floatValue]];
-    [trimmerView setNewRightPosition:[segment.endTime floatValue]];
+    [trimmerView setNewLeftPosition:segment.startTime];
+    [trimmerView setNewRightPosition:segment.endTime];
 }
 
 @end

@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "SCRecorder.h"
-//#import "SCRecordSessionSegment+LZAdd.h"
+#import "LZRecordSession.h"
 
 @interface LZTrimCropViewController : UIViewController
-@property (nonatomic, strong) SCRecordSession * recordSession;
-@property (nonatomic, strong) SCRecordSessionSegment * selectSegment;
+@property (nonatomic, strong) LZRecordSession * recordSession;
+@property (nonatomic, strong) LZSessionSegment * selectSegment;
 @end

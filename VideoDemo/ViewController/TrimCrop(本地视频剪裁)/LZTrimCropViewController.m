@@ -47,7 +47,7 @@
     self.videoEditAuxiliary = [[LZVideoEditAuxiliary alloc]init];
 
     self.recordSegments = [NSMutableArray arrayWithArray:self.recordSession.segments];
-    self.selectSegment.isSelect = [NSNumber numberWithBool:YES];
+    self.selectSegment.isSelect = YES;
     [self.recordSegments addObject:self.selectSegment];
     
     [self configView];
@@ -121,9 +121,9 @@
             break;
         }
         
-        SCRecordSessionSegment * segment = self.recordSegments[i];
-        if ([segment.startTime floatValue] > 0 || [segment.endTime floatValue] > 0) {
-            time += ([segment.endTime floatValue]-[segment.startTime floatValue]);
+        LZSessionSegment * segment = self.recordSegments[i];
+        if (segment.startTime > 0 || segment.endTime > 0) {
+            time += (segment.endTime - segment.startTime);
         } else {
             time += CMTimeGetSeconds(segment.duration);
         }
@@ -160,21 +160,21 @@
 - (void)videoRange:(SAVideoRangeSlider *)videoRange isLeft:(BOOL)isLeft didChangeLeftPosition:(CGFloat)leftPosition rightPosition:(CGFloat)rightPosition {
     NSAssert(self.selectSegment.url != nil, @"segment must be non-nil");
     if(self.selectSegment) {
-        [self.selectSegment setStartTime:[NSNumber numberWithFloat:leftPosition]];
-        [self.selectSegment setEndTime:[NSNumber numberWithFloat:rightPosition]];
+        [self.selectSegment setStartTime:leftPosition];
+        [self.selectSegment setEndTime:rightPosition];
         
         CGFloat width = (rightPosition-leftPosition) / MAX_VIDEO_DUR * SCREEN_WIDTH;
         [self.progressBar refreshCurrentView:self.recordSegments.count-1 andWidth:width];
         
-        DLog(@"%f, %f", self.selectSegment.startTime.floatValue, self.selectSegment.endTime.floatValue);
+        DLog(@"%f, %f", self.selectSegment.startTime, self.selectSegment.endTime);
         
         
         //控制快进，后退
         float f = 0;
         if (isLeft) {
-            f = self.selectSegment.startTime.floatValue;
+            f = self.selectSegment.startTime;
         }else{
-            f = self.selectSegment.endTime.floatValue;
+            f = self.selectSegment.endTime;
         }
         CMTime time = CMTimeMakeWithSeconds(f, self.videoPlayerView.player.currentTime.timescale);
         [self.videoPlayerView.player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
@@ -205,7 +205,7 @@
         if (15 - [self getAllVideoTimes] < CMTimeGetSeconds(self.selectSegment.duration)) {
             time = 15 - [self getAllVideoTimes];
             DLog(@"剩余时间：%f", time);
-            [self.selectSegment setEndTime:[NSNumber numberWithFloat:time]];
+            [self.selectSegment setEndTime:time];
             [_trimmerView setMaxGap:time];
         }
     }

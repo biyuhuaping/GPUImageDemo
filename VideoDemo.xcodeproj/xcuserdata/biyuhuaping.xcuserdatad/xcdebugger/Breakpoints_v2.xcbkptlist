@@ -384,65 +384,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VideoDemo/ViewController/VideoDetail(&#x89c6;&#x9891;&#x8be6;&#x60c5;)/LZVideoDetailsVC.m"
-            timestampString = "519725774.931418"
+            timestampString = "519903263.562571"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "67"
-            endingLineNumber = "67"
-            landmarkName = "-viewWillAppear:"
+            startingLineNumber = "170"
+            endingLineNumber = "170"
+            landmarkName = "-playOrPause"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VideoDemo/ViewController/VideoDetail(&#x89c6;&#x9891;&#x8be6;&#x60c5;)/LZVideoDetailsVC.m"
-            timestampString = "519726435.103809"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "64"
-            endingLineNumber = "64"
-            landmarkName = "-viewWillAppear:"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[LZVideoDetailsVC viewWillAppear:]"
-                  moduleName = "VideoDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/biyuhuaping/GPUImageDemo/VideoDemo/ViewController/VideoDetail(%E8%A7%86%E9%A2%91%E8%AF%A6%E6%83%85)/LZVideoDetailsVC.m"
-                  timestampString = "519726435.419874"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "64"
-                  endingLineNumber = "64"
-                  offsetFromSymbolStart = "312">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__35-[LZVideoDetailsVC viewWillAppear:]_block_invoke"
-                  moduleName = "VideoDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/biyuhuaping/GPUImageDemo/VideoDemo/ViewController/VideoDetail(%E8%A7%86%E9%A2%91%E8%AF%A6%E6%83%85)/LZVideoDetailsVC.m"
-                  timestampString = "519726435.42183"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "65"
-                  endingLineNumber = "65"
-                  offsetFromSymbolStart = "32">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -451,13 +403,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "VideoDemo/ViewController/VideoDetail(&#x89c6;&#x9891;&#x8be6;&#x60c5;)/LZVideoDetailsVC.m"
-            timestampString = "519729054.932601"
+            filePath = "VideoDemo/ViewController/VideoEdit(&#x89c6;&#x9891;&#x7f16;&#x8f91;)/LZVideoTailoringVC.m"
+            timestampString = "519903751.577207"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
+            startingLineNumber = "115"
+            endingLineNumber = "115"
             landmarkName = "-playOrPause"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoDemo/ViewController/VideoEdit(&#x89c6;&#x9891;&#x7f16;&#x8f91;)/LZVideoTailoringVC.m"
+            timestampString = "519903751.577207"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "-viewDidLoad"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

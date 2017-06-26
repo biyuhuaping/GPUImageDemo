@@ -59,11 +59,11 @@
 @property (readonly, nonatomic) BOOL fileUrlExists;
 
 
-@property (assign, nonatomic) CGFloat startTime;
-@property (assign, nonatomic) CGFloat endTime;
-
-
-
+@property (assign, nonatomic) double startTime;
+@property (assign, nonatomic) double endTime;
+@property (assign, nonatomic) BOOL isVoice;//是否有声
+@property (assign, nonatomic) BOOL isSelect;//是否被选中
+@property (assign, nonatomic) BOOL isReverse;//是否倒放
 /**
  Initialize from a dictionaryRepresentation
  */
