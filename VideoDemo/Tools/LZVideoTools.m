@@ -168,10 +168,9 @@
     return [NSURL fileURLWithPath:tempPath];
 }
 
-
 /**
  生成文件路径名称
-
+ 
  @param fileName 文件名
  @param isFilter 是否有滤镜（存了两份文件：有滤镜和无滤镜文件）
  @return 返回完整路径
@@ -196,13 +195,13 @@
     return nil;
 }
 
-
 /**
- 移除文件
+ 获取文件名称
 
- @param path 路径
+ @param path 文件路径 如//file:///private/var/mobile/Containers/Data/Application/C91A7103-ED23-4578-AB00-DA59EEB36E86/tmp/LZVideo/Video-1.m4v
+ @return 文件名称 如：Video-1
  */
-+ (void)removeFileAtPath:(NSString *)path {
++ (NSString *)getFileName:(NSString *)path {
     NSString *tempPath = @"";
     if ([path containsString:@"LZVideoFilter"]) {
         tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideoFilter"];
@@ -213,19 +212,8 @@
     NSString *fileName = @"";
     NSRange range = [path rangeOfString:@"Video-"];
     fileName = [path substringFromIndex:range.location];
-    
-    //首先判断文件是否存在
-    NSFileManager *manager = [NSFileManager defaultManager];
-    BOOL exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
-    if (!exists) {//如果不存在，就不用创建、更不用删除
-        return;
-    }
-    
-    tempPath = [tempPath stringByAppendingPathComponent:fileName];
-    exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
-    if (exists) {
-        [manager removeItemAtPath:tempPath error:NULL];
-    }
+    fileName = [fileName stringByReplacingOccurrencesOfString:@".m4v" withString:@""];
+    return fileName;
 }
 
 //声音淡出

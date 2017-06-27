@@ -14,7 +14,7 @@
 @protocol LZVideoCropperSliderDelegate;
 
 @interface LZVideoCropperSlider : UIView{
-    CGFloat _rightPosition;
+    CGFloat _position;
 }
 
 @property (nonatomic, weak) id <LZVideoCropperSliderDelegate> delegate;

@@ -203,31 +203,27 @@
 #pragma mark - Event
 //保存
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
-    /*[self.recordSession removeAllSegments:NO];
+    [self.recordSession removeAllSegments:NO];
     
     WS(weakSelf);
     dispatch_group_t serviceGroup = dispatch_group_create();
     for (int i = 0; i < weakSelf.recordSegments.count; i++) {
         DLog(@"执行剪切：%d", i);
-        SCRecordSessionSegment * segment = weakSelf.recordSegments[i];
+        LZSessionSegment * segment = weakSelf.recordSegments[i];
         NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:segment.asset];
         if ([compatiblePresets containsObject:AVAssetExportPresetHighestQuality]) {
 
             NSString *filename = [NSString stringWithFormat:@"SCVideoEditCut-%ld.m4v", (long)i];
             NSURL *tempPath = [LZVideoTools filePathWithFileName:filename];
             
-            CMTime start = CMTimeMakeWithSeconds(segment.startTime.floatValue, segment.duration.timescale);
-            CMTime duration = CMTimeMakeWithSeconds(segment.endTime.floatValue - segment.startTime.floatValue, segment.asset.duration.timescale);
+            CMTime start = CMTimeMakeWithSeconds(segment.startTime, segment.duration.timescale);
+            CMTime duration = CMTimeMakeWithSeconds(segment.endTime - segment.startTime, segment.asset.duration.timescale);
             CMTimeRange range = CMTimeRangeMake(start, duration);
             
             dispatch_group_enter(serviceGroup);
             [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:tempPath timeRange:range completion:^(NSURL *savedPath) {
                 SCRecordSessionSegment * newSegment = [[SCRecordSessionSegment alloc] initWithURL:tempPath info:nil];
                 DLog(@"剪切url:%@", [tempPath path]);
-                
-                newSegment.startTime = nil;
-                newSegment.endTime = nil;
-                
                 [weakSelf.recordSegments removeObject:segment];
                 [weakSelf.recordSegments insertObject:newSegment atIndex:i];
                 dispatch_group_leave(serviceGroup);
@@ -238,14 +234,14 @@
     dispatch_group_notify(serviceGroup, dispatch_get_main_queue(),^{
         DLog(@"保存到recordSession");
         for (int i = 0; i < weakSelf.recordSegments.count; i++) {
-            SCRecordSessionSegment * segment = weakSelf.recordSegments[i];
+            LZSessionSegment * segment = weakSelf.recordSegments[i];
             NSAssert(segment.url != nil, @"segment url must be non-nil");
             if (segment.url != nil) {
                 [weakSelf.recordSession insertSegment:segment atIndex:i];
             }
         }
         [weakSelf.navigationController popViewControllerAnimated:YES];
-    });*/
+    });
 }
 
 //播放或暂停
@@ -269,6 +265,13 @@
 
 //分割
 - (IBAction)lzSplitButtonAction:(id)sender {
+    //至少1秒，才能分割
+    LZSessionSegment *segment = self.recordSession.segments[self.currentSelected];
+    if (CMTimeGetSeconds(segment.duration) < 1) {
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:LZLocalizedString(@"edit_message", nil) message:@"至少1秒，才能分割!" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
+        [alert show];
+        return;
+    }
     LZVideoSplitVC *splitView = [[LZVideoSplitVC alloc]initWithNibName:@"LZVideoSplitVC" bundle:nil];
     splitView.recordSession = self.recordSession;
     splitView.currentSelected = self.currentSelected;

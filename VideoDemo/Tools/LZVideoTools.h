@@ -47,20 +47,14 @@
 + (NSURL *)filePathWithFileName:(NSString *)fileName isFilter:(BOOL)isFilter;
 
 /**
- 生成文件路径名称
+ 获取文件名称
  
- @param fileName 文件名
- @param isFilter 是否有滤镜（存了两份文件：有滤镜和无滤镜文件）
- @return 返回完整路径
+ @param path 文件路径 如//file:///private/var/mobile/Containers/Data/Application/C91A7103-ED23-4578-AB00-DA59EEB36E86/tmp/LZVideo/Video-1.m4v
+ @return 文件名称 如：Video-1
  */
-+ (NSURL *)getFilePathWithFileName:(NSString *)fileName isFilter:(BOOL)isFilter;
++ (NSString *)getFileName:(NSString *)path;
 
-/**
- 移除文件
- 
- @param path 路径
- */
-+ (void)removeFileAtPath:(NSString *)path;
+
 
 //声音淡出
 + (AVPlayerItem *)audioFadeOut:(LZSessionSegment *)selectSegment;

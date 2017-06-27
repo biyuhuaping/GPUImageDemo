@@ -58,7 +58,7 @@
 - (void)initialize{
     _frame_width = SCREEN_WIDTH;
     CGFloat height = self.bounds.size.height;
-    _rightPosition = _frame_width/2;
+    _position = _frame_width/2;
     
     _bgView = [[UIControl alloc] initWithFrame:CGRectMake(0, 10, _frame_width, height-20)];
     _bgView.clipsToBounds = YES;
@@ -81,7 +81,7 @@
 
 - (void)delegateNotification {
     if ([_delegate respondsToSelector:@selector(videoRange:didChangePosition:)]){
-        [_delegate videoRange:self didChangePosition:self.rightPosition];
+        [_delegate videoRange:self didChangePosition:self.position];
     }
 }
 
@@ -93,23 +93,23 @@
         gesture.state == UIGestureRecognizerStateChanged) {
         
         CGPoint translation = [gesture translationInView:self];
-        _rightPosition += translation.x;
-        if (_rightPosition < 0) {
-            _rightPosition = 0;
+        _position += translation.x;
+        if (_position < 0) {
+            _position = 0;
         }
         
-        if (_rightPosition > _frame_width){
-            _rightPosition = _frame_width;
+        if (_position > _frame_width){
+            _position = _frame_width;
         }
         
-        if (_rightPosition <= 0){
-            _rightPosition -= translation.x;
+        if (_position <= 0){
+            _position -= translation.x;
         }
         
-        if ((_rightPosition <= _rightThumb.frame.size.width) ||
-            ((self.maxGap > 0) && (self.rightPosition > self.maxGap)) ||
-            ((self.minGap > 0) && (self.rightPosition < self.minGap)) ) {
-            _rightPosition -= translation.x;
+        if ((_position <= _rightThumb.frame.size.width) ||
+            ((self.maxGap > 0) && (self.position > self.maxGap)) ||
+            ((self.minGap > 0) && (self.position < self.minGap)) ) {
+            _position -= translation.x;
         }
         
         [gesture setTranslation:CGPointZero inView:self];
@@ -122,7 +122,7 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
 
-    _rightThumb.center = CGPointMake(_rightPosition, CGRectGetMaxY(_rightThumb.frame) / 2);
+    _rightThumb.center = CGPointMake(_position, CGRectGetMaxY(_rightThumb.frame) / 2);
     _centerView.frame = CGRectMake(0, _centerView.frame.origin.y, _rightThumb.frame.origin.x, _centerView.frame.size.height);
     _dragView.center = CGPointMake(_centerView.frame.size.width/2, _centerView.frame.size.height/2);
 }
@@ -234,16 +234,16 @@
 }
 
 #pragma mark - Properties
-- (CGFloat)rightPosition {
-    return _rightPosition * _durationSeconds / _frame_width;
+- (CGFloat)position {
+    return _position * _durationSeconds / _frame_width;
 }
 
 - (void)setNewRightPosition:(CGFloat)newrightPosition {
     
     if (newrightPosition == 0) {
-        _rightPosition = _frame_width;
+        _position = _frame_width;
     } else {
-        _rightPosition = newrightPosition * _frame_width / _durationSeconds;
+        _position = newrightPosition * _frame_width / _durationSeconds;
     }
     
     [self setNeedsLayout];

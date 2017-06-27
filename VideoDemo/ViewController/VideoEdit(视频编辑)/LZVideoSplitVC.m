@@ -34,7 +34,9 @@
     [self.trimmerView getMovieFrameWithAsset:self.segment.asset];
     self.trimmerView.delegate = self;
     
-    self.segment.endTime = CMTimeGetSeconds(self.segment.duration);
+    self.segment.startTime = 0.00;
+    self.segment.endTime = CMTimeGetSeconds(self.segment.duration)/2;
+
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playOrPause)];
     [self.playerView addGestureRecognizer:tap];
     
@@ -76,41 +78,52 @@
 }
 
 #pragma mark - Event
+//保存
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
     [self cutVideo];
 }
 
 - (void)cutVideo {
     NSURL *tempPath = self.segment.url;
-    [LZVideoTools removeFileAtPath:[tempPath absoluteString]];
-    
+    NSString *filename = [LZVideoTools getFileName:[tempPath absoluteString]];
     [self.recordSession removeAllSegments:NO];
     
-    CMTime start = CMTimeMakeWithSeconds(self.segment.startTime, self.segment.duration.timescale);
-    CMTime duration = CMTimeMakeWithSeconds(self.segment.endTime - self.segment.startTime, self.segment.duration.timescale);
-    CMTimeRange range = CMTimeRangeMake(start, duration);
-    
-    [LZVideoTools exportVideo:self.segment.asset videoComposition:nil filePath:tempPath timeRange:range completion:^(NSURL *savedPath) {
-        if(savedPath) {
-            DLog(@"导出视频路径：%@", savedPath);
-            LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:tempPath filter:self.segment.filter];
-            [self.recordSegments removeObject:self.segment];
-            [self.recordSegments insertObject:newSegment atIndex:self.currentSelected];
-            
-            for (int i = 0; i < self.recordSegments.count; i++) {
-                LZSessionSegment * segment = self.recordSegments[i];
-                NSAssert(segment.url != nil, @"segment url must be non-nil");
-                if (segment.url != nil) {
-                    [self.recordSession insertSegment:segment atIndex:i];
-                }
+    dispatch_group_t serviceGroup = dispatch_group_create();
+    for (int i = 0; i < 2; i++) {
+        tempPath = [LZVideoTools filePathWithFileName:[NSString stringWithFormat:@"%@-%d.m4v", filename,i] isFilter:YES];
+
+        if (i == 1) {
+            self.segment.startTime = self.segment.endTime;
+            self.segment.endTime = CMTimeGetSeconds(self.segment.duration);
+        }
+        CMTime start = CMTimeMakeWithSeconds(self.segment.startTime, self.segment.duration.timescale);
+        CMTime duration = CMTimeMakeWithSeconds(self.segment.endTime - self.segment.startTime, self.segment.duration.timescale);
+        CMTimeRange range = CMTimeRangeMake(start, duration);
+        
+        dispatch_group_enter(serviceGroup);
+        [LZVideoTools exportVideo:self.segment.asset videoComposition:nil filePath:tempPath timeRange:range completion:^(NSURL *savedPath) {
+            if(savedPath) {
+                DLog(@"导出视频路径：%@", savedPath);
+                LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:tempPath filter:self.segment.filter];
+                [self.recordSegments removeObject:self.segment];
+                [self.recordSegments insertObject:newSegment atIndex:self.currentSelected + i];
             }
-            
-            [self.navigationController popViewControllerAnimated:YES];
+            dispatch_group_leave(serviceGroup);
+        }];
+    }
+    
+    
+    dispatch_group_notify(serviceGroup, dispatch_get_main_queue(),^{
+        for (int i = 0; i < self.recordSegments.count; i++) {
+            LZSessionSegment * segment = self.recordSegments[i];
+            NSAssert(segment.url != nil, @"segment url must be non-nil");
+            if (segment.url != nil) {
+                [self.recordSession insertSegment:segment atIndex:i];
+            }
         }
-        else {
-            DLog(@"导出视频路径出错：%@", savedPath);
-        }
-    }];
+        
+        [self.navigationController popViewControllerAnimated:YES];
+    });
 }
 
 //播放或暂停
@@ -130,7 +143,6 @@
 - (void)videoRange:(LZVideoCropperSlider *)videoRange didChangePosition:(CGFloat)position{
     [self.playerView.player pause];
     self.imageView.hidden = NO;
-    self.segment.startTime = 0;
     self.segment.endTime = position;
     
     //控制快进，后退

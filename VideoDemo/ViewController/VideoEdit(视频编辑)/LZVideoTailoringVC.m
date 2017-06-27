@@ -93,8 +93,9 @@
 
 - (void)cutVideo {
     NSURL *tempPath = self.segment.url;
-    [LZVideoTools removeFileAtPath:[tempPath absoluteString]];
-    
+    NSString *filename = [LZVideoTools getFileName:[tempPath absoluteString]];
+    tempPath = [LZVideoTools filePathWithFileName:[NSString stringWithFormat:@"%@.m4v", filename] isFilter:YES];
+
     [self.recordSession removeAllSegments:NO];
 
     CMTime start = CMTimeMakeWithSeconds(self.segment.startTime, self.segment.duration.timescale);
