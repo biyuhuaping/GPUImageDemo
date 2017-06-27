@@ -102,7 +102,7 @@
     [button sizeToFit];
     button.frame = CGRectMake(0, 0, CGRectGetWidth(button.bounds), 40);
     button.titleEdgeInsets = UIEdgeInsetsMake(0, 8, 0, -8);
-    [button addTarget:self action:@selector(navbarRightButtonClickAction:) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(cutVideoAndSavedPhotosAlbum:) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *button1 = [UIButton buttonWithType:UIButtonTypeCustom];
     button1.titleLabel.font = [UIFont systemFontOfSize:15];
@@ -110,7 +110,7 @@
     [button1 setTitleColor:UIColorFromRGB(0xffffff, 1) forState:UIControlStateNormal];
     [button1 sizeToFit];
     button1.frame = CGRectMake(0, 0, CGRectGetWidth(button1.bounds), 40);
-    [button1 addTarget:self action:@selector(cutVideo) forControlEvents:UIControlEventTouchUpInside];
+    [button1 addTarget:self action:@selector(navbarRightButtonClickAction:) forControlEvents:UIControlEventTouchUpInside];
     
     self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc]initWithCustomView:button],[[UIBarButtonItem alloc]initWithCustomView:button1]];
 }
@@ -130,13 +130,18 @@
 
 #pragma mark - Event
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
-    DLog(@"该方法还没实现");
+    [self cutVideoAndSavedPhotosAlbum:YES];
 }
 
 //剪裁视频，保存到本地
-- (void)cutVideo {
+- (void)cutVideoAndSavedPhotosAlbum:(BOOL)isSave {
     NSURL *tempPath = [LZVideoTools filePathWithFileName:@"LZVideoEdit-0.m4v" isFilter:YES];
     [self.recordSession removeAllSegments];
+    
+    if (isSave) {
+        self.startTime = 0.00;
+        self.endTime = CMTimeGetSeconds(self.asset.duration);
+    }
     
     CMTime start = CMTimeMakeWithSeconds(self.startTime, self.asset.duration.timescale);
     CMTime duration = CMTimeMakeWithSeconds(self.endTime - self.startTime, self.asset.duration.timescale);
@@ -147,14 +152,18 @@
             DLog(@"导出视频路径：%@", savedPath);
             LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:tempPath filter:nil];
             [self.recordSession addSegment:newSegment];
-            //保存到本地
-            ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
-            if ([assetsLibrary videoAtPathIsCompatibleWithSavedPhotosAlbum:savedPath]) {
-                [assetsLibrary writeVideoAtPathToSavedPhotosAlbum:savedPath completionBlock:NULL];
+            if (isSave) {
+                //保存到本地
+                ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
+                if ([assetsLibrary videoAtPathIsCompatibleWithSavedPhotosAlbum:savedPath]) {
+                    [assetsLibrary writeVideoAtPathToSavedPhotosAlbum:savedPath completionBlock:^(NSURL *assetURL, NSError *error) {
+                        if (!error) {
+                            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:LZLocalizedString(@"edit_message", nil) message:@"保存成功zhoubo" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
+                            [alert show];
+                        }
+                    }];
+                }
             }
-        }
-        else {
-            DLog(@"导出视频路径出错：%@", savedPath);
         }
     }];
 }

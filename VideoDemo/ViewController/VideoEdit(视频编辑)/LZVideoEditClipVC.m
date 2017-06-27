@@ -62,6 +62,9 @@
     self.currentSelected = 0;
     self.videoEditAuxiliary = [[LZVideoEditAuxiliary alloc]init];
 
+    self.timeLabel.layer.masksToBounds = YES;
+    self.timeLabel.layer.cornerRadius = 10;
+    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(lzPlayOrPause)];
     [self.playerView addGestureRecognizer:tap];
     
@@ -123,9 +126,6 @@
 
 //配置timeLabel
 - (void)configTimeLabel{
-    self.timeLabel.layer.masksToBounds = YES;
-    self.timeLabel.layer.cornerRadius = 10;
-    
     //显示总时间
     CGFloat durationSeconds = CMTimeGetSeconds(self.recordSession.assetRepresentingSegments.duration);
     int seconds = lround(durationSeconds) % 60;
@@ -268,7 +268,7 @@
     //至少1秒，才能分割
     LZSessionSegment *segment = self.recordSession.segments[self.currentSelected];
     if (CMTimeGetSeconds(segment.duration) < 1) {
-        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:LZLocalizedString(@"edit_message", nil) message:@"至少1秒，才能分割!" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:LZLocalizedString(@"edit_message", nil) message:@"至少1秒，才能分割!zhoubo" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
         [alert show];
         return;
     }
