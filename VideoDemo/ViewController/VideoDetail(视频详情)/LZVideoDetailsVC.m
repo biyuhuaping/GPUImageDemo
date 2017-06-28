@@ -38,20 +38,6 @@
 @implementation LZVideoDetailsVC
 - (void)viewDidLoad {
     [super viewDidLoad];
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playOrPause)];
-    [self.playerView addGestureRecognizer:tap];
-    WS(weakSelf);
-    _timeObser = [self.playerView.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time){
-        double current = CMTimeGetSeconds(time);
-        //        float total = CMTimeGetSeconds(weakSelf.asset.duration);
-        DLog(@"当前已经播放%.2fs.",current);
-        if (current >= self.endTime) {
-            DLog(@"播放完毕");
-            [weakSelf.playerView.player pause];
-            weakSelf.imageView.hidden = NO;
-        }
-    }];
-    
     [self configNavigationBar];
 }
 
@@ -60,12 +46,13 @@
     self.startTime = 0.00;
     self.endTime = CMTimeGetSeconds(self.asset.duration);
     
-    [self.trimmerView getMovieFrameWithAsset:self.asset];
+    [self.trimmerView performSelectorInBackground:@selector(getMovieFrameWithAsset:) withObject:self.asset];
     self.trimmerView.delegate = self;
     
-    AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:self.asset];
-    self.playerView.player = [AVPlayer playerWithPlayerItem:item];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playOrPause)];
+    [self.playerView addGestureRecognizer:tap];
     
+    [self configPlayerView];
     [self configTimeLabel];
 }
 
@@ -78,10 +65,6 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)dealloc{
-    [self.playerView.player removeTimeObserver:_timeObser];
 }
 
 - (AVAsset *)asset{
@@ -113,6 +96,24 @@
     [button1 addTarget:self action:@selector(navbarRightButtonClickAction:) forControlEvents:UIControlEventTouchUpInside];
     
     self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc]initWithCustomView:button],[[UIBarButtonItem alloc]initWithCustomView:button1]];
+}
+
+- (void)configPlayerView{
+    AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:self.asset];
+    self.playerView.player = [AVPlayer playerWithPlayerItem:item];
+    
+    WS(weakSelf);
+    _timeObser = [self.playerView.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time){
+        double current = CMTimeGetSeconds(time);
+        double total = CMTimeGetSeconds(weakSelf.asset.duration);
+        DLog(@"当前已经播放%.2fs.",current);
+        if (current >= total) {
+            DLog(@"播放完毕");
+            CMTime time = CMTimeMakeWithSeconds(0, weakSelf.asset.duration.timescale);
+            [weakSelf.playerView.player seekToTime:time];
+            weakSelf.imageView.hidden = NO;
+        }
+    }];
 }
 
 - (void)configTimeLabel{
@@ -185,8 +186,6 @@
 //播放或暂停
 - (void)playOrPause{
     if (!(self.playerView.player.rate > 0)) {
-        CMTime time = CMTimeMakeWithSeconds(self.startTime, self.asset.duration.timescale);
-        [self.playerView.player seekToTime:time];
         [self.playerView.player play];
         _imageView.hidden = YES;
     }else{
@@ -221,6 +220,8 @@
 #pragma mark - 剪辑按钮们
 - (IBAction)clipsButtonActions:(UIButton *)sender {
     DLog(@"%ld",(long)sender.tag);
+    [self tailoringButton:self.tailoringButton];
+
     switch (sender.tag) {
         case 100:{//Clips edit
             LZVideoEditClipVC * vc = [[LZVideoEditClipVC alloc] initWithNibName:@"LZVideoEditClipVC" bundle:nil];
@@ -249,6 +250,11 @@
         }
             break;
     }
+}
+
+- (void)dealloc{
+    [self.playerView.player removeTimeObserver:_timeObser];
+    DLog(@"========= dealloc =========");
 }
 
 @end

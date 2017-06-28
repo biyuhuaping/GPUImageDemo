@@ -1,44 +1,36 @@
 //
-//  LZVideoTailoringVC.m
+//  LZVideoSpeedVC.m
 //  VideoDemo
 //
-//  Created by biyuhuaping on 2017/6/23.
+//  Created by biyuhuaping on 2017/6/28.
 //  Copyright © 2017年 biyuhuaping. All rights reserved.
 //
 
-#import "LZVideoTailoringVC.h"
-#import "SAVideoRangeSlider.h"
+#import "LZVideoSpeedVC.h"
 #import "LZPlayerView.h"
 #import "LZVideoTools.h"
 
-@interface LZVideoTailoringVC ()<SAVideoRangeSliderDelegate>
+@interface LZVideoSpeedVC ()
 @property (strong, nonatomic) LZSessionSegment *segment;
 
 @property (strong, nonatomic) IBOutlet LZPlayerView *playerView;
 @property (strong, nonatomic) IBOutlet UIImageView *imageView;
-@property (strong, nonatomic) IBOutlet SAVideoRangeSlider *trimmerView;     //微调视图
-@property (strong, nonatomic) IBOutlet UILabel *timeLabel;//计时显示
 
 @property (strong, nonatomic) id timeObser;
 @property (strong, nonatomic) NSMutableArray *recordSegments;
 
 @end
 
-@implementation LZVideoTailoringVC
+@implementation LZVideoSpeedVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = LZLocalizedString(@"edit_video", nil);
-
+    
     self.recordSegments = [NSMutableArray arrayWithArray:self.recordSession.segments];
     self.segment = self.recordSession.segments[self.currentSelected];
-
-    [self.trimmerView performSelectorInBackground:@selector(getMovieFrameWithAsset:) withObject:self.segment.asset];
-    self.trimmerView.delegate = self;
     
     [self configNavigationBar];
     [self configPlayerView];
-    [self configTimeLabel];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -52,7 +44,7 @@
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.titleLabel.font = [UIFont systemFontOfSize:15];
     button.selected = NO;
-    [button setTitle:@"提交" forState:UIControlStateNormal];
+    [button setTitle:LZLocalizedString(@"edit_done", @"") forState:UIControlStateNormal];
     [button setTitleColor:UIColorFromRGB(0xffffff, 1) forState:UIControlStateNormal];
     [button sizeToFit];
     button.frame = CGRectMake(0, 0, CGRectGetWidth(button.bounds), 40);
@@ -63,9 +55,6 @@
 }
 
 - (void)configPlayerView{
-    self.segment.startTime = 0.00;
-    self.segment.endTime = CMTimeGetSeconds(self.segment.duration);
-    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playOrPause)];
     [self.playerView addGestureRecognizer:tap];
     
@@ -75,7 +64,7 @@
     WS(weakSelf);
     self.timeObser = [self.playerView.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
         double current = CMTimeGetSeconds(time);
-        double total = CMTimeGetSeconds(weakSelf.segment.duration);
+        double total = CMTimeGetSeconds(weakSelf.segment.asset.duration);
         if (current >= total) {
             CMTime time = CMTimeMakeWithSeconds(weakSelf.segment.startTime, weakSelf.segment.duration.timescale);
             [weakSelf.playerView.player seekToTime:time];
@@ -84,28 +73,14 @@
     }];
 }
 
-- (void)configTimeLabel{
-    self.timeLabel.layer.masksToBounds = YES;
-    self.timeLabel.layer.cornerRadius = 10;
-    
-    CGFloat durationSeconds = CMTimeGetSeconds(self.segment.asset.duration);
-    int seconds = lround(durationSeconds) % 60;
-    int minutes = (lround(durationSeconds) / 60) % 60;
-    self.timeLabel.text = [NSString stringWithFormat:@" %02d:%02d ", minutes, seconds];
-}
-
 #pragma mark - Event
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
-    [self cutVideo];
-}
-
-- (void)cutVideo {
     NSURL *tempPath = self.segment.url;
     NSString *filename = [LZVideoTools getFileName:[tempPath absoluteString]];
     tempPath = [LZVideoTools filePathWithFileName:[NSString stringWithFormat:@"%@.m4v", filename] isFilter:YES];
-
+    
     [self.recordSession removeAllSegments:NO];
-
+    
     CMTime start = CMTimeMakeWithSeconds(self.segment.startTime, self.segment.duration.timescale);
     CMTime duration = CMTimeMakeWithSeconds(self.segment.endTime - self.segment.startTime, self.segment.duration.timescale);
     CMTimeRange range = CMTimeRangeMake(start, duration);
@@ -127,6 +102,9 @@
             
             [self.navigationController popViewControllerAnimated:YES];
         }
+        else {
+            DLog(@"导出视频路径出错：%@", savedPath);
+        }
     }];
 }
 
@@ -139,23 +117,6 @@
         [self.playerView.player pause];
         _imageView.hidden = NO;
     }
-}
-
-#pragma mark - SAVideoRangeSliderDelegate
-- (void)videoRange:(SAVideoRangeSlider *)videoRange isLeft:(BOOL)isLeft didChangeLeftPosition:(CGFloat)leftPosition rightPosition:(CGFloat)rightPosition
-{
-    [self.playerView.player pause];
-    self.imageView.hidden = NO;
-    self.segment.startTime = leftPosition;
-    self.segment.endTime = rightPosition;
-    
-    CGFloat durationSeconds = rightPosition - leftPosition;
-    self.timeLabel.text = [NSString stringWithFormat:@" 00:%02ld ", lround(durationSeconds)];
-    
-    //控制快进，后退
-    double f = isLeft?leftPosition:rightPosition;
-    CMTime time = CMTimeMakeWithSeconds(f, self.segment.asset.duration.timescale);
-    [self.playerView.player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
 }
 
 - (void)dealloc{

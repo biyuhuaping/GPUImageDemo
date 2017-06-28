@@ -64,6 +64,9 @@
 @property (assign, nonatomic) BOOL isVoice;//是否有声
 @property (assign, nonatomic) BOOL isSelect;//是否被选中
 @property (assign, nonatomic) BOOL isReverse;//是否倒放
+@property (strong, nonatomic) NSURL * _Nullable assetSourcePath;//源路径
+@property (copy, nonatomic) NSString * _Nullable assetTargetPath;//目标路径
+
 /**
  Initialize from a dictionaryRepresentation
  */

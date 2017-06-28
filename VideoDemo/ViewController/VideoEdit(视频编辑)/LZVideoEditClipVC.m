@@ -25,6 +25,7 @@
 
 #import "LZVideoTailoringVC.h"//剪裁VC
 #import "LZVideoSplitVC.h"//分割VC
+#import "LZVideoSpeedVC.h"//速度VC
 
 
 @interface LZVideoEditClipVC ()<LewReorderableLayoutDelegate, LewReorderableLayoutDataSource, SAVideoRangeSliderDelegate>
@@ -87,11 +88,6 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)dealloc{
-    [self.playerView.player removeTimeObserver:self.timeObser];
-    DLog(@"=========");
 }
 
 #pragma mark - configViews
@@ -157,7 +153,6 @@
                 DLog(@"播放完毕");
                 CMTime time = CMTimeMakeWithSeconds(segment.startTime, segment.duration.timescale);
                 [weakSelf.playerView.player seekToTime:time];
-//                [weakSelf.playerView.player pause];
                 weakSelf.imageView.hidden = NO;
             }
         }];
@@ -306,6 +301,10 @@
 
 //变速
 - (IBAction)lzVariableSpeedAction:(id)sender {
+    LZVideoSpeedVC *viewC = [[LZVideoSpeedVC alloc]initWithNibName:@"LZVideoSpeedVC" bundle:nil];
+    viewC.recordSession = self.recordSession;
+    viewC.currentSelected = self.currentSelected;
+    [self.navigationController pushViewController:viewC animated:YES];
 }
 
 //调节
@@ -343,7 +342,7 @@
 
 //倒放
 - (IBAction)lzBackwardsButtonAction:(UIButton *)sender {
-    /*if (self.recordSegments.count == 0) {
+    if (self.recordSegments.count == 0) {
         return;
     }
     
@@ -355,21 +354,20 @@
     __block LZSessionSegment *segment = [self.videoEditAuxiliary getCurrentSegment:self.recordSegments index:self.currentSelected];
     __block LZSessionSegment *newSegment = nil;
     
-    NSURL *tempPath = [LZVideoTools filePathWithFileName:@"ConponVideo.m4v"];
+    NSURL *tempPath = [LZVideoTools filePathWithFileName:@"ConponVideo.m4v" isFilter:YES];
     
     if (segment.isReverse == YES && segment.assetSourcePath != nil) {
-        
-        newSegment = [LZSessionSegment segmentWithURL:segment.assetSourcePath info:nil];
+        newSegment = [LZSessionSegment segmentWithURL:segment.assetSourcePath filter:segment.filter];
         NSAssert(newSegment.url != nil, @"segment must be non-nil");
         if(newSegment) {
-            [newSegment setIsReverse:[NSNumber numberWithBool:NO]];
-            [newSegment setAssetSourcePath:segment.assetSourcePath];
-            [newSegment setAssetTargetPath:segment.assetTargetPath];
+            newSegment.isReverse = NO;
+            newSegment.assetSourcePath = segment.assetSourcePath;
+            newSegment.assetTargetPath = segment.assetTargetPath;
             
             [self.recordSegments removeObject:segment];
             [self.recordSegments insertObject:newSegment atIndex:self.currentSelected];
             
-            [self showVideo:self.currentSelected];
+            [self configPlayVideo:self.currentSelected];
             self.progressView.hidden = YES;
         }
     }
@@ -383,7 +381,7 @@
                     
                     if (progress == 1.00) {
                         [self.progressView setProgress:1 animated:YES];
-                        newSegment = [SCRecordSessionSegment segmentWithURL:tempPath info:nil];
+                        newSegment = [LZSessionSegment segmentWithURL:tempPath filter:segment.filter];
                         newSegment.startTime = segment.startTime;
                         newSegment.endTime = segment.endTime;
                         newSegment.isSelect = segment.isSelect;
@@ -399,7 +397,7 @@
                             [weakSelf.recordSegments removeObject:segment];
                             [weakSelf.recordSegments insertObject:newSegment atIndex:weakSelf.currentSelected];
                             
-                            [weakSelf showVideo:weakSelf.currentSelected];
+                            [weakSelf configPlayVideo:weakSelf.currentSelected];
                             
                             weakSelf.progressView.hidden = YES;
                         }
@@ -407,7 +405,7 @@
                 });
             } cancle:&_isReverseCancel];
         });
-    }*/
+    }
 }
 
 //添加水印
@@ -500,6 +498,12 @@
     
     //停止
 //    [self stopTimer];
+}
+
+
+- (void)dealloc{
+    [self.playerView.player removeTimeObserver:self.timeObser];
+    DLog(@"========= dealloc =========");
 }
 
 @end

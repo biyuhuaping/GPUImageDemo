@@ -28,32 +28,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.title = LZLocalizedString(@"edit_video", nil);
+
     self.recordSegments = [NSMutableArray arrayWithArray:self.recordSession.segments];
     self.segment = self.recordSession.segments[self.currentSelected];
     
-    [self.trimmerView getMovieFrameWithAsset:self.segment.asset];
+    [self.trimmerView performSelectorInBackground:@selector(getMovieFrameWithAsset:) withObject:self.segment.asset];
     self.trimmerView.delegate = self;
     
-    self.segment.startTime = 0.00;
-    self.segment.endTime = CMTimeGetSeconds(self.segment.duration)/2;
-
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playOrPause)];
-    [self.playerView addGestureRecognizer:tap];
-    
-    AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:self.segment.asset];
-    self.playerView.player = [AVPlayer playerWithPlayerItem:item];
-    
-    WS(weakSelf);
-    self.timeObser = [self.playerView.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
-        double current = CMTimeGetSeconds(time);
-        if (current >= weakSelf.segment.endTime) {
-            [weakSelf.playerView.player pause];
-            weakSelf.imageView.hidden = NO;
-        }
-    }];
-    
-    
     [self configNavigationBar];
+    [self configPlayerView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -75,6 +59,28 @@
     [button addTarget:self action:@selector(navbarRightButtonClickAction:) forControlEvents:UIControlEventTouchUpInside];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:button];
+}
+
+- (void)configPlayerView{
+    self.segment.startTime = 0.00;
+    self.segment.endTime = CMTimeGetSeconds(self.segment.duration)/2;
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playOrPause)];
+    [self.playerView addGestureRecognizer:tap];
+    
+    AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:self.segment.asset];
+    self.playerView.player = [AVPlayer playerWithPlayerItem:item];
+    
+    WS(weakSelf);
+    self.timeObser = [self.playerView.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+        double current = CMTimeGetSeconds(time);
+        double total = CMTimeGetSeconds(weakSelf.segment.duration);
+        if (current >= total) {
+            CMTime time = CMTimeMakeWithSeconds(weakSelf.segment.startTime, weakSelf.segment.duration.timescale);
+            [weakSelf.playerView.player seekToTime:time];
+            weakSelf.imageView.hidden = NO;
+        }
+    }];
 }
 
 #pragma mark - Event
@@ -129,8 +135,6 @@
 //播放或暂停
 - (void)playOrPause{
     if (!(self.playerView.player.rate > 0)) {
-        CMTime time = CMTimeMakeWithSeconds(self.segment.startTime, self.segment.asset.duration.timescale);
-        [self.playerView.player seekToTime:time];
         [self.playerView.player play];
         _imageView.hidden = YES;
     }else{
@@ -152,6 +156,7 @@
 
 - (void)dealloc{
     [self.playerView.player removeTimeObserver:self.timeObser];
+    DLog(@"========= dealloc =========");
 }
 
 @end

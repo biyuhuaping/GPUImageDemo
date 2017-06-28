@@ -19,6 +19,7 @@
                 <outlet property="lzCopyButton" destination="huv-mn-5XT" id="FO2-Ka-lSh"/>
                 <outlet property="lzVoiceButton" destination="sqn-xh-d30" id="LAN-89-fRN"/>
                 <outlet property="playerView" destination="aKv-Jb-vsj" id="2Pj-jH-Rc8"/>
+                <outlet property="progressView" destination="FKf-lv-IJ0" id="WYi-kY-PEc"/>
                 <outlet property="timeLabel" destination="xTK-HS-Zmo" id="sTh-az-pKE"/>
                 <outlet property="view" destination="DIJ-tA-rhW" id="eHZ-Mc-Vza"/>
             </connections>
@@ -50,6 +51,12 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NCz-Rf-8kH">
                     <rect key="frame" x="0.0" y="375" width="375" height="243"/>
                     <subviews>
+                        <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FKf-lv-IJ0">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="2"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="2" id="Kom-CO-HNO"/>
+                            </constraints>
+                        </progressView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" 00:00 " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xTK-HS-Zmo">
                             <rect key="frame" x="164.5" y="57" width="46.5" height="20"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -80,9 +87,12 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
+                        <constraint firstItem="FKf-lv-IJ0" firstAttribute="top" secondItem="NCz-Rf-8kH" secondAttribute="top" id="Tka-Nu-eXV"/>
                         <constraint firstItem="HqY-y0-qrC" firstAttribute="top" secondItem="xTK-HS-Zmo" secondAttribute="bottom" constant="24.5" id="Ug4-oE-LI4"/>
                         <constraint firstAttribute="trailing" secondItem="HqY-y0-qrC" secondAttribute="trailing" id="Uln-s9-XGh"/>
+                        <constraint firstAttribute="trailing" secondItem="FKf-lv-IJ0" secondAttribute="trailing" id="V4I-mt-8nv"/>
                         <constraint firstItem="HqY-y0-qrC" firstAttribute="centerY" secondItem="NCz-Rf-8kH" secondAttribute="centerY" constant="20" id="XUy-J3-GRU"/>
+                        <constraint firstItem="FKf-lv-IJ0" firstAttribute="leading" secondItem="NCz-Rf-8kH" secondAttribute="leading" id="ceo-8b-KAZ"/>
                         <constraint firstItem="xTK-HS-Zmo" firstAttribute="centerX" secondItem="NCz-Rf-8kH" secondAttribute="centerX" id="ea8-22-I8q"/>
                         <constraint firstItem="HqY-y0-qrC" firstAttribute="leading" secondItem="NCz-Rf-8kH" secondAttribute="leading" id="h3Q-gn-qpM"/>
                     </constraints>
