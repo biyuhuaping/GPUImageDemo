@@ -284,6 +284,8 @@
 		FB8341931F00F4D80010F690 /* LZVideoCropperSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = FB8341921F00F4D80010F690 /* LZVideoCropperSlider.m */; };
 		FB8341981F037DA80010F690 /* LZVideoSpeedVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FB8341961F037DA80010F690 /* LZVideoSpeedVC.m */; };
 		FB8341991F037DA80010F690 /* LZVideoSpeedVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB8341971F037DA80010F690 /* LZVideoSpeedVC.xib */; };
+		FB83419E1F03A4D70010F690 /* LZVideoAdjustVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FB83419C1F03A4D70010F690 /* LZVideoAdjustVC.m */; };
+		FB83419F1F03A4D70010F690 /* LZVideoAdjustVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB83419D1F03A4D70010F690 /* LZVideoAdjustVC.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -865,6 +867,9 @@
 		FB8341951F037DA80010F690 /* LZVideoSpeedVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZVideoSpeedVC.h; sourceTree = "<group>"; };
 		FB8341961F037DA80010F690 /* LZVideoSpeedVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZVideoSpeedVC.m; sourceTree = "<group>"; };
 		FB8341971F037DA80010F690 /* LZVideoSpeedVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LZVideoSpeedVC.xib; sourceTree = "<group>"; };
+		FB83419B1F03A4D70010F690 /* LZVideoAdjustVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZVideoAdjustVC.h; sourceTree = "<group>"; };
+		FB83419C1F03A4D70010F690 /* LZVideoAdjustVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZVideoAdjustVC.m; sourceTree = "<group>"; };
+		FB83419D1F03A4D70010F690 /* LZVideoAdjustVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LZVideoAdjustVC.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1559,6 +1564,7 @@
 				FB8341751EFCE9680010F690 /* 裁剪 */,
 				FB83417B1F00E29C0010F690 /* 分割 */,
 				FB8341941F037D740010F690 /* 速度 */,
+				FB83419A1F03A47B0010F690 /* 调节 */,
 			);
 			path = "VideoEdit(视频编辑)";
 			sourceTree = "<group>";
@@ -1799,6 +1805,16 @@
 			name = "速度";
 			sourceTree = "<group>";
 		};
+		FB83419A1F03A47B0010F690 /* 调节 */ = {
+			isa = PBXGroup;
+			children = (
+				FB83419B1F03A4D70010F690 /* LZVideoAdjustVC.h */,
+				FB83419C1F03A4D70010F690 /* LZVideoAdjustVC.m */,
+				FB83419D1F03A4D70010F690 /* LZVideoAdjustVC.xib */,
+			);
+			name = "调节";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1935,6 +1951,7 @@
 				FB69C40C1EB96ADD007B38BD /* LaunchScreen.storyboard in Resources */,
 				FB83417A1EFCEAB30010F690 /* LZVideoTailoringVC.xib in Resources */,
 				FB69C5421EC01CA1007B38BD /* a_filter.cisf in Resources */,
+				FB83419F1F03A4D70010F690 /* LZVideoAdjustVC.xib in Resources */,
 				FB69C44D1EB96ED2007B38BD /* LZNewPromotionVC.xib in Resources */,
 				FB69C4FD1EB975EE007B38BD /* LICENSE in Resources */,
 				FB69C4551EB96ED2007B38BD /* LZVideoEditClipVC.xib in Resources */,
@@ -2176,6 +2193,7 @@
 				FB4D357F1EE64007000A92C8 /* GPUImageFilterPipeline.m in Sources */,
 				FB69C4D51EB975EE007B38BD /* MASConstraintMaker.m in Sources */,
 				FB4D357D1EE64007000A92C8 /* GPUImageFilter.m in Sources */,
+				FB83419E1F03A4D70010F690 /* LZVideoAdjustVC.m in Sources */,
 				FB4D359C1EE64007000A92C8 /* GPUImageLaplacianFilter.m in Sources */,
 				FB4D35CD1EE64007000A92C8 /* GPUImageSepiaFilter.m in Sources */,
 				FB4D35AD1EE64007000A92C8 /* GPUImageMotionBlurFilter.m in Sources */,

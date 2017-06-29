@@ -26,6 +26,7 @@
 #import "LZVideoTailoringVC.h"//剪裁VC
 #import "LZVideoSplitVC.h"//分割VC
 #import "LZVideoSpeedVC.h"//速度VC
+#import "LZVideoAdjustVC.h"//调节VC
 
 
 @interface LZVideoEditClipVC ()<LewReorderableLayoutDelegate, LewReorderableLayoutDataSource, SAVideoRangeSliderDelegate>
@@ -289,10 +290,7 @@
     }
     
     LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:segment.url filter:nil];
-    NSAssert(newSegment.url != nil, @"segment must be non-nil");
-    newSegment.startTime = 0;
-    newSegment.endTime = 0;
-    
+    NSAssert(newSegment.url != nil, @"segment must be non-nil");    
     [self.recordSegments addObject:newSegment];
     
     //更新片段view
@@ -309,6 +307,10 @@
 
 //调节
 - (IBAction)lzAdjustButtonAction:(id)sender {
+    LZVideoAdjustVC *viewC = [[LZVideoAdjustVC alloc]initWithNibName:@"LZVideoAdjustVC" bundle:nil];
+    viewC.recordSession = self.recordSession;
+    viewC.currentSelected = self.currentSelected;
+    [self.navigationController pushViewController:viewC animated:YES];
 }
 
 //声音
@@ -320,24 +322,26 @@
     [self lzAddWatermark];
     [self.playerView.player setItem:item];
     [self.playerView.player play];
-    
     return;
+     */
+    
+    
     if (self.recordSegments.count == 0) {
         return;
     }
     
-    SCRecordSessionSegment * segment = [self.videoEditAuxiliary getCurrentSegment:self.recordSegments index:self.currentSelected];
+    LZSessionSegment * segment = [self.videoEditAuxiliary getCurrentSegment:self.recordSegments index:self.currentSelected];
     NSAssert(segment.url != nil, @"segment must be non-nil");
-    if ([segment.isVoice boolValue] == YES) {
-        [segment setIsVoice:[NSNumber numberWithBool:NO]];
+    if (segment.isVoice) {
+        segment.isVoice = NO;
         [self.lzVoiceButton setImage:[UIImage imageNamed:@"lz_videoedit_voice_off"] forState:UIControlStateNormal];
         self.playerView.player.volume = 0;
     }
     else {
-        [segment setIsVoice:[NSNumber numberWithBool:YES]];
+        segment.isVoice = YES;
         [self.lzVoiceButton setImage:[UIImage imageNamed:@"lz_videoedit_voice_on"] forState:UIControlStateNormal];
         self.playerView.player.volume = 1;
-    }*/
+    }
 }
 
 //倒放
@@ -479,7 +483,6 @@
 }
 
 #pragma mark - UICollectionViewDelegate
-
 - (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath didMoveToIndexPath:(NSIndexPath *)toIndexPath {
     LZSessionSegment * segment = self.recordSegments[fromIndexPath.row];
     NSAssert(segment.url != nil, @"segment must be non-nil");
@@ -495,11 +498,7 @@
     
     //显示当前片段
     [self configPlayVideo:self.currentSelected];
-    
-    //停止
-//    [self stopTimer];
 }
-
 
 - (void)dealloc{
     [self.playerView.player removeTimeObserver:self.timeObser];
