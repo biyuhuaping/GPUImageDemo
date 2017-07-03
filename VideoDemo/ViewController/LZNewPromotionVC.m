@@ -222,8 +222,8 @@
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     _cameraFilterView = [[LZCameraFilterCollectionView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, 100) collectionViewLayout:layout];
     NSMutableArray *filterNameArray = [[NSMutableArray alloc] initWithCapacity:9];
-    for (NSInteger index = 0; index < 9; index++) {
-        UIImage *image = [UIImage imageNamed:@"filter0"];
+    for (NSInteger index = 0; index < 10; index++) {
+        UIImage *image = [UIImage imageNamed:@"18"];
         [filterNameArray addObject:image];
     }
     _cameraFilterView.cameraFilterDelegate = self;
@@ -615,6 +615,9 @@
             break;
         case 8:
             _filter = [[GPUImageBilateralFilter alloc] init];
+            break;
+        case 9:
+            _filter = [[GPUImageEmbossFilter alloc] init];//浮雕
             break;
     }
     

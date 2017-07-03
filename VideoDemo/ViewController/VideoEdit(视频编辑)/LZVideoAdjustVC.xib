@@ -13,8 +13,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LZVideoAdjustVC">
             <connections>
-                <outlet property="imageView" destination="6M7-na-LbV" id="8gR-bE-7nr"/>
-                <outlet property="playerView" destination="yur-Xc-iVr" id="ufl-PC-cOI"/>
+                <outlet property="gpuImageView" destination="lYG-kc-tBI" id="vxL-xQ-44S"/>
+                <outlet property="playButton" destination="ooU-8P-VFX" id="NMO-SZ-lfM"/>
                 <outlet property="slider1" destination="nJR-Yr-trR" id="wkX-l7-qVT"/>
                 <outlet property="slider2" destination="22X-g9-aM4" id="0CZ-EQ-E5x"/>
                 <outlet property="slider3" destination="da2-C9-RAl" id="3LC-9B-8tf"/>
@@ -29,28 +29,30 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yur-Xc-iVr" customClass="LZPlayerView">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lYG-kc-tBI" customClass="GPUImageView">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="播放" translatesAutoresizingMaskIntoConstraints="NO" id="6M7-na-LbV">
-                            <rect key="frame" x="153" y="153" width="69" height="69"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="69" id="K4H-Pr-nMj"/>
-                                <constraint firstAttribute="width" constant="69" id="l8n-Un-kMy"/>
-                            </constraints>
-                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ooU-8P-VFX">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                            <state key="normal" image="播放"/>
+                            <connections>
+                                <action selector="filterClicked:" destination="-1" eventType="touchUpInside" id="ouX-h1-MsW"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="width" secondItem="yur-Xc-iVr" secondAttribute="height" multiplier="1:1" id="63W-Vr-ret"/>
-                        <constraint firstItem="6M7-na-LbV" firstAttribute="centerY" secondItem="yur-Xc-iVr" secondAttribute="centerY" id="Vx5-jz-NGS"/>
-                        <constraint firstItem="6M7-na-LbV" firstAttribute="centerX" secondItem="yur-Xc-iVr" secondAttribute="centerX" id="iNb-xA-ZVe"/>
+                        <constraint firstItem="ooU-8P-VFX" firstAttribute="leading" secondItem="lYG-kc-tBI" secondAttribute="leading" id="B36-uT-4zz"/>
+                        <constraint firstAttribute="trailing" secondItem="ooU-8P-VFX" secondAttribute="trailing" id="INA-Bm-pJP"/>
+                        <constraint firstItem="ooU-8P-VFX" firstAttribute="top" secondItem="lYG-kc-tBI" secondAttribute="top" id="Pah-9F-yRR"/>
+                        <constraint firstAttribute="width" secondItem="lYG-kc-tBI" secondAttribute="height" multiplier="1:1" id="pX4-aS-ZuA"/>
+                        <constraint firstAttribute="bottom" secondItem="ooU-8P-VFX" secondAttribute="bottom" id="xJI-p6-uiP"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9eH-0Q-sHx">
                     <rect key="frame" x="0.0" y="375" width="375" height="292"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W0O-m2-pC6">
+                        <button opaque="NO" alpha="0.0" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W0O-m2-pC6">
                             <rect key="frame" x="0.0" y="243" width="62.5" height="49"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="49" id="7nx-LT-Qsj"/>
@@ -78,13 +80,13 @@
                             <state key="normal" image="暗度"/>
                             <state key="selected" image="静音"/>
                         </button>
-                        <slider opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="nJR-Yr-trR">
+                        <slider opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-1" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="nJR-Yr-trR">
                             <rect key="frame" x="-68" y="30" width="197" height="194"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="nJR-Yr-trR" secondAttribute="height" id="V0d-FK-35J"/>
                             </constraints>
                             <connections>
-                                <action selector="updateValue:" destination="-1" eventType="valueChanged" id="4gP-DB-91R"/>
+                                <action selector="updateSliderValue:" destination="-1" eventType="valueChanged" id="otd-Nk-Gsg"/>
                             </connections>
                         </slider>
                         <slider opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="22X-g9-aM4">
@@ -93,7 +95,7 @@
                                 <constraint firstAttribute="width" secondItem="22X-g9-aM4" secondAttribute="height" id="WZw-Cz-Al2"/>
                             </constraints>
                             <connections>
-                                <action selector="updateValue:" destination="-1" eventType="valueChanged" id="LvZ-h9-K40"/>
+                                <action selector="updateSliderValue:" destination="-1" eventType="valueChanged" id="ILA-qg-sYP"/>
                             </connections>
                         </slider>
                         <slider opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="da2-C9-RAl">
@@ -102,7 +104,7 @@
                                 <constraint firstAttribute="width" secondItem="da2-C9-RAl" secondAttribute="height" id="tAD-T9-7If"/>
                             </constraints>
                             <connections>
-                                <action selector="updateValue:" destination="-1" eventType="valueChanged" id="4AN-dN-Wh6"/>
+                                <action selector="updateSliderValue:" destination="-1" eventType="valueChanged" id="cZS-Jc-jvM"/>
                             </connections>
                         </slider>
                         <slider opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="hpr-hd-7L7">
@@ -111,7 +113,7 @@
                                 <constraint firstAttribute="width" secondItem="hpr-hd-7L7" secondAttribute="height" id="8TX-4B-ZHT"/>
                             </constraints>
                             <connections>
-                                <action selector="updateValue:" destination="-1" eventType="valueChanged" id="VRw-sw-x6K"/>
+                                <action selector="updateSliderValue:" destination="-1" eventType="valueChanged" id="SgP-lm-InS"/>
                             </connections>
                         </slider>
                         <slider opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="YKx-xy-L3I">
@@ -120,7 +122,7 @@
                                 <constraint firstAttribute="width" secondItem="YKx-xy-L3I" secondAttribute="height" id="rVN-lI-d52"/>
                             </constraints>
                             <connections>
-                                <action selector="updateValue:" destination="-1" eventType="valueChanged" id="qoE-GA-MCI"/>
+                                <action selector="updateSliderValue:" destination="-1" eventType="valueChanged" id="Jkt-3X-2sk"/>
                             </connections>
                         </slider>
                         <slider opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="nI3-dX-gHt">
@@ -129,7 +131,7 @@
                                 <constraint firstAttribute="width" secondItem="nI3-dX-gHt" secondAttribute="height" id="Fxx-aS-Z5r"/>
                             </constraints>
                             <connections>
-                                <action selector="updateValue:" destination="-1" eventType="valueChanged" id="9cP-VH-VSd"/>
+                                <action selector="updateSliderValue:" destination="-1" eventType="valueChanged" id="7em-LF-ven"/>
                             </connections>
                         </slider>
                     </subviews>
@@ -197,11 +199,11 @@
             <constraints>
                 <constraint firstItem="9eH-0Q-sHx" firstAttribute="leading" secondItem="6BI-RA-2dK" secondAttribute="leading" id="60n-QG-ho8"/>
                 <constraint firstAttribute="bottom" secondItem="9eH-0Q-sHx" secondAttribute="bottom" id="EiK-Mz-ATs"/>
+                <constraint firstItem="lYG-kc-tBI" firstAttribute="top" secondItem="6BI-RA-2dK" secondAttribute="top" id="HBX-EK-7e0"/>
                 <constraint firstAttribute="trailing" secondItem="9eH-0Q-sHx" secondAttribute="trailing" id="NaO-x4-1mJ"/>
-                <constraint firstAttribute="trailing" secondItem="yur-Xc-iVr" secondAttribute="trailing" id="Tv2-rO-Efn"/>
-                <constraint firstItem="9eH-0Q-sHx" firstAttribute="top" secondItem="yur-Xc-iVr" secondAttribute="bottom" id="XhT-i8-cac"/>
-                <constraint firstItem="yur-Xc-iVr" firstAttribute="top" secondItem="6BI-RA-2dK" secondAttribute="top" id="ZPy-zo-xg8"/>
-                <constraint firstItem="yur-Xc-iVr" firstAttribute="leading" secondItem="6BI-RA-2dK" secondAttribute="leading" id="y1J-At-JAS"/>
+                <constraint firstItem="9eH-0Q-sHx" firstAttribute="top" secondItem="lYG-kc-tBI" secondAttribute="bottom" id="R6X-mm-3FN"/>
+                <constraint firstAttribute="trailing" secondItem="lYG-kc-tBI" secondAttribute="trailing" id="UVj-Hk-riV"/>
+                <constraint firstItem="lYG-kc-tBI" firstAttribute="leading" secondItem="6BI-RA-2dK" secondAttribute="leading" id="lkd-nW-3iB"/>
             </constraints>
             <point key="canvasLocation" x="33.5" y="54.5"/>
         </view>
