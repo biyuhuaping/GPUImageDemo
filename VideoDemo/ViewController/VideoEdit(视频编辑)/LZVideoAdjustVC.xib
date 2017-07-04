@@ -58,30 +58,31 @@
                                 <constraint firstAttribute="height" constant="49" id="7nx-LT-Qsj"/>
                             </constraints>
                             <state key="normal" image="亮度"/>
+                            <state key="selected" image="亮度"/>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dbf-eN-P4V">
-                            <rect key="frame" x="62.5" y="243" width="62.5" height="49"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dbf-eN-P4V">
+                            <rect key="frame" x="62.5" y="242.5" width="62.5" height="49"/>
                             <state key="normal" image="对比度"/>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q27-E4-4Ge">
-                            <rect key="frame" x="125" y="243" width="62.5" height="49"/>
+                            <rect key="frame" x="125" y="242.5" width="62.5" height="49"/>
                             <state key="normal" image="饱和度"/>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n8c-f3-BaD">
-                            <rect key="frame" x="187.5" y="243.5" width="62.5" height="49"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n8c-f3-BaD">
+                            <rect key="frame" x="187.5" y="243" width="62.5" height="49"/>
                             <state key="normal" image="锐度"/>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="id1-bS-SE8">
-                            <rect key="frame" x="250" y="243" width="62.5" height="49"/>
+                            <rect key="frame" x="250" y="242.5" width="62.5" height="49"/>
                             <state key="normal" image="色温"/>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dz9-DN-gfW">
-                            <rect key="frame" x="312.5" y="243" width="62.5" height="49"/>
+                            <rect key="frame" x="312.5" y="242.5" width="62.5" height="49"/>
                             <state key="normal" image="暗度"/>
                             <state key="selected" image="静音"/>
                         </button>
-                        <slider opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-1" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="nJR-Yr-trR">
-                            <rect key="frame" x="-68" y="30" width="197" height="194"/>
+                        <slider opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-2" maxValue="2" translatesAutoresizingMaskIntoConstraints="NO" id="nJR-Yr-trR">
+                            <rect key="frame" x="-67.5" y="30" width="197.5" height="194"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="nJR-Yr-trR" secondAttribute="height" id="V0d-FK-35J"/>
                             </constraints>
@@ -89,8 +90,8 @@
                                 <action selector="updateSliderValue:" destination="-1" eventType="valueChanged" id="otd-Nk-Gsg"/>
                             </connections>
                         </slider>
-                        <slider opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="22X-g9-aM4">
-                            <rect key="frame" x="-4.5" y="30" width="197" height="194"/>
+                        <slider opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="-1" maxValue="3" translatesAutoresizingMaskIntoConstraints="NO" id="22X-g9-aM4">
+                            <rect key="frame" x="-4.5" y="30" width="197" height="193.5"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="22X-g9-aM4" secondAttribute="height" id="WZw-Cz-Al2"/>
                             </constraints>
@@ -98,8 +99,8 @@
                                 <action selector="updateSliderValue:" destination="-1" eventType="valueChanged" id="ILA-qg-sYP"/>
                             </connections>
                         </slider>
-                        <slider opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="da2-C9-RAl">
-                            <rect key="frame" x="58" y="30" width="197" height="194"/>
+                        <slider opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="2" translatesAutoresizingMaskIntoConstraints="NO" id="da2-C9-RAl">
+                            <rect key="frame" x="58.5" y="30" width="196.5" height="193.5"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="da2-C9-RAl" secondAttribute="height" id="tAD-T9-7If"/>
                             </constraints>
@@ -107,8 +108,8 @@
                                 <action selector="updateSliderValue:" destination="-1" eventType="valueChanged" id="cZS-Jc-jvM"/>
                             </connections>
                         </slider>
-                        <slider opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="hpr-hd-7L7">
-                            <rect key="frame" x="120.5" y="30" width="197.5" height="194.5"/>
+                        <slider opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-4" maxValue="4" translatesAutoresizingMaskIntoConstraints="NO" id="hpr-hd-7L7">
+                            <rect key="frame" x="121" y="30" width="197" height="194"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="hpr-hd-7L7" secondAttribute="height" id="8TX-4B-ZHT"/>
                             </constraints>
@@ -116,8 +117,8 @@
                                 <action selector="updateSliderValue:" destination="-1" eventType="valueChanged" id="SgP-lm-InS"/>
                             </connections>
                         </slider>
-                        <slider opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="YKx-xy-L3I">
-                            <rect key="frame" x="183" y="30" width="197" height="194"/>
+                        <slider opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="5000" minValue="0.0" maxValue="10000" translatesAutoresizingMaskIntoConstraints="NO" id="YKx-xy-L3I">
+                            <rect key="frame" x="183.5" y="30" width="196.5" height="193.5"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="YKx-xy-L3I" secondAttribute="height" id="rVN-lI-d52"/>
                             </constraints>
@@ -125,8 +126,8 @@
                                 <action selector="updateSliderValue:" destination="-1" eventType="valueChanged" id="Jkt-3X-2sk"/>
                             </connections>
                         </slider>
-                        <slider opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="nI3-dX-gHt">
-                            <rect key="frame" x="245.5" y="30" width="197" height="194"/>
+                        <slider opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-1" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="nI3-dX-gHt">
+                            <rect key="frame" x="246" y="30" width="196.5" height="193.5"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="nI3-dX-gHt" secondAttribute="height" id="Fxx-aS-Z5r"/>
                             </constraints>

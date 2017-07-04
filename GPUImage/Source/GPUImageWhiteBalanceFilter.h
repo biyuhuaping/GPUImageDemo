@@ -8,10 +8,10 @@
 {
     GLint temperatureUniform, tintUniform;
 }
-//choose color temperature, in degrees Kelvin
+//choose color temperature, in degrees Kelvin（最大值10000，最小值1000，正常值5000）
 @property(readwrite, nonatomic) CGFloat temperature;
 
-//adjust tint to compensate
+//adjust tint to compensate（最大值1000，最小值-1000，正常值0.0）
 @property(readwrite, nonatomic) CGFloat tint;
 
 @end
