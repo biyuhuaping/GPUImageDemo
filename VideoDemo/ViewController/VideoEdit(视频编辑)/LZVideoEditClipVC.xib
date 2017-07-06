@@ -32,14 +32,19 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aKv-Jb-vsj" customClass="LZPlayerView">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="播放" translatesAutoresizingMaskIntoConstraints="NO" id="KBM-k3-6P4">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="播放" translatesAutoresizingMaskIntoConstraints="NO" id="KBM-k3-6P4">
                             <rect key="frame" x="153" y="153" width="69" height="69"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="69" id="8ww-Rv-OnP"/>
+                                <constraint firstAttribute="height" constant="69" id="dOZ-9n-HTd"/>
+                            </constraints>
                         </imageView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
+                        <constraint firstItem="KBM-k3-6P4" firstAttribute="centerX" secondItem="aKv-Jb-vsj" secondAttribute="centerX" id="6bI-ff-Bxz"/>
                         <constraint firstAttribute="width" secondItem="aKv-Jb-vsj" secondAttribute="height" multiplier="1:1" id="XMb-8s-ofV"/>
+                        <constraint firstItem="KBM-k3-6P4" firstAttribute="centerY" secondItem="aKv-Jb-vsj" secondAttribute="centerY" id="yOk-Ti-yPp"/>
                     </constraints>
                 </view>
                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xMb-1e-kRb">
@@ -88,7 +93,7 @@
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="FKf-lv-IJ0" firstAttribute="top" secondItem="NCz-Rf-8kH" secondAttribute="top" id="Tka-Nu-eXV"/>
-                        <constraint firstItem="HqY-y0-qrC" firstAttribute="top" secondItem="xTK-HS-Zmo" secondAttribute="bottom" constant="24.5" id="Ug4-oE-LI4"/>
+                        <constraint firstItem="HqY-y0-qrC" firstAttribute="top" secondItem="xTK-HS-Zmo" secondAttribute="bottom" constant="25" id="Ug4-oE-LI4"/>
                         <constraint firstAttribute="trailing" secondItem="HqY-y0-qrC" secondAttribute="trailing" id="Uln-s9-XGh"/>
                         <constraint firstAttribute="trailing" secondItem="FKf-lv-IJ0" secondAttribute="trailing" id="V4I-mt-8nv"/>
                         <constraint firstItem="HqY-y0-qrC" firstAttribute="centerY" secondItem="NCz-Rf-8kH" secondAttribute="centerY" constant="20" id="XUy-J3-GRU"/>

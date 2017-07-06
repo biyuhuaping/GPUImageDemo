@@ -7,7 +7,6 @@
 //  选择视频剪切页面
 
 #import <UIKit/UIKit.h>
-#import "SCRecorder.h"
 #import "LZRecordSession.h"
 
 @interface LZTrimCropViewController : UIViewController

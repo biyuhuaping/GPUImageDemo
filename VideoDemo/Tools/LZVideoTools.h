@@ -7,8 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SCRecorder.h"
-
 #import "LZRecordSession.h"
 #import "LZSessionSegment.h"
 

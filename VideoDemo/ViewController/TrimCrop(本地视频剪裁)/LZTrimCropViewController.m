@@ -14,7 +14,7 @@
 
 #import "ProgressBar.h"
 
-#import "SCRecordSessionManager.h"
+#import "LZPlayerView.h"
 #import <AVFoundation/AVFoundation.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
@@ -26,7 +26,7 @@
 
 //views
 @property (nonatomic, strong) ProgressBar           * progressBar;
-@property (nonatomic, strong) SCVideoPlayerView     * videoPlayerView;
+@property (nonatomic, strong) LZPlayerView          * videoPlayerView;
 
 @property (nonatomic, strong) SAVideoRangeSlider    * trimmerView;
 
@@ -57,8 +57,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    [self.videoPlayerView.player setItemByAsset:self.selectSegment.asset];
-    [self.videoPlayerView.player setLoopEnabled:YES];
+//    [self.videoPlayerView.player setItemByAsset:self.selectSegment.asset];
+//    [self.videoPlayerView.player setLoopEnabled:YES];
     [self.videoPlayerView.player play];
 }
 
@@ -139,7 +139,7 @@
         NSURL *tempPath = [LZVideoTools filePathWithFileName:@"ConponVideo.m4v"];
         WS(weakSelf);
         [LZVideoTools cutVideoWith:self.selectSegment filePath:tempPath completion:^{
-            SCRecordSessionSegment * newSegment = [[SCRecordSessionSegment alloc] initWithURL:tempPath info:nil];
+            LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:tempPath filter:nil];
             [weakSelf.recordSession addSegment:newSegment];
             [weakSelf.navigationController popViewControllerAnimated:YES];
         }];
@@ -183,12 +183,12 @@
 
 #pragma mark - Setter/Getter
 
-- (SCVideoPlayerView *)videoPlayerView {
+- (LZPlayerView *)videoPlayerView {
     
     if (_videoPlayerView == nil) {
-        _videoPlayerView = [[SCVideoPlayerView alloc] init];
+        _videoPlayerView = [[LZPlayerView alloc] init];
         _videoPlayerView.backgroundColor            = UIColorFromRGB(0x000000, 1);
-        _videoPlayerView.playerLayer.videoGravity   = AVLayerVideoGravityResizeAspectFill;
+//        _videoPlayerView.playerLayer.videoGravity   = AVLayerVideoGravityResizeAspectFill;
     }
     
     return _videoPlayerView;

@@ -19,6 +19,7 @@
 @property (strong, nonatomic) id timeObser;
 @property (strong, nonatomic) NSMutableArray *recordSegments;
 
+@property (assign, nonatomic) float rateValue;
 @end
 
 @implementation LZVideoSpeedVC
@@ -29,6 +30,8 @@
     self.recordSegments = [NSMutableArray arrayWithArray:self.recordSession.segments];
     self.segment = self.recordSession.segments[self.currentSelected];
     
+    self.rateValue = 1.0;
+
     [self configNavigationBar];
     [self configPlayerView];
 }
@@ -111,12 +114,17 @@
 //播放或暂停
 - (void)playOrPause{
     if (!(self.playerView.player.rate > 0)) {
-        [self.playerView.player play];
         _imageView.hidden = YES;
     }else{
-        [self.playerView.player pause];
+        self.rateValue = 0;
         _imageView.hidden = NO;
     }
+    self.playerView.player.rate = self.rateValue;
+}
+
+- (IBAction)updateSliderValue:(UISlider *)sender{
+    self.rateValue = sender.value;
+    self.playerView.player.rate = self.rateValue;
 }
 
 - (void)dealloc{

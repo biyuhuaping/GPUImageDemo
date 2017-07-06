@@ -11,13 +11,11 @@
 #import "LZSelectVideoCollectionViewCell.h"
 
 #import "Masonry.h"
-//#import "UINavigationBar+BackgroundColor.h"
 #import "ProgressBar.h"
 
-#import "SCRecordSessionManager.h"
 #import <AVFoundation/AVFoundation.h>
 #import <MobileCoreServices/MobileCoreServices.h>
-#import "SCRecordSessionSegment+LZAdd.h"
+#import "LZPlayerView.h"
 #import "LZVideoEditAuxiliary.h"
 
 #import "GPUImage.h"
@@ -26,7 +24,7 @@
 
 //views
 @property (nonatomic, strong) ProgressBar       * progressBar;
-@property (nonatomic, strong) SCVideoPlayerView * videoPlayerView;
+@property (nonatomic, strong) LZPlayerView * videoPlayerView;
 @property (nonatomic, strong) UICollectionView  * collectionView;
 @property (nonatomic, strong) UIButton          * nextButton;
 
@@ -109,7 +107,7 @@
 }
 
 - (void)updateProgressBar {
-    for (SCRecordSessionSegment * segment in self.recordSession.segments) {
+    for (LZSessionSegment * segment in self.recordSession.segments) {
         CMTime currentTime = kCMTimeZero;
         if (segment != nil) {
             currentTime = segment.duration;
@@ -122,22 +120,22 @@
 //播放视频
 - (void)showVideo:(NSInteger)idx {
     if (idx < self.videoListSegmentArrays.count) {
-        SCRecordSessionSegment *segment = self.videoListSegmentArrays[idx];
+        LZSessionSegment *segment = self.videoListSegmentArrays[idx];
         NSAssert(segment != nil, @"segment must be non-nil");
-        [self.videoPlayerView.player setItemByAsset:segment.asset];
-        [self.videoPlayerView.player setLoopEnabled:YES];
+//        [self.videoPlayerView.player setItemByAsset:segment.asset];
+//        [self.videoPlayerView.player setLoopEnabled:YES];
         [self.videoPlayerView.player play];
     }
     
     for (int i = 0; i < self.videoListSegmentArrays.count; i++) {
-        SCRecordSessionSegment * segment = self.videoListSegmentArrays[i];
+        LZSessionSegment * segment = self.videoListSegmentArrays[i];
         NSAssert(segment != nil, @"segment must be non-nil");
         if (self.currentSelectIdx == i) {
             //设置选中
-            segment.isSelect = [[NSNumber alloc] initWithBool:YES];
+            segment.isSelect = YES;
         }
         else {
-            segment.isSelect = [[NSNumber alloc] initWithBool:NO];
+            segment.isSelect = NO;
         }
     }
     
@@ -217,12 +215,12 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *identify = @"SelectVideoCollectionCell";
     LZSelectVideoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identify forIndexPath:indexPath];
-    SCRecordSessionSegment * segment = self.videoListSegmentArrays[indexPath.row];
+    LZSessionSegment * segment = self.videoListSegmentArrays[indexPath.row];
     NSAssert(segment.url != nil, @"segment must be non-nil");
     if (segment) {
         cell.imageView.image = segment.thumbnail;
         cell.timeLabel.text = [NSString stringWithFormat:@" %.2f ", CMTimeGetSeconds(segment.duration)];
-        if ([segment.isSelect boolValue] == YES) {
+        if (segment.isSelect) {
             cell.imageView.layer.borderWidth = 2;
             cell.imageView.layer.borderColor = UIColorFromRGB(0xffffff, 1).CGColor;
         } else {
@@ -241,11 +239,11 @@
 }
 
 #pragma mark - Setter/Getter
-- (SCVideoPlayerView *)videoPlayerView {
+- (LZPlayerView *)videoPlayerView {
     if (_videoPlayerView == nil) {
-        _videoPlayerView = [[SCVideoPlayerView alloc] init];
+        _videoPlayerView = [[LZPlayerView alloc] init];
         _videoPlayerView.backgroundColor            = UIColorFromRGB(0x000000, 1);
-        _videoPlayerView.playerLayer.videoGravity   = AVLayerVideoGravityResizeAspectFill;
+//        _videoPlayerView.playerLayer.videoGravity   = AVLayerVideoGravityResizeAspectFill;
     }
     
     return _videoPlayerView;

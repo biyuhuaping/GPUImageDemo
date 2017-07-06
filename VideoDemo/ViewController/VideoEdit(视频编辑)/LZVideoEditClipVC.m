@@ -218,7 +218,7 @@
             
             dispatch_group_enter(serviceGroup);
             [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:tempPath timeRange:range completion:^(NSURL *savedPath) {
-                SCRecordSessionSegment * newSegment = [[SCRecordSessionSegment alloc] initWithURL:tempPath info:nil];
+                LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:tempPath filter:nil];
                 DLog(@"剪切url:%@", [tempPath path]);
                 [weakSelf.recordSegments removeObject:segment];
                 [weakSelf.recordSegments insertObject:newSegment atIndex:i];

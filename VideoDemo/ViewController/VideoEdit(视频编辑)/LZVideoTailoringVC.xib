@@ -52,7 +52,7 @@
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" 00:00 " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y1M-nW-i0N">
-                            <rect key="frame" x="164.5" y="81.5" width="46.5" height="20"/>
+                            <rect key="frame" x="164.5" y="86.5" width="46.5" height="20"/>
                             <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="20" id="LTe-iM-m0h"/>
@@ -66,7 +66,7 @@
                     <constraints>
                         <constraint firstItem="Z10-ce-Sgp" firstAttribute="leading" secondItem="Obb-Yj-zNp" secondAttribute="leading" id="GNP-eE-uD5"/>
                         <constraint firstItem="Z10-ce-Sgp" firstAttribute="centerY" secondItem="Obb-Yj-zNp" secondAttribute="centerY" constant="10" id="Ujo-hG-nL3"/>
-                        <constraint firstItem="Z10-ce-Sgp" firstAttribute="top" secondItem="y1M-nW-i0N" secondAttribute="bottom" constant="30" id="jhC-Xa-Nf9"/>
+                        <constraint firstItem="Z10-ce-Sgp" firstAttribute="top" secondItem="y1M-nW-i0N" secondAttribute="bottom" constant="25" id="jhC-Xa-Nf9"/>
                         <constraint firstItem="y1M-nW-i0N" firstAttribute="centerX" secondItem="Obb-Yj-zNp" secondAttribute="centerX" id="kh8-jP-hEp"/>
                         <constraint firstAttribute="trailing" secondItem="Z10-ce-Sgp" secondAttribute="trailing" id="wpJ-z9-FeS"/>
                     </constraints>

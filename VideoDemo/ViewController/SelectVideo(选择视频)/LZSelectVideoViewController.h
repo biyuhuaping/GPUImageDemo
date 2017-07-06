@@ -7,9 +7,10 @@
 //  选择视频页面
 
 #import <UIKit/UIKit.h>
-#import "SCRecorder.h"
+//#import "SCRecorder.h"
+#import "LZRecordSession.h"
 
 @interface LZSelectVideoViewController : UIViewController
-@property (nonatomic, strong) SCRecordSession * recordSession;
+@property (nonatomic, strong) LZRecordSession * recordSession;
 @property (nonatomic, strong) NSMutableArray * videoListSegmentArrays;
 @end

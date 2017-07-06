@@ -44,7 +44,7 @@
 @property (strong, nonatomic) IBOutlet UIImageView *ghostImageView; //快照imageView
 @property (strong, nonatomic) IBOutlet LZLevelView *levelView;      //水平仪view
 @property (strong, nonatomic) IBOutlet RecordProgressView *progressView;    //进度条
-@property (strong, nonatomic) IBOutlet SCRecorderToolsView *focusView;
+//@property (strong, nonatomic) IBOutlet SCRecorderToolsView *focusView;
 
 @property (strong, nonatomic) IBOutlet UIButton *recordBtn;         //录制按钮
 @property (strong, nonatomic) IBOutlet UIButton *cancelButton;      //删除按钮
@@ -53,7 +53,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *snapshotButton;    //快照按钮
 
 //recorder
-@property (nonatomic, strong) SCRecorder *recorder;
+//@property (nonatomic, strong) SCRecorder *recorder;
 @property (nonatomic, strong) NSMutableArray *videoListSegmentArrays; //音频库
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *recordBtnWidth;
@@ -118,7 +118,7 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    [_recorder previewViewFrameChanged];
+//    [_recorder previewViewFrameChanged];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -201,7 +201,7 @@
 //                    DLog(@"Video");
                     NSDictionary *assetUrls = [result valueForProperty:ALAssetPropertyURLs];
                     for (NSString *assetURLKey in assetUrls) {
-                        SCRecordSessionSegment * segment = [[SCRecordSessionSegment alloc] initWithURL:assetUrls[assetURLKey] info:nil];
+                        LZSessionSegment * segment = [[LZSessionSegment alloc] initWithURL:assetUrls[assetURLKey] filter:nil];
                         [self.videoListSegmentArrays addObject:segment];
                     }
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -287,7 +287,7 @@
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
     if (self.videoListSegmentArrays.count > 0) {
         LZSelectVideoViewController * vc = [[LZSelectVideoViewController alloc] init];
-        vc.recordSession = self.recorder.session;
+        vc.recordSession = self.recordSession;
         vc.videoListSegmentArrays = self.videoListSegmentArrays;
         [self.navigationController pushViewController:vc animated:YES];
     }

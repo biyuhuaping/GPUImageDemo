@@ -17,7 +17,6 @@
                 <outlet property="chooseFilterView" destination="cXo-rc-d8H" id="GSz-eB-mNU"/>
                 <outlet property="confirmButton" destination="72Y-ht-z9P" id="RER-dT-qVj"/>
                 <outlet property="filterView" destination="Nbh-Xr-mn6" id="Azm-xg-nLA"/>
-                <outlet property="focusView" destination="lwV-zg-OGU" id="YHe-AI-XLs"/>
                 <outlet property="ghostImageView" destination="JMy-kw-3j3" id="a5v-Pf-I6e"/>
                 <outlet property="girdView" destination="s4r-Er-HdQ" id="pGv-KZ-Ero"/>
                 <outlet property="gridOrlineButton" destination="oYL-lC-4WG" id="0Ch-mC-foc"/>
