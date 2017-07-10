@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LZVideoFilterVC">
+            <connections>
+                <outlet property="cameraFilterView" destination="Ycs-ie-VRk" id="pV9-2m-5KO"/>
+                <outlet property="collectionView" destination="y45-Qe-Dve" id="yvL-FG-A7u"/>
+                <outlet property="gpuImageView" destination="SmE-mV-Cei" id="dWO-nn-Bgk"/>
+                <outlet property="playButton" destination="giZ-5O-AID" id="qhP-Wd-coS"/>
+                <outlet property="view" destination="mbh-9E-AWZ" id="GTr-YA-mhM"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="mbh-9E-AWZ">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SmE-mV-Cei" customClass="GPUImageView">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="giZ-5O-AID">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                            <state key="normal" image="播放"/>
+                            <connections>
+                                <action selector="filterClicked:" destination="-1" eventType="touchUpInside" id="mxX-VK-LVH"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="SmE-mV-Cei" secondAttribute="height" multiplier="1:1" id="6v9-0k-ZTX"/>
+                        <constraint firstAttribute="trailing" secondItem="giZ-5O-AID" secondAttribute="trailing" id="C5S-X5-Qrm"/>
+                        <constraint firstAttribute="bottom" secondItem="giZ-5O-AID" secondAttribute="bottom" id="l5s-Xj-Mya"/>
+                        <constraint firstItem="giZ-5O-AID" firstAttribute="leading" secondItem="SmE-mV-Cei" secondAttribute="leading" id="phj-0F-650"/>
+                        <constraint firstItem="giZ-5O-AID" firstAttribute="top" secondItem="SmE-mV-Cei" secondAttribute="top" id="yzA-E7-7Q1"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fDp-Yw-BFr">
+                    <rect key="frame" x="0.0" y="375" width="375" height="292"/>
+                    <subviews>
+                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="Ycs-ie-VRk" customClass="LZCameraFilterCollectionView">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
+                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="100" id="eCd-aa-Tkx"/>
+                            </constraints>
+                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Tyz-QI-2Hd">
+                                <size key="itemSize" width="50" height="50"/>
+                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            </collectionViewFlowLayout>
+                        </collectionView>
+                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="y45-Qe-Dve">
+                            <rect key="frame" x="0.0" y="212" width="375" height="80"/>
+                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="80" id="q37-Dw-2Lc"/>
+                            </constraints>
+                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="EFv-FT-fkx">
+                                <size key="itemSize" width="50" height="50"/>
+                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            </collectionViewFlowLayout>
+                            <connections>
+                                <outlet property="dataSource" destination="-1" id="6Ss-dX-iIo"/>
+                                <outlet property="delegate" destination="-1" id="zGI-FX-tkc"/>
+                            </connections>
+                        </collectionView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="y45-Qe-Dve" secondAttribute="trailing" id="C18-wO-5Zg"/>
+                        <constraint firstItem="Ycs-ie-VRk" firstAttribute="leading" secondItem="fDp-Yw-BFr" secondAttribute="leading" id="LVc-eG-RU9"/>
+                        <constraint firstAttribute="bottom" secondItem="y45-Qe-Dve" secondAttribute="bottom" id="QSm-id-nXL"/>
+                        <constraint firstAttribute="trailing" secondItem="Ycs-ie-VRk" secondAttribute="trailing" id="Tdk-lS-6JK"/>
+                        <constraint firstItem="y45-Qe-Dve" firstAttribute="leading" secondItem="fDp-Yw-BFr" secondAttribute="leading" id="hMi-bD-nIu"/>
+                        <constraint firstItem="Ycs-ie-VRk" firstAttribute="top" secondItem="fDp-Yw-BFr" secondAttribute="top" id="kT0-1w-ouP"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="fDp-Yw-BFr" firstAttribute="leading" secondItem="mbh-9E-AWZ" secondAttribute="leading" id="0Pu-ec-O2Y"/>
+                <constraint firstItem="SmE-mV-Cei" firstAttribute="top" secondItem="mbh-9E-AWZ" secondAttribute="top" id="AWZ-el-p50"/>
+                <constraint firstAttribute="trailing" secondItem="fDp-Yw-BFr" secondAttribute="trailing" id="dYk-HK-czb"/>
+                <constraint firstItem="SmE-mV-Cei" firstAttribute="leading" secondItem="mbh-9E-AWZ" secondAttribute="leading" id="nUp-1L-3j6"/>
+                <constraint firstAttribute="bottom" secondItem="fDp-Yw-BFr" secondAttribute="bottom" id="r86-hq-KbD"/>
+                <constraint firstAttribute="trailing" secondItem="SmE-mV-Cei" secondAttribute="trailing" id="vPF-a4-ifa"/>
+                <constraint firstItem="fDp-Yw-BFr" firstAttribute="top" secondItem="SmE-mV-Cei" secondAttribute="bottom" id="xzX-Ma-gE0"/>
+            </constraints>
+            <point key="canvasLocation" x="33.5" y="54.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="播放" width="69" height="69"/>
+    </resources>
+</document>

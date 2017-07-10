@@ -7,7 +7,6 @@
 //
 
 #import "LZVideoAdjustVC.h"
-#import "LZPlayerView.h"
 #import "LZVideoTools.h"
 
 @interface LZVideoAdjustVC (){

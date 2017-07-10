@@ -61,7 +61,7 @@
 
 @property (readwrite, nonatomic) double startTime;
 @property (readwrite, nonatomic) double endTime;
-@property (readwrite, nonatomic) BOOL isVoice;//是否有声
+@property (readwrite, nonatomic) BOOL isMute;//是否静音  YES:静音 NO:有声
 @property (readwrite, nonatomic) BOOL isSelect;//是否被选中
 @property (readwrite, nonatomic) BOOL isReverse;//是否倒放
 @property (strong, nonatomic) NSURL * _Nullable assetSourcePath;//源路径

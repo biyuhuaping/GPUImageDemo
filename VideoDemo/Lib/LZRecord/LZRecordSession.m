@@ -179,11 +179,32 @@
     _segmentsDuration = CMTimeAdd(_segmentsDuration, segment.duration);
 }
 
+- (void)replaceSegmentsAtIndex:(NSInteger)index withSegment:(LZSessionSegment *_Nullable)segment{
+    [_segments replaceObjectAtIndex:index withObject:segment];
+    CMTime segmentDuration = segment.duration;
+    if (CMTIME_IS_VALID(segmentDuration)) {
+//        NSLog(@"Removed duration of %fs", CMTimeGetSeconds(segmentDuration));
+        _segmentsDuration = CMTimeSubtract(_segmentsDuration, segmentDuration);
+    } else {
+        CMTime newDuration = kCMTimeZero;
+        for (LZSessionSegment *segment in _segments) {
+            if (CMTIME_IS_VALID(segment.duration)) {
+                newDuration = CMTimeAdd(newDuration, segment.duration);
+            }
+        }
+        _segmentsDuration = newDuration;
+    }
+}
+
 - (void)removeSegment:(LZSessionSegment *)segment {
     NSUInteger index = [_segments indexOfObject:segment];
     if (index != NSNotFound) {
         [self removeSegmentAtIndex:index deleteFile:NO];
     }
+}
+
+- (void)removeSegmentAtIndex:(NSInteger)segmentIndex{
+    [self removeSegmentAtIndex:segmentIndex deleteFile:NO];
 }
 
 - (void)removeSegmentAtIndex:(NSInteger)segmentIndex deleteFile:(BOOL)deleteFile {
@@ -193,7 +214,7 @@
     CMTime segmentDuration = segment.duration;
     
     if (CMTIME_IS_VALID(segmentDuration)) {
-        //            NSLog(@"Removed duration of %fs", CMTimeGetSeconds(segmentDuration));
+//        NSLog(@"Removed duration of %fs", CMTimeGetSeconds(segmentDuration));
         _segmentsDuration = CMTimeSubtract(_segmentsDuration, segmentDuration);
     } else {
         CMTime newDuration = kCMTimeZero;

@@ -252,6 +252,8 @@
 		FB8341991F037DA80010F690 /* LZVideoSpeedVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB8341971F037DA80010F690 /* LZVideoSpeedVC.xib */; };
 		FB83419E1F03A4D70010F690 /* LZVideoAdjustVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FB83419C1F03A4D70010F690 /* LZVideoAdjustVC.m */; };
 		FB83419F1F03A4D70010F690 /* LZVideoAdjustVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB83419D1F03A4D70010F690 /* LZVideoAdjustVC.xib */; };
+		FBE24AB41F0F5F6100160F62 /* LZVideoFilterVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FBE24AB21F0F5F6100160F62 /* LZVideoFilterVC.m */; };
+		FBE24AB51F0F5F6100160F62 /* LZVideoFilterVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBE24AB31F0F5F6100160F62 /* LZVideoFilterVC.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -768,6 +770,9 @@
 		FB83419B1F03A4D70010F690 /* LZVideoAdjustVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZVideoAdjustVC.h; sourceTree = "<group>"; };
 		FB83419C1F03A4D70010F690 /* LZVideoAdjustVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZVideoAdjustVC.m; sourceTree = "<group>"; };
 		FB83419D1F03A4D70010F690 /* LZVideoAdjustVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LZVideoAdjustVC.xib; sourceTree = "<group>"; };
+		FBE24AB11F0F5F6100160F62 /* LZVideoFilterVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZVideoFilterVC.h; sourceTree = "<group>"; };
+		FBE24AB21F0F5F6100160F62 /* LZVideoFilterVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZVideoFilterVC.m; sourceTree = "<group>"; };
+		FBE24AB31F0F5F6100160F62 /* LZVideoFilterVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LZVideoFilterVC.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1299,6 +1304,7 @@
 				FB69C4321EB96ED1007B38BD /* LZNewPromotionVC.xib */,
 				FB69C43B1EB96ED2007B38BD /* VideoDetail(视频详情) */,
 				FB69C43F1EB96ED2007B38BD /* VideoEdit(视频编辑) */,
+				FBE24AB01F0F5F6100160F62 /* LZVideoFilter(视频滤镜) */,
 				FB69C4351EB96ED2007B38BD /* SelectVideo(选择视频) */,
 				FB69C4381EB96ED2007B38BD /* TrimCrop(本地视频剪裁) */,
 			);
@@ -1548,6 +1554,16 @@
 			name = "调节";
 			sourceTree = "<group>";
 		};
+		FBE24AB01F0F5F6100160F62 /* LZVideoFilter(视频滤镜) */ = {
+			isa = PBXGroup;
+			children = (
+				FBE24AB11F0F5F6100160F62 /* LZVideoFilterVC.h */,
+				FBE24AB21F0F5F6100160F62 /* LZVideoFilterVC.m */,
+				FBE24AB31F0F5F6100160F62 /* LZVideoFilterVC.xib */,
+			);
+			path = "LZVideoFilter(视频滤镜)";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1684,6 +1700,7 @@
 				FB69C40C1EB96ADD007B38BD /* LaunchScreen.storyboard in Resources */,
 				FB83417A1EFCEAB30010F690 /* LZVideoTailoringVC.xib in Resources */,
 				FB83419F1F03A4D70010F690 /* LZVideoAdjustVC.xib in Resources */,
+				FBE24AB51F0F5F6100160F62 /* LZVideoFilterVC.xib in Resources */,
 				FB69C44D1EB96ED2007B38BD /* LZNewPromotionVC.xib in Resources */,
 				FB69C4551EB96ED2007B38BD /* LZVideoEditClipVC.xib in Resources */,
 				FB69C50E1EB983E5007B38BD /* Localizable.strings in Resources */,
@@ -1739,6 +1756,7 @@
 				FB4D35571EE64007000A92C8 /* GPUImageBrightnessFilter.m in Sources */,
 				FB4D35971EE64007000A92C8 /* GPUImageiOSBlurFilter.m in Sources */,
 				FB4D358D1EE64007000A92C8 /* GPUImageHighlightShadowFilter.m in Sources */,
+				FBE24AB41F0F5F6100160F62 /* LZVideoFilterVC.m in Sources */,
 				FB4D35601EE64007000A92C8 /* GPUImageColorBurnBlendFilter.m in Sources */,
 				FB4D35C41EE64007000A92C8 /* GPUImageRawDataOutput.m in Sources */,
 				FB4D359F1EE64007000A92C8 /* GPUImageLinearBurnBlendFilter.m in Sources */,

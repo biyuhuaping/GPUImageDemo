@@ -61,6 +61,9 @@
 #pragma mark -
 - (void)addSegment:(LZSessionSegment *_Nullable)segment;
 - (void)insertSegment:(LZSessionSegment *_Nullable)segment atIndex:(NSInteger)segmentIndex;
+- (void)replaceSegmentsAtIndex:(NSInteger)index withSegment:(LZSessionSegment *_Nullable)segment;
+- (void)removeSegmentAtIndex:(NSInteger)segmentIndex;
+- (void)removeSegmentAtIndex:(NSInteger)segmentIndex deleteFile:(BOOL)deleteFile;
 - (void)removeLastSegment;
 - (void)removeAllSegments;
 - (void)removeAllSegments:(BOOL)removeFiles;

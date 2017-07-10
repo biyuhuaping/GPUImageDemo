@@ -13,6 +13,8 @@
 #import "LZVideoTools.h"
 #import "LZPlayerView.h"
 
+#import "LZVideoFilterVC.h"//视频滤镜VC
+
 @interface LZVideoDetailsVC ()<SAVideoRangeSliderDelegate>
 
 @property (strong, nonatomic) IBOutlet LZPlayerView *playerView;
@@ -234,7 +236,9 @@
         }
             break;
         case 102:{//Filter
-            
+            LZVideoFilterVC *vc = [[LZVideoFilterVC alloc]initWithNibName:@"LZVideoFilterVC" bundle:nil];
+            vc.recordSession = self.recordSession;
+            [self.navigationController pushViewController:vc animated:YES];
         }
             break;
         case 103:{//Transition

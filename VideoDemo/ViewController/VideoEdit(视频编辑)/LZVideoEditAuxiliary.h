@@ -14,16 +14,6 @@
 @interface LZVideoEditAuxiliary : NSObject
 
 /**
- 获取当前segment
- 
- @param recordSegments <#recordSegments description#>
- @param idx <#idx description#>
- @return <#return value description#>
- */
-- (LZSessionSegment *)getCurrentSegment:(NSArray *)recordSegments index:(NSInteger)idx;
-
-
-/**
  获取视频当前总时间长度
  
  @param recordSegments <#recordSegments description#>

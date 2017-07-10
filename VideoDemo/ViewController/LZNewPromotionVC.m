@@ -63,7 +63,6 @@
 @property (strong, nonatomic) UILabel *labelCount;//段数
 
 @property (strong, nonatomic) IBOutlet UIView *maskView;//遮罩View
-@property (strong, nonatomic) IBOutlet UIView *chooseFilterView;//遮罩View
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *toTopDistance;
 @property (strong, nonatomic) IBOutlet LZCameraFilterCollectionView *cameraFilterView;
 
@@ -94,7 +93,7 @@
 
 //    [self configGPUImageView];
     [self.recordSession initGPUImageView:self.filter];
-    [self addCameraFilterView];
+    [self configCameraFilterView];
 }
 
 //- (void)configGPUImageView {
@@ -216,11 +215,8 @@
     });
 }
 
-//添加选择滤镜的CollectionView
-- (void)addCameraFilterView {
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    _cameraFilterView = [[LZCameraFilterCollectionView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, 100) collectionViewLayout:layout];
+//配置选择滤镜的CollectionView
+- (void)configCameraFilterView {
     NSMutableArray *filterNameArray = [[NSMutableArray alloc] initWithCapacity:9];
     for (NSInteger index = 0; index < 10; index++) {
         UIImage *image = [UIImage imageNamed:@"18"];
@@ -228,7 +224,6 @@
     }
     _cameraFilterView.cameraFilterDelegate = self;
     _cameraFilterView.picArray = filterNameArray;
-    [self.chooseFilterView addSubview:_cameraFilterView];
 }
 
 //更新进度条
@@ -418,18 +413,9 @@
 - (IBAction)setVoice:(UIButton *)sender {
     sender.selected = !sender.selected;
 
-//    SCRecordSessionSegment * segment = self.recordSegments[idx];
-//    //判断当前片段的声音设置
-//    if (segment.isVoice) {
-//        if ([segment.isVoice boolValue] == YES) {
-//            self.videoPlayerView.player.volume = 1;
-//            [self.lzVoiceButton setImage:[UIImage imageNamed:@"lz_videoedit_voice_on"] forState:UIControlStateNormal];
-//        }
-//        else {
-//            self.videoPlayerView.player.volume = 0;
-//            [self.lzVoiceButton setImage:[UIImage imageNamed:@"lz_videoedit_voice_off"] forState:UIControlStateNormal];
-//        }
-//    }
+    LZSessionSegment * segment = [self.recordSession.segments lastObject];
+    //判断当前片段的声音设置
+    segment.isMute = !segment.isMute;
 }
 
 //网格或线按钮

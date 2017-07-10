@@ -19,6 +19,18 @@
     return self;
 }
 
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder{
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        self.collectionViewLayout = layout;
+        self.delegate = self;
+        self.dataSource = self;
+    }
+    return self;
+}
+
 #pragma mark - delegate
 #pragma UICollectionView datasource
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {

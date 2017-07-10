@@ -12,26 +12,6 @@
 
 
 /**
- 获取当前segment
-
- @param recordSegments <#recordSegments description#>
- @param idx <#idx description#>
- @return <#return value description#>
- */
-- (LZSessionSegment *)getCurrentSegment:(NSArray *)recordSegments index:(NSInteger)idx {
-    
-    if (recordSegments.count == 0) {
-        return nil;
-    }
-    
-    LZSessionSegment * segment = recordSegments[idx];
-    NSAssert(segment.url != nil, @"segment must be non-nil");
-    return segment;
-}
-
-
-
-/**
  获取视频当前总时间长度
 
  @param recordSegments <#recordSegments description#>
@@ -99,10 +79,8 @@
  @param currentSelected <#currentSelected description#>
  */
 - (void)updateTrimmerView:(SAVideoRangeSlider *)trimmerView recordSegments:(NSArray *)recordSegments index:(NSInteger)currentSelected{
-    LZSessionSegment *sessionSegment = [self getCurrentSegment:recordSegments index:currentSelected];
-    [trimmerView getMovieFrame:sessionSegment.url];
-    
-    LZSessionSegment * segment = sessionSegment;
+    LZSessionSegment * segment = recordSegments[currentSelected];
+    [trimmerView getMovieFrame:segment.url];
 //    DLog(@"\r starttime:%f, \r endtime:%f \r url:%@ \r maximun: %f",
 //         segment.startTime,
 //         segment.endTime,
