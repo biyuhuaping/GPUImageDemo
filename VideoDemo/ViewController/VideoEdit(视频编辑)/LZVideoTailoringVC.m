@@ -16,10 +16,7 @@
 @property (strong, nonatomic) IBOutlet GPUImageView *gpuImageView;
 @property (strong, nonatomic) IBOutlet UIButton *playButton;
 
-@property (strong, nonatomic) GPUImageMovie *movieFile;
 @property (strong, nonatomic) LZSessionSegment *segment;
-@property (strong, nonatomic) GPUImageOutput<GPUImageInput> *filter;
-
 @property (strong, nonatomic) AVPlayer *player;
 @property (strong, nonatomic) id timeObser;
 
@@ -77,13 +74,13 @@
     self.player = [AVPlayer playerWithPlayerItem:playerItem];
     [self.playButton setImage:[UIImage imageNamed:@"播放"] forState:UIControlStateNormal];
     
-    self.movieFile = [[GPUImageMovie alloc] initWithPlayerItem:playerItem];
-    self.movieFile.playAtActualSpeed = YES;
+    GPUImageMovie *movieFile = [[GPUImageMovie alloc] initWithPlayerItem:playerItem];
+    movieFile.playAtActualSpeed = YES;
     
-    self.filter = [[GPUImageFilter alloc] init];//原图
-    [self.filter addTarget:self.gpuImageView];
-    [self.movieFile addTarget:self.filter];
-    [self.movieFile startProcessing];
+    GPUImageOutput<GPUImageInput> *filter = [[GPUImageFilter alloc] init];//原图
+    [filter addTarget:self.gpuImageView];
+    [movieFile addTarget:filter];
+    [movieFile startProcessing];
     
     WS(weakSelf);
     self.timeObser = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
