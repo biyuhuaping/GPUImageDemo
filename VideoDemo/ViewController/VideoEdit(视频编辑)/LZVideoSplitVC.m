@@ -13,13 +13,15 @@
 #import "LZVideoTools.h"
 
 @interface LZVideoSplitVC ()<LZVideoCropperSliderDelegate>
+
+@property (strong, nonatomic) IBOutlet GPUImageView *gpuImageView;
+@property (strong, nonatomic) IBOutlet UIButton *playButton;
+
 @property (strong, nonatomic) LZSessionSegment *segment;
-
-@property (strong, nonatomic) IBOutlet LZPlayerView *playerView;
-@property (strong, nonatomic) IBOutlet UIImageView *imageView;
-@property (strong, nonatomic) IBOutlet LZVideoCropperSlider *trimmerView;     //微调视图
-
+@property (strong, nonatomic) AVPlayer *player;
 @property (strong, nonatomic) id timeObser;
+
+@property (strong, nonatomic) IBOutlet LZVideoCropperSlider *trimmerView;     //微调视图
 @property (strong, nonatomic) NSMutableArray *recordSegments;
 
 @end
@@ -63,22 +65,28 @@
 
 - (void)configPlayerView{
     self.segment.startTime = 0.00;
-    self.segment.endTime = CMTimeGetSeconds(self.segment.duration)/2;
+    self.segment.endTime = CMTimeGetSeconds(self.segment.duration);
     
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playOrPause)];
-    [self.playerView addGestureRecognizer:tap];
+    AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithURL:self.segment.url];
+    self.player = [AVPlayer playerWithPlayerItem:playerItem];
+    [self.playButton setImage:[UIImage imageNamed:@"播放"] forState:UIControlStateNormal];
     
-    AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:self.segment.asset];
-    self.playerView.player = [AVPlayer playerWithPlayerItem:item];
+    GPUImageMovie *movieFile = [[GPUImageMovie alloc] initWithPlayerItem:playerItem];
+    movieFile.playAtActualSpeed = YES;
+    
+    GPUImageOutput<GPUImageInput> *filter = [[GPUImageFilter alloc] init];//原图
+    [filter addTarget:self.gpuImageView];
+    [movieFile addTarget:filter];
+    [movieFile startProcessing];
     
     WS(weakSelf);
-    self.timeObser = [self.playerView.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+    self.timeObser = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
         double current = CMTimeGetSeconds(time);
-        double total = CMTimeGetSeconds(weakSelf.segment.duration);
+        double total = CMTimeGetSeconds(weakSelf.segment.asset.duration);
         if (current >= total) {
             CMTime time = CMTimeMakeWithSeconds(weakSelf.segment.startTime, weakSelf.segment.duration.timescale);
-            [weakSelf.playerView.player seekToTime:time];
-            weakSelf.imageView.hidden = NO;
+            [weakSelf.player seekToTime:time];
+            [weakSelf.playButton setImage:[UIImage imageNamed:@"播放"] forState:UIControlStateNormal];
         }
     }];
 }
@@ -133,29 +141,29 @@
 }
 
 //播放或暂停
-- (void)playOrPause{
-    if (!(self.playerView.player.rate > 0)) {
-        [self.playerView.player play];
-        _imageView.hidden = YES;
+- (IBAction)playOrPause{
+    if (!(self.player.rate > 0)) {
+        [self.player play];
+        [self.playButton setImage:nil forState:UIControlStateNormal];
     }else{
-        [self.playerView.player pause];
-        _imageView.hidden = NO;
+        [self.player pause];
+        [self.playButton setImage:[UIImage imageNamed:@"播放"] forState:UIControlStateNormal];
     }
 }
 
 #pragma mark - SAVideoRangeSliderDelegate
 - (void)videoRange:(LZVideoCropperSlider *)videoRange didChangePosition:(CGFloat)position{
-    [self.playerView.player pause];
-    self.imageView.hidden = NO;
+    [self.player pause];
+    [self.playButton setImage:[UIImage imageNamed:@"播放"] forState:UIControlStateNormal];
     self.segment.endTime = position;
     
     //控制快进，后退
     CMTime time = CMTimeMakeWithSeconds(position, self.segment.asset.duration.timescale);
-    [self.playerView.player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+    [self.player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
 }
 
 - (void)dealloc{
-    [self.playerView.player removeTimeObserver:self.timeObser];
+    [self.player removeTimeObserver:self.timeObser];
     DLog(@"========= dealloc =========");
 }
 

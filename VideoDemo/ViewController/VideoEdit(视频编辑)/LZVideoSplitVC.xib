@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -12,8 +12,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LZVideoSplitVC">
             <connections>
-                <outlet property="imageView" destination="pqV-pU-Vql" id="TGP-d3-EUz"/>
-                <outlet property="playerView" destination="FoA-Ao-pd2" id="oRx-Y8-qVt"/>
+                <outlet property="gpuImageView" destination="n3w-fE-7KM" id="2vK-BN-7oi"/>
+                <outlet property="playButton" destination="Fgl-A9-5sw" id="cY2-0X-AcT"/>
                 <outlet property="trimmerView" destination="sOd-jl-Ep2" id="ykH-2t-eU3"/>
                 <outlet property="view" destination="Q3m-8P-KEk" id="nWQ-2P-gfC"/>
             </connections>
@@ -23,22 +23,24 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FoA-Ao-pd2" customClass="LZPlayerView">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n3w-fE-7KM" customClass="GPUImageView">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="播放" translatesAutoresizingMaskIntoConstraints="NO" id="pqV-pU-Vql">
-                            <rect key="frame" x="153" y="153" width="69" height="69"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="69" id="2wv-hC-UZd"/>
-                                <constraint firstAttribute="width" constant="69" id="3pK-Os-Yok"/>
-                            </constraints>
-                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fgl-A9-5sw">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                            <state key="normal" image="播放"/>
+                            <connections>
+                                <action selector="playOrPause" destination="-1" eventType="touchUpInside" id="Rlr-uR-ey7"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="width" secondItem="FoA-Ao-pd2" secondAttribute="height" multiplier="1:1" id="7Gi-V5-DbW"/>
-                        <constraint firstItem="pqV-pU-Vql" firstAttribute="centerX" secondItem="FoA-Ao-pd2" secondAttribute="centerX" id="Bl4-Zy-rc4"/>
-                        <constraint firstItem="pqV-pU-Vql" firstAttribute="centerY" secondItem="FoA-Ao-pd2" secondAttribute="centerY" id="pz3-Ne-dfB"/>
+                        <constraint firstAttribute="trailing" secondItem="Fgl-A9-5sw" secondAttribute="trailing" id="ADY-WA-7PS"/>
+                        <constraint firstItem="Fgl-A9-5sw" firstAttribute="leading" secondItem="n3w-fE-7KM" secondAttribute="leading" id="HKD-VA-1TQ"/>
+                        <constraint firstItem="Fgl-A9-5sw" firstAttribute="top" secondItem="n3w-fE-7KM" secondAttribute="top" id="Tm9-07-dnP"/>
+                        <constraint firstAttribute="bottom" secondItem="Fgl-A9-5sw" secondAttribute="bottom" id="gsC-if-KBk"/>
+                        <constraint firstAttribute="width" secondItem="n3w-fE-7KM" secondAttribute="height" multiplier="1:1" id="zm6-TL-L29"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8tJ-4f-4qv">
@@ -61,11 +63,11 @@
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="8tJ-4f-4qv" firstAttribute="top" secondItem="FoA-Ao-pd2" secondAttribute="bottom" id="4wJ-hJ-C3P"/>
-                <constraint firstAttribute="trailing" secondItem="FoA-Ao-pd2" secondAttribute="trailing" id="5fJ-uE-HlO"/>
-                <constraint firstItem="FoA-Ao-pd2" firstAttribute="top" secondItem="Q3m-8P-KEk" secondAttribute="top" id="5vd-vI-nu5"/>
+                <constraint firstAttribute="trailing" secondItem="n3w-fE-7KM" secondAttribute="trailing" id="DbH-LP-4zA"/>
                 <constraint firstItem="8tJ-4f-4qv" firstAttribute="leading" secondItem="Q3m-8P-KEk" secondAttribute="leading" id="FdW-n6-SLs"/>
-                <constraint firstItem="FoA-Ao-pd2" firstAttribute="leading" secondItem="Q3m-8P-KEk" secondAttribute="leading" id="Nem-5g-LEG"/>
+                <constraint firstItem="n3w-fE-7KM" firstAttribute="top" secondItem="Q3m-8P-KEk" secondAttribute="top" id="jvv-yg-EIF"/>
+                <constraint firstItem="8tJ-4f-4qv" firstAttribute="top" secondItem="n3w-fE-7KM" secondAttribute="bottom" id="pLW-Z0-1oQ"/>
+                <constraint firstItem="n3w-fE-7KM" firstAttribute="leading" secondItem="Q3m-8P-KEk" secondAttribute="leading" id="uLc-5e-eBh"/>
                 <constraint firstAttribute="trailing" secondItem="8tJ-4f-4qv" secondAttribute="trailing" id="vWl-Dk-wgB"/>
                 <constraint firstAttribute="bottom" secondItem="8tJ-4f-4qv" secondAttribute="bottom" id="vem-d5-jWG"/>
             </constraints>

@@ -13,12 +13,13 @@
     GPUImageMovieWriter *movieWriter;
 }
 
-@property (strong, nonatomic) LZSessionSegment *segment;
-
+@property (strong, nonatomic) IBOutlet GPUImageView *gpuImageView;
 @property (strong, nonatomic) IBOutlet UIButton *playButton;
 
+@property (strong, nonatomic) GPUImageMovie *movieFile;
+@property (strong, nonatomic) LZSessionSegment *segment;
+@property (strong, nonatomic) AVPlayer *player;
 @property (strong, nonatomic) id timeObser;
-@property (strong, nonatomic) NSMutableArray *recordSegments;
 
 @property (strong, nonatomic) IBOutlet UISlider *slider1;
 @property (strong, nonatomic) IBOutlet UISlider *slider2;
@@ -26,12 +27,6 @@
 @property (strong, nonatomic) IBOutlet UISlider *slider4;
 @property (strong, nonatomic) IBOutlet UISlider *slider5;
 @property (strong, nonatomic) IBOutlet UISlider *slider6;
-
-
-@property (strong, nonatomic) IBOutlet GPUImageView *gpuImageView;
-@property (strong, nonatomic) GPUImageMovie *movieFile;
-@property (strong, nonatomic) AVPlayer *player;
-
 
 @property (strong, nonatomic) GPUImageFilterGroup *filterGroup;             //滤镜池
 @property (strong, nonatomic) GPUImageExposureFilter *exposureFilter;       //曝光度
@@ -41,6 +36,7 @@
 @property (strong, nonatomic) GPUImageWhiteBalanceFilter *whiteBalanceFilter;//色温
 @property (strong, nonatomic) GPUImageBrightnessFilter *brightnessFilter;   //暗度
 
+
 @end
 
 @implementation LZVideoAdjustVC
@@ -48,7 +44,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"调节";
-    self.recordSegments = [NSMutableArray arrayWithArray:self.recordSession.segments];
     self.segment = self.recordSession.segments[self.currentSelected];
     
     [self configNavigationBar];
@@ -195,20 +190,9 @@
             [weakSelf.filterGroup removeTarget:strongSelf->movieWriter];
             [strongSelf->movieWriter finishRecording];
 
-//            //在主线程里更新UI
-            [weakSelf.recordSession removeAllSegments:NO];
-
+            //在主线程里更新UI
             LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:movieURL filter:nil];
-            [weakSelf.recordSegments removeObject:weakSelf.segment];
-            [weakSelf.recordSegments insertObject:newSegment atIndex:weakSelf.currentSelected];
-
-            for (int i = 0; i < weakSelf.recordSegments.count; i++) {
-                LZSessionSegment * segment = weakSelf.recordSegments[i];
-                if (segment.url != nil) {
-                    [weakSelf.recordSession insertSegment:segment atIndex:i];
-                }
-            }
-            
+            [weakSelf.recordSession replaceSegmentsAtIndex:weakSelf.currentSelected withSegment:newSegment];
             [weakSelf.navigationController popViewControllerAnimated:YES];
         });
     }];
@@ -267,8 +251,6 @@
 //    [self.player play];
 //    [self.playButton setImage:nil forState:UIControlStateNormal];
 }
-
-
 
 - (void)dealloc{
     [self.player removeTimeObserver:self.timeObser];

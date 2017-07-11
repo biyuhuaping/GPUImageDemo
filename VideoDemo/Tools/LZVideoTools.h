@@ -15,11 +15,11 @@
 /**
  视频压缩+剪切+导出
  
- @param selectSegment 所选视频资源
+ @param segment 视频资源
  @param filePath 文件路径
  @param completion 完成回调
  */
-+ (void)cutVideoWith:(LZSessionSegment *)selectSegment filePath:(NSURL *)filePath completion:(void (^)(void))completion;
++ (void)cutVideoWith:(LZSessionSegment *)segment filePath:(NSURL *)filePath completion:(void (^)(void))completion;
 
 
 /**
@@ -55,9 +55,12 @@
 
 
 //声音淡出
-+ (AVPlayerItem *)audioFadeOut:(LZSessionSegment *)selectSegment;
++ (AVPlayerItem *)audioFadeOut:(LZSessionSegment *)segment;
 
 //视频淡出
-+ (AVPlayerItem *)videoFadeOut:(LZSessionSegment *)selectSegment;
++ (AVPlayerItem *)videoFadeOut:(LZSessionSegment *)segment;
+
+//视频速度
++ (AVPlayerItem *)videoSpeed:(LZSessionSegment *)segment scale:(CGFloat)scale;
 
 @end

@@ -34,10 +34,7 @@
 @property (strong, nonatomic) IBOutlet GPUImageView *gpuImageView;
 @property (strong, nonatomic) IBOutlet UIButton *playButton;
 
-@property (strong, nonatomic) GPUImageMovie *movieFile;
 @property (strong, nonatomic) LZSessionSegment *segment;
-@property (strong, nonatomic) GPUImageOutput<GPUImageInput> *filter;
-
 @property (strong, nonatomic) AVPlayer *player;
 @property (strong, nonatomic) id timeObser;
 
@@ -67,9 +64,7 @@
     self.title = LZLocalizedString(@"edit_video", nil);
     _hintLabel.text = LZLocalizedString(@"all_video_delete", nil);
     self.currentSelected = 0;
-    self.segment = self.recordSession.segments[self.currentSelected];
     self.videoEditAuxiliary = [[LZVideoEditAuxiliary alloc]init];
-    self.filter = [[GPUImageFilter alloc] init];//原图
 
     self.timeLabel.layer.masksToBounds = YES;
     self.timeLabel.layer.cornerRadius = 10;
@@ -81,6 +76,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.recordSegments = [NSMutableArray arrayWithArray:self.recordSession.segments];
+    self.segment = self.recordSession.segments[self.currentSelected];
+
     [self configPlayerView:YES];
     [self didSelectPlayerItem];
     [self configTimeLabel];
@@ -148,12 +145,13 @@
         [self.playButton setImage:nil forState:UIControlStateNormal];
     }
     
-    self.movieFile = [[GPUImageMovie alloc] initWithPlayerItem:playerItem];
-    self.movieFile.playAtActualSpeed = YES;
+    GPUImageMovie *movieFile = [[GPUImageMovie alloc] initWithPlayerItem:playerItem];
+    movieFile.playAtActualSpeed = YES;
     
-    [self.filter addTarget:self.gpuImageView];
-    [self.movieFile addTarget:self.filter];
-    [self.movieFile startProcessing];
+    GPUImageOutput<GPUImageInput> *filter = [[GPUImageFilter alloc] init];//原图
+    [filter addTarget:self.gpuImageView];
+    [movieFile addTarget:filter];
+    [movieFile startProcessing];
     
     WS(weakSelf);
     self.timeObser = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {

@@ -24,8 +24,6 @@
 @property (strong, nonatomic) IBOutlet SAVideoRangeSlider *trimmerView;     //微调视图
 @property (strong, nonatomic) IBOutlet UILabel *timeLabel;//计时显示
 
-@property (strong, nonatomic) NSMutableArray *recordSegments;
-
 @end
 
 @implementation LZVideoTailoringVC
@@ -33,8 +31,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = LZLocalizedString(@"edit_video", nil);
-
-    self.recordSegments = [NSMutableArray arrayWithArray:self.recordSession.segments];
     self.segment = self.recordSession.segments[self.currentSelected];
 
     [self.trimmerView performSelectorInBackground:@selector(getMovieFrameWithAsset:) withObject:self.segment.asset];
