@@ -372,11 +372,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VideoDemo/ViewController/VideoEdit(&#x89c6;&#x9891;&#x7f16;&#x8f91;)/LZVideoAdjustVC.m"
-            timestampString = "521434350.350928"
+            timestampString = "521458631.550344"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "592"
-            endingLineNumber = "592">
+            startingLineNumber = "593"
+            endingLineNumber = "593">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -386,11 +386,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VideoDemo/ViewController/VideoEdit(&#x89c6;&#x9891;&#x7f16;&#x8f91;)/LZVideoAdjustVC.m"
-            timestampString = "521434350.350928"
+            timestampString = "521458631.550344"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "601"
-            endingLineNumber = "601">
+            startingLineNumber = "602"
+            endingLineNumber = "602">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -400,27 +400,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VideoDemo/ViewController/VideoEdit(&#x89c6;&#x9891;&#x7f16;&#x8f91;)/LZVideoAdjustVC.m"
-            timestampString = "521434350.350928"
+            timestampString = "521458631.550344"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "287"
-            endingLineNumber = "287">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "VideoDemo/ViewController/LZVideoFilter(&#x89c6;&#x9891;&#x6ee4;&#x955c;)/LZVideoFilterVC.m"
-            timestampString = "521361028.481573"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "270"
-            endingLineNumber = "270"
-            landmarkName = "-dealloc"
-            landmarkType = "7">
+            startingLineNumber = "288"
+            endingLineNumber = "288">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -436,6 +420,166 @@
             startingLineNumber = "414"
             endingLineNumber = "414"
             landmarkName = "-setVoice:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoDemo/ViewController/VideoEdit(&#x89c6;&#x9891;&#x7f16;&#x8f91;)/LZVideoEditClipVC.m"
+            timestampString = "521619364.721522"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "195"
+            endingLineNumber = "195"
+            landmarkName = "-navbarRightButtonClickAction:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoDemo/ViewController/VideoEdit(&#x89c6;&#x9891;&#x7f16;&#x8f91;)/LZVideoEditClipVC.m"
+            timestampString = "521619364.721522"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "210"
+            endingLineNumber = "210"
+            landmarkName = "-navbarRightButtonClickAction:"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[LZVideoEditClipVC navbarRightButtonClickAction:]"
+                  moduleName = "VideoDemo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/biyuhuaping/GPUImageDemo/VideoDemo/ViewController/VideoEdit(%E8%A7%86%E9%A2%91%E7%BC%96%E8%BE%91)/LZVideoEditClipVC.m"
+                  timestampString = "521619997.504546"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "210"
+                  endingLineNumber = "210"
+                  offsetFromSymbolStart = "1244">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__50-[LZVideoEditClipVC navbarRightButtonClickAction:]_block_invoke"
+                  moduleName = "VideoDemo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/biyuhuaping/GPUImageDemo/VideoDemo/ViewController/VideoEdit(%E8%A7%86%E9%A2%91%E7%BC%96%E8%BE%91)/LZVideoEditClipVC.m"
+                  timestampString = "521619997.507104"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "210"
+                  endingLineNumber = "210"
+                  offsetFromSymbolStart = "24">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoDemo/ViewController/VideoEdit(&#x89c6;&#x9891;&#x7f16;&#x8f91;)/LZVideoEditClipVC.m"
+            timestampString = "521619364.721522"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "211"
+            endingLineNumber = "211"
+            landmarkName = "-navbarRightButtonClickAction:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoDemo/ViewController/VideoEdit(&#x89c6;&#x9891;&#x7f16;&#x8f91;)/LZVideoEditClipVC.m"
+            timestampString = "521619364.721522"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "221"
+            endingLineNumber = "221"
+            landmarkName = "-navbarRightButtonClickAction:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoDemo/ViewController/VideoEdit(&#x89c6;&#x9891;&#x7f16;&#x8f91;)/LZVideoEditClipVC.m"
+            timestampString = "521619364.721522"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "223"
+            endingLineNumber = "223"
+            landmarkName = "-navbarRightButtonClickAction:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoDemo/ViewController/VideoEdit(&#x89c6;&#x9891;&#x7f16;&#x8f91;)/LZVideoTailoringVC.m"
+            timestampString = "521458631.550344"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "110"
+            endingLineNumber = "110"
+            landmarkName = "-cutVideo"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoDemo/ViewController/VideoEdit(&#x89c6;&#x9891;&#x7f16;&#x8f91;)/LZVideoEditClipVC.m"
+            timestampString = "521620058.302131"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "324"
+            endingLineNumber = "324"
+            landmarkName = "-lzVoiceButtonAction:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "VideoDemo/ViewController/VideoEdit(&#x89c6;&#x9891;&#x7f16;&#x8f91;)/LZVideoEditClipVC.m"
+            timestampString = "521620429.929815"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "146"
+            endingLineNumber = "146"
+            landmarkName = "-showVideo:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -68,6 +68,7 @@
     
     AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithURL:self.segment.url];
     self.player = [AVPlayer playerWithPlayerItem:playerItem];
+    self.player.volume = self.segment.isMute?0:1;
     [self.playButton setImage:[UIImage imageNamed:@"播放"] forState:UIControlStateNormal];
     
     GPUImageMovie *movieFile = [[GPUImageMovie alloc] initWithPlayerItem:playerItem];

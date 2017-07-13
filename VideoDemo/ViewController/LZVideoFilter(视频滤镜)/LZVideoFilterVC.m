@@ -11,15 +11,12 @@
 #import "LZVideoEditCollectionViewCell.h"
 #import "LewReorderableLayout.h"
 
-@interface LZVideoFilterVC ()<LZCameraFilterViewDelegate,LewReorderableLayoutDelegate, LewReorderableLayoutDataSource>{
-    GPUImageMovieWriter *movieWriter;
-}
+@interface LZVideoFilterVC ()<LZCameraFilterViewDelegate,LewReorderableLayoutDelegate, LewReorderableLayoutDataSource>
 
 @property (strong, nonatomic) IBOutlet GPUImageView *gpuImageView;
 @property (strong, nonatomic) IBOutlet UIButton *playButton;
 
 @property (strong, nonatomic) GPUImageMovie *movieFile;
-@property (strong, nonatomic) LZSessionSegment *segment;
 @property (strong, nonatomic) GPUImageOutput<GPUImageInput> *filter;
 
 @property (strong, nonatomic) AVPlayer *player;
@@ -40,7 +37,6 @@
     self.title = @"滤镜";
     
     self.currentSelected = 0;
-    self.segment = self.recordSession.segments[self.currentSelected];
     self.recordSegments = [NSMutableArray arrayWithArray:self.recordSession.segments];
 
     self.filter = [[GPUImageExposureFilter alloc]init];
@@ -49,11 +45,6 @@
     [self configCameraFilterView];
     [self configCollectionView];
     [self didSelectPlayerItem];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [self.player pause];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -78,17 +69,20 @@
 }
 
 - (void)configPlayerView:(BOOL)isFirstTime{
-    AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithURL:self.segment.url];
+    LZSessionSegment *segment = self.recordSegments[self.currentSelected];
+
+    AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithURL:segment.url];
     if (isFirstTime) {
         self.player = [AVPlayer playerWithPlayerItem:playerItem];
         [self.playButton setImage:[UIImage imageNamed:@"播放"] forState:UIControlStateNormal];
     }else{
-        [self.player replaceCurrentItemWithPlayerItem:playerItem];
         [self.player removeTimeObserver:self.timeObser];
+        [self.player replaceCurrentItemWithPlayerItem:playerItem];
         [self.player play];
         [self.playButton setImage:nil forState:UIControlStateNormal];
     }
-    
+    self.player.volume = segment.isMute?0:1;
+
     self.movieFile = [[GPUImageMovie alloc] initWithPlayerItem:playerItem];
     self.movieFile.playAtActualSpeed = YES;
     
@@ -99,9 +93,9 @@
     WS(weakSelf);
     self.timeObser = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
         double current = CMTimeGetSeconds(time);
-        double total = CMTimeGetSeconds(weakSelf.segment.asset.duration);
+        double total = CMTimeGetSeconds(segment.asset.duration);
         if (current >= total) {
-            CMTime time = CMTimeMakeWithSeconds(weakSelf.segment.startTime, weakSelf.segment.duration.timescale);
+            CMTime time = CMTimeMakeWithSeconds(segment.startTime, segment.duration.timescale);
             [weakSelf.player seekToTime:time];
             [weakSelf.playButton setImage:[UIImage imageNamed:@"播放"] forState:UIControlStateNormal];
         }
@@ -193,7 +187,6 @@
         return;
     }
     self.currentSelected = indexPath.row;
-    self.segment = self.recordSession.segments[self.currentSelected];
 
     //显示当前片段
     [self configPlayerView:NO];

@@ -103,7 +103,8 @@
 - (void)configPlayerView{
     AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:self.asset];
     self.playerView.player = [AVPlayer playerWithPlayerItem:item];
-    
+//    self.player.volume = self.segment.isMute?0:1;
+
     WS(weakSelf);
     _timeObser = [self.playerView.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time){
         double current = CMTimeGetSeconds(time);

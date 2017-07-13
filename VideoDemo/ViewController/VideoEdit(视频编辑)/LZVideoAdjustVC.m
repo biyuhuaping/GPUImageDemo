@@ -131,7 +131,8 @@
 - (void)configPlayerView{
     AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithURL:self.segment.url];
     self.player = [AVPlayer playerWithPlayerItem:playerItem];
-    
+    self.player.volume = self.segment.isMute?0:1;
+
     self.movieFile = [[GPUImageMovie alloc] initWithPlayerItem:playerItem];
 //    self.movieFile.delegate = self;
     self.movieFile.playAtActualSpeed = YES;

@@ -18,7 +18,6 @@
 @property (strong, nonatomic) AVPlayer *player;
 @property (strong, nonatomic) id timeObser;
 
-@property (strong, nonatomic) NSMutableArray *recordSegments;
 @property (assign, nonatomic) float rateValue;
 
 @end
@@ -28,7 +27,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.recordSegments = [NSMutableArray arrayWithArray:self.recordSession.segments];
     self.segment = self.recordSession.segments[self.currentSelected];
     
     self.rateValue = 1.0;
@@ -61,6 +59,7 @@
 - (void)configPlayerView{
     AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithURL:self.segment.url];
     self.player = [AVPlayer playerWithPlayerItem:playerItem];
+    self.player.volume = self.segment.isMute?0:1;
     [self.playButton setImage:[UIImage imageNamed:@"播放"] forState:UIControlStateNormal];
     
     GPUImageMovie *movieFile = [[GPUImageMovie alloc] initWithPlayerItem:playerItem];

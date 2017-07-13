@@ -12,12 +12,13 @@
 @protocol LZCameraFilterViewDelegate <NSObject>
 
 - (void)switchCameraFilter:(NSInteger)index;
+
 @end
 
 
 @interface LZCameraFilterCollectionView : UICollectionView<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
 @property (strong, nonatomic) NSMutableArray *picArray;
-@property (strong, nonatomic) id <LZCameraFilterViewDelegate> cameraFilterDelegate;
+@property (weak, nonatomic) id <LZCameraFilterViewDelegate> cameraFilterDelegate;
 
 @end
