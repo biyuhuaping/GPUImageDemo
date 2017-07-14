@@ -22,7 +22,6 @@
 @property (strong, nonatomic) id timeObser;
 
 @property (strong, nonatomic) IBOutlet LZVideoCropperSlider *trimmerView;     //微调视图
-@property (strong, nonatomic) NSMutableArray *recordSegments;
 
 @end
 
@@ -31,9 +30,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = LZLocalizedString(@"edit_video", nil);
-
-    self.recordSegments = [NSMutableArray arrayWithArray:self.recordSession.segments];
-    self.segment = self.recordSession.segments[self.currentSelected];
+    self.segment = self.recordSegments[self.currentSelected];
     
     [self.trimmerView performSelectorInBackground:@selector(getMovieFrameWithAsset:) withObject:self.segment.asset];
     self.trimmerView.delegate = self;
@@ -96,13 +93,51 @@
 //保存
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
     [self cutVideo];
+    
+//    [self.recordSegments removeObjectAtIndex:self.currentSelected];
+//    [self.recordSegments insertObject:self.segment atIndex:self.currentSelected];
+//    [self.recordSession removeAllSegments:NO];
+//    
+//    WS(weakSelf);
+//    dispatch_group_t serviceGroup = dispatch_group_create();
+//    for (int i = 0; i < weakSelf.recordSegments.count; i++) {
+//        DLog(@"遍历数组：%d", i);
+//        LZSessionSegment * segment = weakSelf.recordSegments[i];
+//        NSString *filename = [NSString stringWithFormat:@"Video-%ld.m4v", (long)i];
+//        NSURL *tempPath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
+//        
+//        CMTime start = CMTimeMakeWithSeconds(segment.startTime, segment.duration.timescale);
+//        CMTime duration = CMTimeMakeWithSeconds(segment.endTime - segment.startTime, segment.asset.duration.timescale);
+//        CMTimeRange range = CMTimeRangeMake(start, duration);
+//        
+//        dispatch_group_enter(serviceGroup);
+//        [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:tempPath timeRange:range completion:^(NSURL *savedPath) {
+//            LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:tempPath filter:nil];
+//            DLog(@"url:%@", [tempPath path]);
+//            [weakSelf.recordSegments removeObject:segment];
+//            [weakSelf.recordSegments insertObject:newSegment atIndex:i];
+//            dispatch_group_leave(serviceGroup);
+//        }];
+//    }
+//    
+//    dispatch_group_notify(serviceGroup, dispatch_get_main_queue(),^{
+//        DLog(@"保存到recordSession");
+//        for (int i = 0; i < weakSelf.recordSegments.count; i++) {
+//            LZSessionSegment * segment = weakSelf.recordSegments[i];
+//            NSAssert(segment.url != nil, @"segment url must be non-nil");
+//            if (segment.url != nil) {
+//                [weakSelf.recordSession insertSegment:segment atIndex:i];
+//            }
+//        }
+//        [weakSelf.navigationController popViewControllerAnimated:YES];
+//    });
 }
 
 - (void)cutVideo {
     NSURL *tempPath = self.segment.url;
     NSString *filename = [LZVideoTools getFileName:[tempPath absoluteString]];
-    [self.recordSession removeAllSegments:NO];
-    
+    [self.recordSegments removeObjectAtIndex:self.currentSelected];
+
     dispatch_group_t serviceGroup = dispatch_group_create();
     for (int i = 0; i < 2; i++) {
         tempPath = [LZVideoTools filePathWithFileName:[NSString stringWithFormat:@"%@-%d.m4v", filename,i] isFilter:YES];
@@ -120,15 +155,14 @@
             if(savedPath) {
                 DLog(@"导出视频路径：%@", savedPath);
                 LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:tempPath filter:self.segment.filter];
-                [self.recordSegments removeObject:self.segment];
                 [self.recordSegments insertObject:newSegment atIndex:self.currentSelected + i];
             }
             dispatch_group_leave(serviceGroup);
         }];
     }
     
-    
     dispatch_group_notify(serviceGroup, dispatch_get_main_queue(),^{
+        [self.recordSession removeAllSegments:NO];
         for (int i = 0; i < self.recordSegments.count; i++) {
             LZSessionSegment * segment = self.recordSegments[i];
             NSAssert(segment.url != nil, @"segment url must be non-nil");

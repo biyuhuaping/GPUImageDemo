@@ -31,7 +31,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = LZLocalizedString(@"edit_video", nil);
-    self.segment = self.recordSession.segments[self.currentSelected];
+    self.segment = self.recordSegments[self.currentSelected];
 
     [self.trimmerView performSelectorInBackground:@selector(getMovieFrameWithAsset:) withObject:self.segment.asset];
     self.trimmerView.delegate = self;
@@ -103,7 +103,8 @@
 
 #pragma mark - Event
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
-    [self cutVideo];
+//    [self cutVideo];
+    [self saveCutVideo];
 }
 
 - (void)cutVideo {
@@ -123,6 +124,46 @@
             [self.navigationController popViewControllerAnimated:YES];
         }
     }];
+}
+
+//保存
+- (void)saveCutVideo {
+    [self.recordSegments removeObjectAtIndex:self.currentSelected];
+    [self.recordSegments insertObject:self.segment atIndex:self.currentSelected];
+    
+    WS(weakSelf);
+    dispatch_group_t serviceGroup = dispatch_group_create();
+    for (int i = 0; i < weakSelf.recordSegments.count; i++) {
+        DLog(@"遍历数组：%d", i);
+        LZSessionSegment * segment = weakSelf.recordSegments[i];
+        NSString *filename = [NSString stringWithFormat:@"Video-%ld.m4v", (long)i];
+        NSURL *tempPath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
+        
+        CMTime start = CMTimeMakeWithSeconds(segment.startTime, segment.duration.timescale);
+        CMTime duration = CMTimeMakeWithSeconds(segment.endTime - segment.startTime, segment.asset.duration.timescale);
+        CMTimeRange range = CMTimeRangeMake(start, duration);
+        
+        dispatch_group_enter(serviceGroup);
+        [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:tempPath timeRange:range completion:^(NSURL *savedPath) {
+            LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:tempPath filter:nil];
+            DLog(@"url:%@", [tempPath path]);
+            [weakSelf.recordSegments removeObject:segment];
+            [weakSelf.recordSegments insertObject:newSegment atIndex:i];
+            dispatch_group_leave(serviceGroup);
+        }];
+    }
+    
+    dispatch_group_notify(serviceGroup, dispatch_get_main_queue(),^{
+        [self.recordSession removeAllSegments:NO];
+        for (int i = 0; i < weakSelf.recordSegments.count; i++) {
+            LZSessionSegment * segment = weakSelf.recordSegments[i];
+            NSAssert(segment.url != nil, @"segment url must be non-nil");
+            if (segment.url != nil) {
+                [weakSelf.recordSession insertSegment:segment atIndex:i];
+            }
+        }
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+    });
 }
 
 //播放或暂停

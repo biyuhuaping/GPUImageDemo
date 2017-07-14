@@ -44,7 +44,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"调节";
-    self.segment = self.recordSession.segments[self.currentSelected];
+    self.segment = self.recordSegments[self.currentSelected];
     
     [self configNavigationBar];
     
@@ -193,7 +193,16 @@
 
             //在主线程里更新UI
             LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:movieURL filter:nil];
-            [weakSelf.recordSession replaceSegmentsAtIndex:weakSelf.currentSelected withSegment:newSegment];
+            [weakSelf.recordSegments removeObjectAtIndex:weakSelf.currentSelected];
+            [weakSelf.recordSegments insertObject:newSegment atIndex:weakSelf.currentSelected];
+            
+            [weakSelf.recordSession removeAllSegments:NO];
+            for (int i = 0; i < weakSelf.recordSegments.count; i++) {
+                LZSessionSegment * segment = weakSelf.recordSegments[i];
+                if (segment.url != nil) {
+                    [weakSelf.recordSession insertSegment:segment atIndex:i];
+                }
+            }
             [weakSelf.navigationController popViewControllerAnimated:YES];
         });
     }];

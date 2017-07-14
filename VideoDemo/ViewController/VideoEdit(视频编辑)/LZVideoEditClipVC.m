@@ -50,7 +50,7 @@
 
 @property (strong, nonatomic) LZVideoEditAuxiliary *videoEditAuxiliary;
 @property (assign, nonatomic) NSInteger currentSelected;
-//@property (strong, nonatomic) NSMutableArray *recordSegments;
+@property (strong, nonatomic) NSMutableArray *recordSegments;
 @property (nonatomic, assign) __block BOOL isReverseCancel;   //取消翻转
 
 @end
@@ -62,7 +62,6 @@
     // Do any additional setup after loading the view from its nib.
     self.title = LZLocalizedString(@"edit_video", nil);
     _hintLabel.text = LZLocalizedString(@"all_video_delete", nil);
-    self.currentSelected = 0;
     self.videoEditAuxiliary = [[LZVideoEditAuxiliary alloc]init];
 
     self.timeLabel.layer.masksToBounds = YES;
@@ -74,7 +73,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    self.recordSegments = [NSMutableArray arrayWithArray:self.recordSession.segments];
+    self.currentSelected = 0;
+    self.recordSegments = [NSMutableArray arrayWithArray:self.recordSession.segments];
 
     [self showVideo:YES];
     [self configTimeLabel];
@@ -131,7 +131,7 @@
 
 //选中视频
 - (void)showVideo:(BOOL)isFirstTime{
-    LZSessionSegment *segment = self.recordSession.segments[self.currentSelected];
+    LZSessionSegment *segment = self.recordSegments[self.currentSelected];
 
     AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithURL:segment.url];
     if (isFirstTime) {
@@ -171,8 +171,8 @@
 //选中视频
 - (void)didSelectPlayerItem {
     //这里遍历声音设置情况
-    for (int i = 0; i < self.recordSession.segments.count; i++) {
-        LZSessionSegment * segment = self.recordSession.segments[i];
+    for (int i = 0; i < self.recordSegments.count; i++) {
+        LZSessionSegment * segment = self.recordSegments[i];
         NSAssert(segment != nil, @"segment must be non-nil");
         
         if (self.currentSelected == i) {
@@ -193,9 +193,9 @@
     
     WS(weakSelf);
     dispatch_group_t serviceGroup = dispatch_group_create();
-    for (int i = 0; i < weakSelf.recordSession.segments.count; i++) {
+    for (int i = 0; i < weakSelf.recordSegments.count; i++) {
         DLog(@"执行剪切：%d", i);
-        LZSessionSegment * segment = weakSelf.recordSession.segments[i];
+        LZSessionSegment * segment = weakSelf.recordSegments[i];
         NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:segment.asset];
         if ([compatiblePresets containsObject:AVAssetExportPresetHighestQuality]) {
             
@@ -210,8 +210,8 @@
             [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:tempPath timeRange:range completion:^(NSURL *savedPath) {
                 LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:tempPath filter:nil];
                 DLog(@"剪切url:%@", [tempPath path]);
-                [weakSelf.recordSession.segments removeObject:segment];
-                [weakSelf.recordSession.segments insertObject:newSegment atIndex:i];
+                [weakSelf.recordSegments removeObject:segment];
+                [weakSelf.recordSegments insertObject:newSegment atIndex:i];
                 dispatch_group_leave(serviceGroup);
             }];
         }
@@ -219,8 +219,8 @@
     
     dispatch_group_notify(serviceGroup, dispatch_get_main_queue(),^{
         DLog(@"保存到recordSession");
-        for (int i = 0; i < weakSelf.recordSession.segments.count; i++) {
-            LZSessionSegment * segment = weakSelf.recordSession.segments[i];
+        for (int i = 0; i < weakSelf.recordSegments.count; i++) {
+            LZSessionSegment * segment = weakSelf.recordSegments[i];
             NSAssert(segment.url != nil, @"segment url must be non-nil");
             if (segment.url != nil) {
                 [weakSelf.recordSession insertSegment:segment atIndex:i];
@@ -246,13 +246,14 @@
     LZVideoTailoringVC *tailoringView = [[LZVideoTailoringVC alloc]initWithNibName:@"LZVideoTailoringVC" bundle:nil];
     tailoringView.recordSession = self.recordSession;
     tailoringView.currentSelected = self.currentSelected;
+    tailoringView.recordSegments = [NSMutableArray arrayWithArray:self.recordSegments];
     [self.navigationController pushViewController:tailoringView animated:YES];
 }
 
 //分割
 - (IBAction)lzSplitButtonAction:(id)sender {
     //至少1秒，才能分割
-    LZSessionSegment *segment = self.recordSession.segments[self.currentSelected];
+    LZSessionSegment *segment = self.recordSegments[self.currentSelected];
     if (CMTimeGetSeconds(segment.duration) < 1) {
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:LZLocalizedString(@"edit_message", nil) message:@"至少1秒，才能分割!zhoubo" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
         [alert show];
@@ -261,28 +262,28 @@
     LZVideoSplitVC *splitView = [[LZVideoSplitVC alloc]initWithNibName:@"LZVideoSplitVC" bundle:nil];
     splitView.recordSession = self.recordSession;
     splitView.currentSelected = self.currentSelected;
+    splitView.recordSegments = [NSMutableArray arrayWithArray:self.recordSegments];
     [self.navigationController pushViewController:splitView animated:YES];
 }
 
 //复制
 - (IBAction)lzCopyButtonAction:(UIButton *)sender {
-    if (self.recordSession.segments.count == 0) {
+    if (self.recordSegments.count == 0) {
         return;
     }
     
-    LZSessionSegment * segment = self.recordSession.segments[self.currentSelected];
+    LZSessionSegment * segment = self.recordSegments[self.currentSelected];
     NSAssert(segment.url != nil, @"segment must be non-nil");
     
-    if (CMTimeGetSeconds(segment.duration)+[self.videoEditAuxiliary getAllVideoTimesRecordSegments:self.recordSession.segments] > 15) {
+    if (CMTimeGetSeconds(segment.duration)+[self.videoEditAuxiliary getAllVideoTimesRecordSegments:self.recordSegments] > 15) {
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:LZLocalizedString(@"edit_message", nil) message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
         [alert show];
         return;
     }
     
-    LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:segment.url filter:nil];
+    LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:segment.url filter:segment.filter];
     NSAssert(newSegment.url != nil, @"segment must be non-nil");    
-    [self.recordSession.segments addObject:newSegment];
-    [self.recordSession addSegment:newSegment];
+    [self.recordSegments addObject:newSegment];
     
     //更新片段view
     [self.collectionView reloadData];
@@ -293,6 +294,7 @@
     LZVideoSpeedVC *viewC = [[LZVideoSpeedVC alloc]initWithNibName:@"LZVideoSpeedVC" bundle:nil];
     viewC.recordSession = self.recordSession;
     viewC.currentSelected = self.currentSelected;
+    viewC.recordSegments = [NSMutableArray arrayWithArray:self.recordSegments];
     [self.navigationController pushViewController:viewC animated:YES];
 }
 
@@ -301,6 +303,7 @@
     LZVideoAdjustVC *viewC = [[LZVideoAdjustVC alloc]initWithNibName:@"LZVideoAdjustVC" bundle:nil];
     viewC.recordSession = self.recordSession;
     viewC.currentSelected = self.currentSelected;
+    viewC.recordSegments = [NSMutableArray arrayWithArray:self.recordSegments];
     [self.navigationController pushViewController:viewC animated:YES];
 }
 
@@ -317,11 +320,11 @@
      */
     
 
-    if (self.recordSession.segments.count == 0) {
+    if (self.recordSegments.count == 0) {
         return;
     }
     
-    LZSessionSegment * segment = self.recordSession.segments[self.currentSelected];
+    LZSessionSegment * segment = self.recordSegments[self.currentSelected];
     //判断当前片段的声音设置
     if (!segment.isMute) {
         self.player.volume = 0;
@@ -336,7 +339,7 @@
 
 //倒放
 - (IBAction)lzBackwardsButtonAction:(UIButton *)sender {
-    if (self.recordSession.segments.count == 0) {
+    if (self.recordSegments.count == 0) {
         return;
     }
     
@@ -345,7 +348,7 @@
     [self.player pause];
     [self.progressView setProgress:0];
     
-    __block LZSessionSegment *segment = self.recordSession.segments[self.currentSelected];
+    __block LZSessionSegment *segment = self.recordSegments[self.currentSelected];
     __block LZSessionSegment *newSegment = nil;
     
     NSURL *tempPath = [LZVideoTools filePathWithFileName:@"ConponVideo.m4v" isFilter:YES];
@@ -358,8 +361,8 @@
             newSegment.assetSourcePath = segment.assetSourcePath;
             newSegment.assetTargetPath = segment.assetTargetPath;
             
-            [self.recordSession.segments removeObject:segment];
-            [self.recordSession.segments insertObject:newSegment atIndex:self.currentSelected];
+            [self.recordSegments removeObject:segment];
+            [self.recordSegments insertObject:newSegment atIndex:self.currentSelected];
             
             [self showVideo:NO];
             self.progressView.hidden = YES;
@@ -388,8 +391,8 @@
                             [newSegment setAssetTargetPath:[tempPath path]];
                             
                             //更新session
-                            [weakSelf.recordSession.segments removeObject:segment];
-                            [weakSelf.recordSession.segments insertObject:newSegment atIndex:weakSelf.currentSelected];
+                            [weakSelf.recordSegments removeObject:segment];
+                            [weakSelf.recordSegments insertObject:newSegment atIndex:weakSelf.currentSelected];
                             
                             [self showVideo:NO];
                             weakSelf.progressView.hidden = YES;
@@ -411,20 +414,20 @@
 
 //删除
 - (IBAction)lzDeleteButtonAction:(UIButton *)sender {
-    if (self.recordSession.segments.count == 0) {
+    if (self.recordSegments.count == 0) {
         return;
     }
     
-    if(self.recordSession.segments.count > 0) {
-        [self.recordSession.segments removeObjectAtIndex:self.currentSelected];
-        if (self.currentSelected >= self.recordSession.segments.count) {
-            self.currentSelected = self.recordSession.segments.count-1;
+    if(self.recordSegments.count > 0) {
+        [self.recordSegments removeObjectAtIndex:self.currentSelected];
+        if (self.currentSelected >= self.recordSegments.count) {
+            self.currentSelected = self.recordSegments.count-1;
         }
         [self showVideo:NO];
     }
     
     //这里不能用 else if ，因为当删掉最后一个元素后，self.recordSegments.count 就等于0，需要进入方法内执行。
-    if (self.recordSession.segments.count == 0) {
+    if (self.recordSegments.count == 0) {
         self.navigationItem.rightBarButtonItem.enabled = NO;
         
         [self.player pause];
@@ -446,13 +449,13 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.recordSession.segments.count;
+    return self.recordSegments.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *identify = @"VideoEditCollectionCell";
     LZVideoEditCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identify forIndexPath:indexPath];
-    LZSessionSegment * segment = self.recordSession.segments[indexPath.row];
+    LZSessionSegment * segment = self.recordSegments[indexPath.row];
     NSAssert(segment.url != nil, @"segment must be non-nil");
     if (segment) {
         cell.imageView.image = segment.thumbnail;
@@ -473,10 +476,10 @@
 
 #pragma mark - UICollectionViewDelegate
 - (void)collectionView:(UICollectionView *)collectionView itemAtIndexPath:(NSIndexPath *)fromIndexPath didMoveToIndexPath:(NSIndexPath *)toIndexPath {
-    LZSessionSegment * segment = self.recordSession.segments[fromIndexPath.row];
+    LZSessionSegment * segment = self.recordSegments[fromIndexPath.row];
     NSAssert(segment.url != nil, @"segment must be non-nil");
-    [self.recordSession.segments removeObject:segment];
-    [self.recordSession.segments insertObject:segment atIndex:toIndexPath.row];
+    [self.recordSegments removeObject:segment];
+    [self.recordSegments insertObject:segment atIndex:toIndexPath.row];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {

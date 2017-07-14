@@ -1631,7 +1631,7 @@
 				TargetAttributes = {
 					FB69C3F81EB96ADC007B38BD = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = BNV27HH5PK;
+						DevelopmentTeam = R5QJT22HS5;
 						ProvisioningStyle = Automatic;
 					};
 					FB69C4111EB96ADD007B38BD = {
@@ -2107,7 +2107,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = BNV27HH5PK;
+				DEVELOPMENT_TEAM = R5QJT22HS5;
 				GCC_PREFIX_HEADER = VideoDemo/PrefixHeader.pch;
 				HEADER_SEARCH_PATHS = ../GPUImage/framework;
 				INFOPLIST_FILE = VideoDemo/Info.plist;
@@ -2115,7 +2115,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = "-fobjc-arc";
-				PRODUCT_BUNDLE_IDENTIFIER = com.zhoubo.VideoDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hsrt.lazizmerchant;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -2124,7 +2124,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = BNV27HH5PK;
+				DEVELOPMENT_TEAM = R5QJT22HS5;
 				GCC_PREFIX_HEADER = VideoDemo/PrefixHeader.pch;
 				HEADER_SEARCH_PATHS = ../GPUImage/framework;
 				INFOPLIST_FILE = VideoDemo/Info.plist;
@@ -2132,7 +2132,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = "-fobjc-arc";
-				PRODUCT_BUNDLE_IDENTIFIER = com.zhoubo.VideoDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hsrt.lazizmerchant;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

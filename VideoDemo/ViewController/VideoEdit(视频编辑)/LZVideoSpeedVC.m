@@ -27,8 +27,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.segment = self.recordSession.segments[self.currentSelected];
-    
+    self.segment = self.recordSegments[self.currentSelected];
     self.rateValue = 1.0;
 
     [self configNavigationBar];
