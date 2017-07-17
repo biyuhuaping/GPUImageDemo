@@ -14,8 +14,7 @@
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
-    if (self)
-    {
+    if (self) {
         self.backgroundColor = [UIColor lightTextColor];
         [self configView];
         [self addAutoLayout];

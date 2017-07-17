@@ -7,7 +7,7 @@
 //  视频录制页面
 
 #import "LZNewPromotionVC.h"
-#import "LZSelectVideoViewController.h"
+#import "LZSelectVideoVC.h"
 #import "LZVideoDetailsVC.h"//视频详情
 
 #import "LZGridView.h"
@@ -281,7 +281,7 @@
 #pragma mark - Event
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
     if (self.videoListSegmentArrays.count > 0) {
-        LZSelectVideoViewController * vc = [[LZSelectVideoViewController alloc] init];
+        LZSelectVideoVC *vc = [[LZSelectVideoVC alloc]initWithNibName:@"LZSelectVideoVC" bundle:nil];
         vc.recordSession = self.recordSession;
         vc.videoListSegmentArrays = self.videoListSegmentArrays;
         [self.navigationController pushViewController:vc animated:YES];

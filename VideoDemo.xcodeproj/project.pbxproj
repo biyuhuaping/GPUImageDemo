@@ -241,6 +241,8 @@
 		FB69C52E1EBC4588007B38BD /* LZVideoTools.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C52D1EBC4588007B38BD /* LZVideoTools.m */; };
 		FB69C5311EBC45A5007B38BD /* ClearCacheTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C5301EBC45A5007B38BD /* ClearCacheTool.m */; };
 		FB69D44D1EC5956300953C9E /* RecordProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69D44C1EC5956300953C9E /* RecordProgressView.m */; };
+		FB6CCA221F1C9E150065E45C /* LZSelectVideoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FB6CCA201F1C9E150065E45C /* LZSelectVideoVC.m */; };
+		FB6CCA231F1C9E150065E45C /* LZSelectVideoVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB6CCA211F1C9E150065E45C /* LZSelectVideoVC.xib */; };
 		FB6EAD721EEE3E1B00FAFD97 /* LZCameraFilterCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB6EAD711EEE3E1B00FAFD97 /* LZCameraFilterCollectionView.m */; };
 		FB8341711EFA38650010F690 /* LZPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB8341701EFA38650010F690 /* LZPlayerView.m */; };
 		FB8341791EFCEAB30010F690 /* LZVideoTailoringVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FB8341771EFCEAB30010F690 /* LZVideoTailoringVC.m */; };
@@ -752,6 +754,9 @@
 		FB69C5301EBC45A5007B38BD /* ClearCacheTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClearCacheTool.m; sourceTree = "<group>"; };
 		FB69D44B1EC5956300953C9E /* RecordProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordProgressView.h; sourceTree = "<group>"; };
 		FB69D44C1EC5956300953C9E /* RecordProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordProgressView.m; sourceTree = "<group>"; };
+		FB6CCA1F1F1C9E150065E45C /* LZSelectVideoVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZSelectVideoVC.h; sourceTree = "<group>"; };
+		FB6CCA201F1C9E150065E45C /* LZSelectVideoVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZSelectVideoVC.m; sourceTree = "<group>"; };
+		FB6CCA211F1C9E150065E45C /* LZSelectVideoVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LZSelectVideoVC.xib; sourceTree = "<group>"; };
 		FB6EAD701EEE3E1B00FAFD97 /* LZCameraFilterCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZCameraFilterCollectionView.h; sourceTree = "<group>"; };
 		FB6EAD711EEE3E1B00FAFD97 /* LZCameraFilterCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZCameraFilterCollectionView.m; sourceTree = "<group>"; };
 		FB83416F1EFA38650010F690 /* LZPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZPlayerView.h; sourceTree = "<group>"; };
@@ -1318,6 +1323,9 @@
 				FB69C5171EB9A2C4007B38BD /* LZSelectVideoCollectionViewCell.m */,
 				FB69C4361EB96ED2007B38BD /* LZSelectVideoViewController.h */,
 				FB69C4371EB96ED2007B38BD /* LZSelectVideoViewController.m */,
+				FB6CCA1F1F1C9E150065E45C /* LZSelectVideoVC.h */,
+				FB6CCA201F1C9E150065E45C /* LZSelectVideoVC.m */,
+				FB6CCA211F1C9E150065E45C /* LZSelectVideoVC.xib */,
 			);
 			path = "SelectVideo(选择视频)";
 			sourceTree = "<group>";
@@ -1710,6 +1718,7 @@
 				FB69C4521EB96ED2007B38BD /* LZVideoDetailsVC.xib in Resources */,
 				FB8341991F037DA80010F690 /* LZVideoSpeedVC.xib in Resources */,
 				FB8341901F00EF0E0010F690 /* LZVideoSplitVC.xib in Resources */,
+				FB6CCA231F1C9E150065E45C /* LZSelectVideoVC.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1751,6 +1760,7 @@
 				FB4D355B1EE64007000A92C8 /* GPUImageCGAColorspaceFilter.m in Sources */,
 				FB4D35D01EE64007000A92C8 /* GPUImageSingleComponentGaussianBlurFilter.m in Sources */,
 				FB4D35631EE64007000A92C8 /* GPUImageColorInvertFilter.m in Sources */,
+				FB6CCA221F1C9E150065E45C /* LZSelectVideoVC.m in Sources */,
 				FB4D35DD1EE64007000A92C8 /* GPUImageSubtractBlendFilter.m in Sources */,
 				FB4D35E61EE64007000A92C8 /* GPUImageToneCurveFilter.m in Sources */,
 				FB4D35571EE64007000A92C8 /* GPUImageBrightnessFilter.m in Sources */,
