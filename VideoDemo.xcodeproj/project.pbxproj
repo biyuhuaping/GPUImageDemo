@@ -201,8 +201,6 @@
 		FB69C4221EB96ADD007B38BD /* VideoDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C4211EB96ADD007B38BD /* VideoDemoUITests.m */; };
 		FB69C44C1EB96ED2007B38BD /* LZNewPromotionVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C4311EB96ED1007B38BD /* LZNewPromotionVC.m */; };
 		FB69C44D1EB96ED2007B38BD /* LZNewPromotionVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB69C4321EB96ED1007B38BD /* LZNewPromotionVC.xib */; };
-		FB69C44F1EB96ED2007B38BD /* LZSelectVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C4371EB96ED2007B38BD /* LZSelectVideoViewController.m */; };
-		FB69C4501EB96ED2007B38BD /* LZTrimCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C43A1EB96ED2007B38BD /* LZTrimCropViewController.m */; };
 		FB69C4511EB96ED2007B38BD /* LZVideoDetailsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C43D1EB96ED2007B38BD /* LZVideoDetailsVC.m */; };
 		FB69C4521EB96ED2007B38BD /* LZVideoDetailsVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB69C43E1EB96ED2007B38BD /* LZVideoDetailsVC.xib */; };
 		FB69C4531EB96ED2007B38BD /* LZVideoEditAuxiliary.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C4411EB96ED2007B38BD /* LZVideoEditAuxiliary.m */; };
@@ -679,10 +677,6 @@
 		FB69C4301EB96ED1007B38BD /* LZNewPromotionVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZNewPromotionVC.h; sourceTree = "<group>"; };
 		FB69C4311EB96ED1007B38BD /* LZNewPromotionVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZNewPromotionVC.m; sourceTree = "<group>"; };
 		FB69C4321EB96ED1007B38BD /* LZNewPromotionVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LZNewPromotionVC.xib; sourceTree = "<group>"; };
-		FB69C4361EB96ED2007B38BD /* LZSelectVideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZSelectVideoViewController.h; sourceTree = "<group>"; };
-		FB69C4371EB96ED2007B38BD /* LZSelectVideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZSelectVideoViewController.m; sourceTree = "<group>"; };
-		FB69C4391EB96ED2007B38BD /* LZTrimCropViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZTrimCropViewController.h; sourceTree = "<group>"; };
-		FB69C43A1EB96ED2007B38BD /* LZTrimCropViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZTrimCropViewController.m; sourceTree = "<group>"; };
 		FB69C43C1EB96ED2007B38BD /* LZVideoDetailsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZVideoDetailsVC.h; sourceTree = "<group>"; };
 		FB69C43D1EB96ED2007B38BD /* LZVideoDetailsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZVideoDetailsVC.m; sourceTree = "<group>"; };
 		FB69C43E1EB96ED2007B38BD /* LZVideoDetailsVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LZVideoDetailsVC.xib; sourceTree = "<group>"; };
@@ -1326,8 +1320,6 @@
 			children = (
 				FB69C5161EB9A2C4007B38BD /* LZSelectVideoCollectionViewCell.h */,
 				FB69C5171EB9A2C4007B38BD /* LZSelectVideoCollectionViewCell.m */,
-				FB69C4361EB96ED2007B38BD /* LZSelectVideoViewController.h */,
-				FB69C4371EB96ED2007B38BD /* LZSelectVideoViewController.m */,
 				FB6CCA1F1F1C9E150065E45C /* LZSelectVideoVC.h */,
 				FB6CCA201F1C9E150065E45C /* LZSelectVideoVC.m */,
 				FB6CCA211F1C9E150065E45C /* LZSelectVideoVC.xib */,
@@ -1338,8 +1330,6 @@
 		FB69C4381EB96ED2007B38BD /* TrimCrop(本地视频剪裁) */ = {
 			isa = PBXGroup;
 			children = (
-				FB69C4391EB96ED2007B38BD /* LZTrimCropViewController.h */,
-				FB69C43A1EB96ED2007B38BD /* LZTrimCropViewController.m */,
 				FBEA25431F1DE05F00256A58 /* LZTrimCropVC.h */,
 				FBEA25441F1DE05F00256A58 /* LZTrimCropVC.m */,
 				FBEA25451F1DE05F00256A58 /* LZTrimCropVC.xib */,
@@ -1752,7 +1742,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FB69C44F1EB96ED2007B38BD /* LZSelectVideoViewController.m in Sources */,
 				FB4D35C11EE64007000A92C8 /* GPUImagePosterizeFilter.m in Sources */,
 				FB69C4671EB97467007B38BD /* LZLevelView.m in Sources */,
 				FB4D35721EE64007000A92C8 /* GPUImageDissolveBlendFilter.m in Sources */,
@@ -1926,7 +1915,6 @@
 				FB4D35951EE64007000A92C8 /* GPUImageHueBlendFilter.m in Sources */,
 				FB4D35731EE64007000A92C8 /* GPUImageDivideBlendFilter.m in Sources */,
 				FB4D35591EE64007000A92C8 /* GPUImageBulgeDistortionFilter.m in Sources */,
-				FB69C4501EB96ED2007B38BD /* LZTrimCropViewController.m in Sources */,
 				FB4D35D71EE64007000A92C8 /* GPUImageSolarizeFilter.m in Sources */,
 				FB4D35F21EE64007000A92C8 /* GPUImageVoronoiConsumerFilter.m in Sources */,
 				FB4D354D1EE64007000A92C8 /* GPUImage3x3ConvolutionFilter.m in Sources */,
