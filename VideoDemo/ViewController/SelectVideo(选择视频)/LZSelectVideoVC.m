@@ -7,7 +7,7 @@
 //
 
 #import "LZSelectVideoVC.h"
-#import "LZTrimCropViewController.h"
+#import "LZTrimCropVC.h"
 #import "LZSelectVideoCollectionViewCell.h"
 #import "LZVideoEditAuxiliary.h"
 
@@ -115,9 +115,9 @@
         return;
     }
     else if (self.currentSelected >= 0) {
-        LZTrimCropViewController * vc = [[LZTrimCropViewController alloc] init];
+        LZTrimCropVC * vc = [[LZTrimCropVC alloc] initWithNibName:@"LZTrimCropVC" bundle:nil];
         vc.recordSession = self.recordSession;
-        vc.selectSegment = self.videoListSegmentArrays[self.currentSelected];
+        vc.segment = self.videoListSegmentArrays[self.currentSelected];
         [self.navigationController pushViewController:vc animated:YES];
         
         NSMutableArray *vcArrays = [[NSMutableArray alloc]initWithArray:self.navigationController.viewControllers];

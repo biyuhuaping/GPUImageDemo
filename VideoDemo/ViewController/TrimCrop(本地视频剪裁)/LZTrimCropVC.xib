@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LZTrimCropVC">
+            <connections>
+                <outlet property="playButton" destination="VZ9-BI-AKz" id="h6B-cs-699"/>
+                <outlet property="subView" destination="DUm-DG-gX3" id="Dno-nH-h2u"/>
+                <outlet property="trimmerView" destination="FiX-zi-GxX" id="NDK-J4-mPf"/>
+                <outlet property="view" destination="pWG-CK-412" id="tdd-O3-W13"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="pWG-CK-412">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DUm-DG-gX3">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="DUm-DG-gX3" secondAttribute="height" id="1PE-gb-dmZ"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VZ9-BI-AKz">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="VZ9-BI-AKz" secondAttribute="height" multiplier="1:1" id="ZZ3-YK-dEf"/>
+                    </constraints>
+                    <state key="normal" image="播放"/>
+                    <connections>
+                        <action selector="lzPlayOrPause:" destination="-1" eventType="touchUpInside" id="WFa-Sa-jxw"/>
+                    </connections>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="abq-Hi-w6V">
+                    <rect key="frame" x="0.0" y="375" width="375" height="292"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FiX-zi-GxX" customClass="SAVideoRangeSlider">
+                            <rect key="frame" x="0.0" y="25" width="375" height="49"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="49" id="dQb-0G-XJu"/>
+                            </constraints>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QDC-kv-PqF">
+                            <rect key="frame" x="144.5" y="206" width="86" height="86"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="86" id="7h3-LX-8gx"/>
+                                <constraint firstAttribute="height" constant="86" id="CsR-v5-hmm"/>
+                            </constraints>
+                            <state key="normal" image="lz_selectvideo_add"/>
+                            <connections>
+                                <action selector="nextButtonAction:" destination="-1" eventType="touchUpInside" id="yri-fb-Paa"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="FiX-zi-GxX" firstAttribute="top" secondItem="abq-Hi-w6V" secondAttribute="top" constant="25" id="0sY-g0-5f6"/>
+                        <constraint firstAttribute="bottom" secondItem="QDC-kv-PqF" secondAttribute="bottom" id="AN2-Rk-VKj"/>
+                        <constraint firstItem="FiX-zi-GxX" firstAttribute="leading" secondItem="abq-Hi-w6V" secondAttribute="leading" id="IJP-6r-FgH"/>
+                        <constraint firstItem="QDC-kv-PqF" firstAttribute="centerX" secondItem="abq-Hi-w6V" secondAttribute="centerX" id="Ptr-OD-usj"/>
+                        <constraint firstAttribute="trailing" secondItem="FiX-zi-GxX" secondAttribute="trailing" id="SVE-DB-TG6"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="abq-Hi-w6V" firstAttribute="top" secondItem="VZ9-BI-AKz" secondAttribute="bottom" id="4cK-yU-Kxr"/>
+                <constraint firstAttribute="trailing" secondItem="VZ9-BI-AKz" secondAttribute="trailing" id="5QB-7V-bJU"/>
+                <constraint firstItem="VZ9-BI-AKz" firstAttribute="leading" secondItem="pWG-CK-412" secondAttribute="leading" id="6Bm-Ts-mFC"/>
+                <constraint firstItem="abq-Hi-w6V" firstAttribute="leading" secondItem="pWG-CK-412" secondAttribute="leading" id="A5N-8a-Svt"/>
+                <constraint firstAttribute="bottom" secondItem="abq-Hi-w6V" secondAttribute="bottom" id="AuM-FG-yio"/>
+                <constraint firstItem="DUm-DG-gX3" firstAttribute="leading" secondItem="pWG-CK-412" secondAttribute="leading" id="GaC-nF-8Mt"/>
+                <constraint firstItem="VZ9-BI-AKz" firstAttribute="top" secondItem="pWG-CK-412" secondAttribute="top" id="MH3-hQ-qmR"/>
+                <constraint firstItem="DUm-DG-gX3" firstAttribute="top" secondItem="pWG-CK-412" secondAttribute="top" id="NhG-SS-qTT"/>
+                <constraint firstItem="abq-Hi-w6V" firstAttribute="top" secondItem="DUm-DG-gX3" secondAttribute="bottom" id="QSu-9u-yMX"/>
+                <constraint firstAttribute="trailing" secondItem="abq-Hi-w6V" secondAttribute="trailing" id="mtb-Tq-hvM"/>
+                <constraint firstAttribute="trailing" secondItem="DUm-DG-gX3" secondAttribute="trailing" id="t9Z-a6-HGB"/>
+            </constraints>
+            <point key="canvasLocation" x="33.5" y="54.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="lz_selectvideo_add" width="86" height="86"/>
+        <image name="播放" width="69" height="69"/>
+    </resources>
+</document>

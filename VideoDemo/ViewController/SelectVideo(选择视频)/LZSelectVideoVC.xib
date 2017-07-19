@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina3_5" orientation="portrait">
+    <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -20,18 +20,18 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="msP-zi-XMi">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QRP-IN-rJQ">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="QRP-IN-rJQ" secondAttribute="height" id="C6U-5C-Q79"/>
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2hA-r8-1FK">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="2hA-r8-1FK" secondAttribute="height" multiplier="1:1" id="gqB-U9-huN"/>
                     </constraints>
@@ -41,10 +41,10 @@
                     </connections>
                 </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gtw-dx-EOJ">
-                    <rect key="frame" x="0.0" y="320" width="320" height="160"/>
+                    <rect key="frame" x="0.0" y="375" width="375" height="292"/>
                     <subviews>
                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="7t3-xe-nKV">
-                            <rect key="frame" x="0.0" y="10" width="320" height="100"/>
+                            <rect key="frame" x="0.0" y="10" width="375" height="100"/>
                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="100" id="17B-BF-mUJ"/>
@@ -61,12 +61,12 @@
                             </connections>
                         </collectionView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Tb-99-4N6">
-                            <rect key="frame" x="117" y="74" width="86" height="86"/>
+                            <rect key="frame" x="144.5" y="206" width="86" height="86"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="86" id="QaH-lv-vyG"/>
                                 <constraint firstAttribute="width" constant="86" id="nC8-fd-mAs"/>
                             </constraints>
-                            <state key="normal" title="Button" image="lz_musiclist_nextimage"/>
+                            <state key="normal" image="lz_musiclist_nextimage"/>
                             <connections>
                                 <action selector="nextButtonAction:" destination="-1" eventType="touchUpInside" id="Q8y-qL-8WO"/>
                             </connections>

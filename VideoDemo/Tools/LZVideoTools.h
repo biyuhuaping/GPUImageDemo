@@ -53,11 +53,12 @@
 + (NSString *)getFileName:(NSString *)path;
 
 
-
-//声音淡出
-+ (AVPlayerItem *)audioFadeOut:(LZSessionSegment *)segment;
-
-//视频淡出
+/**
+ 视频、声音淡出
+ 
+ @param segment 输入：LZSessionSegment
+ @return 返回：AVPlayerItem
+ */
 + (AVPlayerItem *)videoFadeOut:(LZSessionSegment *)segment;
 
 //视频速度
