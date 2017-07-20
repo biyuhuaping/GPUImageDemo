@@ -32,8 +32,8 @@
     self.title = LZLocalizedString(@"select_video", nil);
 
     self.currentSelected = 0;
-    [self showVideo:YES];
     [self configCollectionView];
+    [self showVideo:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -172,6 +172,9 @@
 
 #pragma mark - UICollectionViewDelegate
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.currentSelected == indexPath.row) {
+        return;
+    }
     self.currentSelected = indexPath.row;
     [self showVideo:NO];
 }

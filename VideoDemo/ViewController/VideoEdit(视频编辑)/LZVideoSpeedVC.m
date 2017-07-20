@@ -88,6 +88,7 @@
     tempPath = [LZVideoTools filePathWithFileName:[NSString stringWithFormat:@"%@.m4v", filename] isFilter:YES];
     
     AVPlayerItem *playerItem = [LZVideoTools videoSpeed:self.segment scale:self.rateValue];
+//    AVPlayerItem *playerItem = [LZVideoTools videoTailFrameStay:self.segment duration:10];
     [LZVideoTools exportVideo:playerItem.asset videoComposition:nil filePath:tempPath timeRange:kCMTimeRangeZero completion:^(NSURL *savedPath) {
         if(savedPath) {
             DLog(@"导出视频路径：%@", savedPath);
@@ -112,6 +113,7 @@
 - (IBAction)updateSliderValue:(UISlider *)sender{
     self.rateValue = sender.value;
     self.player.rate = self.rateValue;
+    
     DLog(@"rateValue:======%f",self.rateValue);
 }
 

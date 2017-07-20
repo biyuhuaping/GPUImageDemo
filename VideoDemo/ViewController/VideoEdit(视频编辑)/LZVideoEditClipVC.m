@@ -132,7 +132,7 @@
 //选中视频
 - (void)showVideo:(BOOL)isFirstTime{
     LZSessionSegment *segment = self.recordSegments[self.currentSelected];
-
+    
     AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithURL:segment.url];
     if (isFirstTime) {
         self.player = [AVPlayer playerWithPlayerItem:playerItem];

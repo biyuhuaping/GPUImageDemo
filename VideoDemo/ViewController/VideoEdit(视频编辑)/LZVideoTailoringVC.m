@@ -67,7 +67,6 @@
     self.segment.endTime = CMTimeGetSeconds(self.segment.duration);
     
     AVPlayerItem *playerItem = [LZVideoTools videoFadeOut:self.segment];
-
 //    AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithURL:self.segment.url];
     self.player = [AVPlayer playerWithPlayerItem:playerItem];
     self.player.volume = self.segment.isMute?0:1;

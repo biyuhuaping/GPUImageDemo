@@ -36,13 +36,37 @@
 
 
 /**
- 配置文件路径
+ 视频、声音淡出
+ 
+ @param segment 输入：LZSessionSegment
+ @return 返回：AVPlayerItem
+ */
++ (AVPlayerItem *)videoFadeOut:(LZSessionSegment *)segment;
 
+
+/**
+ 视频速度
+ 
+ @param segment 视频资源
+ @param scale 速度比率
+ @return 返回AVPlayerItem
+ */
++ (AVPlayerItem *)videoSpeed:(LZSessionSegment *)segment scale:(CGFloat)scale;
+
+//视频尾帧停留
++ (AVPlayerItem *)videoTailFrameStay:(LZSessionSegment *)segment duration:(Float64)duration;
+
+
+#pragma mark - 
+/**
+ 配置文件路径
+ 
  @param fileName 文件名称
  @return 文件路径
  */
 + (NSURL *)filePathWithFileName:(NSString *)fileName;
 + (NSURL *)filePathWithFileName:(NSString *)fileName isFilter:(BOOL)isFilter;
+
 
 /**
  获取文件名称
@@ -52,16 +76,5 @@
  */
 + (NSString *)getFileName:(NSString *)path;
 
-
-/**
- 视频、声音淡出
- 
- @param segment 输入：LZSessionSegment
- @return 返回：AVPlayerItem
- */
-+ (AVPlayerItem *)videoFadeOut:(LZSessionSegment *)segment;
-
-//视频速度
-+ (AVPlayerItem *)videoSpeed:(LZSessionSegment *)segment scale:(CGFloat)scale;
 
 @end
