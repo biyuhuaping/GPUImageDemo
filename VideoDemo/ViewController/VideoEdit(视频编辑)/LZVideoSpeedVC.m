@@ -83,10 +83,11 @@
 
 #pragma mark - Event
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
-    NSURL *tempPath = self.segment.url;
-    NSString *filename = [LZVideoTools getFileName:[tempPath absoluteString]];
-    tempPath = [LZVideoTools filePathWithFileName:[NSString stringWithFormat:@"%@.m4v", filename] isFilter:YES];
-    
+//    NSURL *tempPath = self.segment.url;
+//    NSString *filename = [LZVideoTools getFileName:[tempPath absoluteString]];
+//    tempPath = [LZVideoTools filePathWithFileName:[NSString stringWithFormat:@"%@.m4v", filename] isFilter:YES];
+    NSURL *tempPath = [LZVideoTools filePathWithFilter:YES];
+
     AVPlayerItem *playerItem = [LZVideoTools videoSpeed:self.segment scale:self.rateValue];
 //    AVPlayerItem *playerItem = [LZVideoTools videoTailFrameStay:self.segment duration:10];
     [LZVideoTools exportVideo:playerItem.asset videoComposition:nil filePath:tempPath timeRange:kCMTimeRangeZero completion:^(NSURL *savedPath) {

@@ -65,6 +65,7 @@
  @return 文件路径
  */
 + (NSURL *)filePathWithFileName:(NSString *)fileName;
++ (NSURL *)filePathWithFilter:(BOOL)isFilter;
 + (NSURL *)filePathWithFileName:(NSString *)fileName isFilter:(BOOL)isFilter;
 
 

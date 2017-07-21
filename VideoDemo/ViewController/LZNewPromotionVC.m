@@ -113,6 +113,7 @@
     [self updateGhostImage];
     [self updateProgressBar];
     [self enumVideoUrl];
+    [self configButtonState];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -226,6 +227,17 @@
     _cameraFilterView.picArray = filterNameArray;
 }
 
+//配置删除、确认按钮的状态
+- (void)configButtonState{
+    if (self.recordSession.segments.count > 0) {
+        self.cancelButton.enabled = YES;
+    } else {
+        self.cancelButton.enabled = NO;
+        self.confirmButton.enabled = NO;
+    }
+    self.cancelButton.selected = NO;
+}
+
 //更新进度条
 - (void)updateProgressBar {
 //    if (CMTimeGetSeconds(self.recordSession.duration) >= 3) {
@@ -307,14 +319,7 @@
         [self.recordSession removeLastSegment];
         [self updateProgressBar];
         [self updateGhostImage];
-        if (self.recordSession.segments.count > 0) {
-            sender.selected = NO;
-            sender.enabled = YES;
-        } else {
-            sender.selected = NO;
-            sender.enabled = NO;
-            self.confirmButton.enabled = NO;
-        }
+        [self configButtonState];
     }
 }
 

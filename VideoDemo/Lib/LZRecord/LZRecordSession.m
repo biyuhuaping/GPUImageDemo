@@ -31,7 +31,9 @@
         
         _startTime = kCMTimeZero;
         _endTime = kCMTimeZero;
-
+        
+        _fileIndex = 0;
+        
         _writeQueue = dispatch_queue_create("LZWriteQueue", DISPATCH_QUEUE_SERIAL);
         [self initVideoCamera:AVCaptureDevicePositionBack];
     }
@@ -106,6 +108,10 @@
 
 - (CMTime)duration {
     return CMTimeAdd(_segmentsDuration, _currentSegmentDuration);
+}
+
+- (double)fileIndex{
+    return _fileIndex++;
 }
 
 #pragma mark - Action

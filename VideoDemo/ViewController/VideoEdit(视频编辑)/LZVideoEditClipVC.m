@@ -63,6 +63,7 @@
     self.title = LZLocalizedString(@"edit_video", nil);
     _hintLabel.text = LZLocalizedString(@"all_video_delete", nil);
     self.videoEditAuxiliary = [[LZVideoEditAuxiliary alloc]init];
+    self.currentSelected = 0;
 
     self.timeLabel.layer.masksToBounds = YES;
     self.timeLabel.layer.cornerRadius = 10;
@@ -73,7 +74,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.currentSelected = 0;
     self.recordSegments = [NSMutableArray arrayWithArray:self.recordSession.segments];
 
     [self showVideo:YES];
@@ -275,14 +275,28 @@
     LZSessionSegment * segment = self.recordSegments[self.currentSelected];
     NSAssert(segment.url != nil, @"segment must be non-nil");
     
+    //限制视频时长
     if (CMTimeGetSeconds(segment.duration)+[self.videoEditAuxiliary getAllVideoTimesRecordSegments:self.recordSegments] > 15) {
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:LZLocalizedString(@"edit_message", nil) message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
         [alert show];
         return;
     }
     
+    //往缓存里复制一份，同时更新self.recordSession.segments。否则重新显示此页面时，recordSegments会取不到复制的文件。
+    NSString *filename = [NSString stringWithFormat:@"Video-%ld.m4v", (long)self.recordSession.segments.count];
+    NSURL *tempPath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
+ 
+    [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:tempPath timeRange:kCMTimeRangeZero completion:^(NSURL *savedPath) {
+        if(savedPath) {
+            DLog(@"导出视频路径：%@", savedPath);
+            LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:tempPath filter:segment.filter];
+            [self.recordSession insertSegment:newSegment atIndex:self.currentSelected];
+        }
+    }];
+    
+    //往临时数组复制一份。
     LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:segment.url filter:segment.filter];
-    NSAssert(newSegment.url != nil, @"segment must be non-nil");    
+    NSAssert(newSegment.url != nil, @"segment must be non-nil");
     [self.recordSegments addObject:newSegment];
     
     //更新片段view

@@ -167,11 +167,14 @@
     [self.movieFile addTarget:self.filterGroup];
     
     
-    NSURL *movieURL = self.segment.url;
-    NSString *filename = [LZVideoTools getFileName:[movieURL absoluteString]];
-    movieURL = [LZVideoTools filePathWithFileName:[NSString stringWithFormat:@"%@.m4v", filename] isFilter:YES];
+    //NSURL *movieURL = self.segment.url;
+    //NSString *filename = [LZVideoTools getFileName:[movieURL absoluteString]];
+    //movieURL = [LZVideoTools filePathWithFileName:[NSString stringWithFormat:@"%@.m4v", filename] isFilter:YES];
     
-    
+//    NSString *filename = [NSString stringWithFormat:@"Video-%ld.m4v", (long)self.recordSegments.count];
+//    NSURL *movieURL = [LZVideoTools filePathWithFileName:filename isFilter:YES];
+    NSURL *movieURL = [LZVideoTools filePathWithFilter:YES];
+
     movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:movieURL size:CGSizeMake(480.0, 480.0)];
     movieWriter.shouldPassthroughAudio = YES;
     self.movieFile.audioEncodingTarget = movieWriter;

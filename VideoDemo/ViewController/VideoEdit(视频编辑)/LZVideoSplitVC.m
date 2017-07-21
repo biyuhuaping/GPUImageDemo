@@ -173,6 +173,45 @@
         
         [self.navigationController popViewControllerAnimated:YES];
     });
+    
+    //========================================================================
+//    [self.recordSegments removeObjectAtIndex:self.currentSelected];
+//
+//    NSURL *tempPath1 = [LZVideoTools filePathWithFilter:YES];
+//    CMTime start1 = CMTimeMakeWithSeconds(self.segment.startTime, self.segment.duration.timescale);
+//    CMTime duration1 = CMTimeMakeWithSeconds(self.segment.endTime - self.segment.startTime, self.segment.duration.timescale);
+//    CMTimeRange range1 = CMTimeRangeMake(start1, duration1);
+//    [LZVideoTools exportVideo:self.segment.asset videoComposition:nil filePath:tempPath1 timeRange:range1 completion:^(NSURL *savedPath) {
+//        if(savedPath) {
+//            DLog(@"导出视频路径：%@", savedPath);
+//            LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:tempPath1 filter:self.segment.filter];
+//            [self.recordSegments insertObject:newSegment atIndex:self.currentSelected];
+//        }
+//    }];
+//    
+//    
+//    NSURL *tempPath2 = [LZVideoTools filePathWithFilter:YES];
+//    CMTime start2 = CMTimeMakeWithSeconds(self.segment.endTime, self.segment.duration.timescale);
+//    CMTime duration2 = CMTimeMakeWithSeconds(CMTimeGetSeconds(self.segment.duration) - self.segment.endTime, self.segment.duration.timescale);
+//    CMTimeRange range2 = CMTimeRangeMake(start2, duration2);
+//    [LZVideoTools exportVideo:self.segment.asset videoComposition:nil filePath:tempPath2 timeRange:range2 completion:^(NSURL *savedPath) {
+//        if(savedPath) {
+//            DLog(@"导出视频路径：%@", savedPath);
+//            LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:tempPath2 filter:self.segment.filter];
+//            [self.recordSegments insertObject:newSegment atIndex:self.currentSelected];
+//        }
+//    }];
+//    
+//    [self.recordSession removeAllSegments:NO];
+//    for (int i = 0; i < self.recordSegments.count; i++) {
+//        LZSessionSegment * segment = self.recordSegments[i];
+//        NSAssert(segment.url != nil, @"segment url must be non-nil");
+//        if (segment.url != nil) {
+//            [self.recordSession insertSegment:segment atIndex:i];
+//        }
+//    }
+//
+//    [self.navigationController popViewControllerAnimated:YES];
 }
 
 //播放或暂停

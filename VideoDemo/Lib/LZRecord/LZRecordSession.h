@@ -30,7 +30,7 @@
 
 
 @property (weak, nonatomic) id<LZRecorderDelegate> __nullable delegate;
-
+@property (readwrite, nonatomic) double fileIndex;
 
 /**
  The duration of the whole recordSession including the current recording segment

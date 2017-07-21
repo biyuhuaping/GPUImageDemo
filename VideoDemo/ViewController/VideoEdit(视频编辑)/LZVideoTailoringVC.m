@@ -109,10 +109,10 @@
 }
 
 - (void)cutVideo {
-    NSURL *tempPath = self.segment.url;
-    NSString *filename = [LZVideoTools getFileName:[tempPath absoluteString]];
-    tempPath = [LZVideoTools filePathWithFileName:[NSString stringWithFormat:@"%@.m4v", filename] isFilter:YES];
-
+//    NSURL *tempPath = self.segment.url;
+//    NSString *filename = [LZVideoTools getFileName:[tempPath absoluteString]];
+//    tempPath = [LZVideoTools filePathWithFileName:[NSString stringWithFormat:@"%@.m4v", filename] isFilter:YES];
+    NSURL *tempPath = [LZVideoTools filePathWithFilter:YES];
     CMTime start = CMTimeMakeWithSeconds(self.segment.startTime, self.segment.duration.timescale);
     CMTime duration = CMTimeMakeWithSeconds(self.segment.endTime - self.segment.startTime, self.segment.duration.timescale);
     CMTimeRange range = CMTimeRangeMake(start, duration);

@@ -66,7 +66,9 @@
 - (IBAction)nextButtonAction:(UIButton *)sender {
     NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:self.segment.asset];
     if ([compatiblePresets containsObject:AVAssetExportPresetHighestQuality]) {
-        NSURL *tempPath = [LZVideoTools filePathWithFileName:@"ConponVideo.m4v"];
+//        NSURL *tempPath = [LZVideoTools filePathWithFileName:@"ConponVideo.m4v"];
+        NSURL *tempPath = [LZVideoTools filePathWithFilter:YES];
+
         WS(weakSelf);
         [LZVideoTools cutVideoWith:self.segment filePath:tempPath completion:^{
             LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:tempPath filter:nil];

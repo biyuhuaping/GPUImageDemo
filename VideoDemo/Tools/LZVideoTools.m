@@ -329,6 +329,41 @@
     return [self filePathWithFileName:fileName isFilter:NO];
 }
 
++ (NSURL *)filePathWithFilter:(BOOL)isFilter{
+    //NSDate --> NSString时间戳
+    NSDate *dateNow = [NSDate date];
+    NSInteger timeInter = (long)[dateNow timeIntervalSince1970];
+    NSString *timeSp = [NSString stringWithFormat:@"%ld.mov", timeInter];//时间戳的值
+    DLog(@"========1=======%@",timeSp);
+    
+    NSString *tempPath = @"";
+    if (isFilter) {
+        tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideoFilter"];
+    }else{
+        tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideo"];
+    }
+    NSFileManager *manager = [NSFileManager defaultManager];
+    BOOL exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
+    if (!exists) {
+        [manager createDirectoryAtPath:tempPath withIntermediateDirectories:YES attributes:nil error:NULL];
+    }
+    
+    tempPath = [tempPath stringByAppendingPathComponent:timeSp];
+    exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
+    if (exists) {
+//        [manager removeItemAtPath:tempPath error:NULL];
+        timeSp = [NSString stringWithFormat:@"%ld.mov", timeInter+1];//时间戳的值
+        tempPath = [tempPath stringByAppendingPathComponent:timeSp];
+        DLog(@"========2=======%@",timeSp);
+    }
+    DLog(@"========3=======%@",timeSp);
+
+    return [NSURL fileURLWithPath:tempPath];
+    
+    
+//    return [self filePathWithFileName:timeSp isFilter:isFilter];
+}
+
 /**
  配置文件路径
  
