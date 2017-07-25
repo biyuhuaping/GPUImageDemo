@@ -62,12 +62,9 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:button];
 }
 
-- (void)configPlayerView{
-    self.segment.startTime = 0.00;
-    self.segment.endTime = CMTimeGetSeconds(self.segment.duration);
-    
-    AVPlayerItem *playerItem = [LZVideoTools videoFadeOut:self.segment];
-//    AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithURL:self.segment.url];
+- (void)configPlayerView{    
+//    AVPlayerItem *playerItem = [LZVideoTools videoFadeOut:self.segment];
+    AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithURL:self.segment.url];
     self.player = [AVPlayer playerWithPlayerItem:playerItem];
     self.player.volume = self.segment.isMute?0:1;
     [self.playButton setImage:[UIImage imageNamed:@"播放"] forState:UIControlStateNormal];
@@ -120,7 +117,7 @@
     [LZVideoTools exportVideo:self.segment.asset videoComposition:nil filePath:tempPath timeRange:range completion:^(NSURL *savedPath) {
         if(savedPath) {
             DLog(@"导出视频路径：%@", savedPath);
-            LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:tempPath filter:self.segment.filter];
+            LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:savedPath filter:self.segment.filter];
             [self.recordSession replaceSegmentsAtIndex:self.currentSelected withSegment:newSegment];
             [self.navigationController popViewControllerAnimated:YES];
         }
@@ -135,7 +132,6 @@
     WS(weakSelf);
     dispatch_group_t serviceGroup = dispatch_group_create();
     for (int i = 0; i < weakSelf.recordSegments.count; i++) {
-        DLog(@"遍历数组：%d", i);
         LZSessionSegment * segment = weakSelf.recordSegments[i];
         NSString *filename = [NSString stringWithFormat:@"Video-%ld.m4v", (long)i];
         NSURL *tempPath = [LZVideoTools filePathWithFileName:filename isFilter:YES];

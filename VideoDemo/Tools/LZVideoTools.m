@@ -329,12 +329,18 @@
     return [self filePathWithFileName:fileName isFilter:NO];
 }
 
+
+/**
+ 用时间戳配置文件路径
+
+ @param isFilter 是否是滤镜文件
+ @return 文件路径
+ */
 + (NSURL *)filePathWithFilter:(BOOL)isFilter{
     //NSDate --> NSString时间戳
     NSDate *dateNow = [NSDate date];
     NSInteger timeInter = (long)[dateNow timeIntervalSince1970];
-    NSString *timeSp = [NSString stringWithFormat:@"%ld.mov", timeInter];//时间戳的值
-    DLog(@"========1=======%@",timeSp);
+    NSString *timeSp = [NSString stringWithFormat:@"%ld.m4v", timeInter];//时间戳的值
     
     NSString *tempPath = @"";
     if (isFilter) {
@@ -352,16 +358,11 @@
     exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
     if (exists) {
 //        [manager removeItemAtPath:tempPath error:NULL];
-        timeSp = [NSString stringWithFormat:@"%ld.mov", timeInter+1];//时间戳的值
-        tempPath = [tempPath stringByAppendingPathComponent:timeSp];
-        DLog(@"========2=======%@",timeSp);
+        NSString *timeSp1 = [NSString stringWithFormat:@"%ld.m4v", timeInter+1];//时间戳的值
+        tempPath = [tempPath stringByReplacingOccurrencesOfString:timeSp withString:timeSp1];
     }
-    DLog(@"========3=======%@",timeSp);
 
     return [NSURL fileURLWithPath:tempPath];
-    
-    
-//    return [self filePathWithFileName:timeSp isFilter:isFilter];
 }
 
 /**
@@ -442,5 +443,29 @@
     return fileName;
 }
 
+/**
+ 枚举路径
+ */
++ (NSArray *)enumPathisFilter:(BOOL)isFilter{
+    NSString *path = @"";
+    if (isFilter) {
+        path = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideoFilter"];
+    }else{
+        path = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideo"];
+    }
+    
+    NSFileManager *myFileManager = [NSFileManager defaultManager];
+    NSDirectoryEnumerator *myDirectoryEnumerator;
+    myDirectoryEnumerator = [myFileManager enumeratorAtPath:path];
+    
+    //列举目录内容，可以遍历子目录
+    NSLog(@"目录下：%@",path);
+    NSMutableArray *array = [NSMutableArray new];
+    while((path = [myDirectoryEnumerator nextObject]) != nil){
+        NSLog(@"%@",path);
+        [array addObject:path];
+    }
+    return array;
+}
 
 @end

@@ -65,6 +65,13 @@
  @return 文件路径
  */
 + (NSURL *)filePathWithFileName:(NSString *)fileName;
+
+/**
+ 用时间戳配置文件路径
+ 
+ @param isFilter 是否是滤镜文件
+ @return 文件路径
+ */
 + (NSURL *)filePathWithFilter:(BOOL)isFilter;
 + (NSURL *)filePathWithFileName:(NSString *)fileName isFilter:(BOOL)isFilter;
 
@@ -77,5 +84,9 @@
  */
 + (NSString *)getFileName:(NSString *)path;
 
+/**
+ 枚举路径
+ */
++ (NSArray *)enumPathisFilter:(BOOL)isFilter;
 
 @end

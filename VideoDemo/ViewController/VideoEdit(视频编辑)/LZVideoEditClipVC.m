@@ -70,6 +70,8 @@
     
     [self configNavigationBar];
     [self configCollectionView];
+    
+    [LZVideoTools enumPathisFilter:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -189,7 +191,6 @@
 #pragma mark - Event
 //保存
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
-    [self.recordSession removeAllSegments:NO];
     
     WS(weakSelf);
     dispatch_group_t serviceGroup = dispatch_group_create();
@@ -219,14 +220,15 @@
     
     dispatch_group_notify(serviceGroup, dispatch_get_main_queue(),^{
         DLog(@"保存到recordSession");
-        for (int i = 0; i < weakSelf.recordSegments.count; i++) {
-            LZSessionSegment * segment = weakSelf.recordSegments[i];
+        [self.recordSession removeAllSegments:NO];
+        for (int i = 0; i < self.recordSegments.count; i++) {
+            LZSessionSegment * segment = self.recordSegments[i];
             NSAssert(segment.url != nil, @"segment url must be non-nil");
             if (segment.url != nil) {
-                [weakSelf.recordSession insertSegment:segment atIndex:i];
+                [self.recordSession insertSegment:segment atIndex:i];
             }
         }
-        [weakSelf.navigationController popViewControllerAnimated:YES];
+        [self.navigationController popViewControllerAnimated:YES];
     });
 }
 
@@ -283,9 +285,10 @@
     }
     
     //往缓存里复制一份，同时更新self.recordSession.segments。否则重新显示此页面时，recordSegments会取不到复制的文件。
-    NSString *filename = [NSString stringWithFormat:@"Video-%ld.m4v", (long)self.recordSession.segments.count];
-    NSURL *tempPath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
- 
+//    NSString *filename = [NSString stringWithFormat:@"Video-%ld.m4v", (long)self.recordSession.segments.count];
+//    NSURL *tempPath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
+    NSURL *tempPath = [LZVideoTools filePathWithFilter:YES];
+
     [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:tempPath timeRange:kCMTimeRangeZero completion:^(NSURL *savedPath) {
         if(savedPath) {
             DLog(@"导出视频路径：%@", savedPath);
@@ -365,7 +368,7 @@
     __block LZSessionSegment *segment = self.recordSegments[self.currentSelected];
     __block LZSessionSegment *newSegment = nil;
     
-    NSURL *tempPath = [LZVideoTools filePathWithFileName:@"ConponVideo.m4v" isFilter:YES];
+    NSURL *tempPath = [LZVideoTools filePathWithFileName:@"BackwardsVideo.m4v" isFilter:YES];
     
     if (segment.isReverse == YES && segment.assetSourcePath != nil) {
         newSegment = [LZSessionSegment segmentWithURL:segment.assetSourcePath filter:segment.filter];

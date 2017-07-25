@@ -37,6 +37,9 @@
     if (self) {
         _url = url;
         _filter = filter;
+        
+        _startTime = 0.00;
+        _endTime = CMTimeGetSeconds([AVAsset assetWithURL:_url].duration);
     }
     return self;
 }

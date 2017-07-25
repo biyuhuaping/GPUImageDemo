@@ -93,7 +93,7 @@
     [LZVideoTools exportVideo:playerItem.asset videoComposition:nil filePath:tempPath timeRange:kCMTimeRangeZero completion:^(NSURL *savedPath) {
         if(savedPath) {
             DLog(@"导出视频路径：%@", savedPath);
-            LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:tempPath filter:self.segment.filter];
+            LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:savedPath filter:self.segment.filter];
             [self.recordSession replaceSegmentsAtIndex:self.currentSelected withSegment:newSegment];
             [self.navigationController popViewControllerAnimated:YES];
         }
