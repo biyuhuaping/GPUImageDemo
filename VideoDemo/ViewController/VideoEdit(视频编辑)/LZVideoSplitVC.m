@@ -134,13 +134,13 @@
 //    __block NSURL *tempPath = self.segment.url;
 //    __block NSString *filename = [LZVideoTools getFileName:[tempPath absoluteString]];
     [self.recordSegments removeObjectAtIndex:self.currentSelected];
-
+    
     double startTime = 0.0;
     double endTime = CMTimeGetSeconds(self.segment.duration)/2;
     dispatch_group_t serviceGroup = dispatch_group_create();
     for (int i = 0; i < 2; i++) {
-//        tempPath = [LZVideoTools filePathWithFileName:[NSString stringWithFormat:@"%@-%d.m4v", filename,i] isFilter:YES];
-        NSURL *tempPath = [LZVideoTools filePathWithFilter:YES];
+        NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", self.recordSession.fileIndex];
+        NSURL *filePath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
 
         if (i == 1) {
             startTime = CMTimeGetSeconds(self.segment.duration)/2;
@@ -151,10 +151,10 @@
         CMTimeRange range = CMTimeRangeMake(start, duration);
         
         dispatch_group_enter(serviceGroup);
-        [LZVideoTools exportVideo:self.segment.asset videoComposition:nil filePath:tempPath timeRange:range completion:^(NSURL *savedPath) {
+        [LZVideoTools exportVideo:self.segment.asset videoComposition:nil filePath:filePath timeRange:range completion:^(NSURL *savedPath) {
             if(savedPath) {
                 DLog(@"导出视频路径：%@", savedPath);
-                LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:savedPath filter:self.segment.filter];
+                LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:filePath filter:self.segment.filter];
                 [self.recordSegments insertObject:newSegment atIndex:self.currentSelected];
             }
             dispatch_group_leave(serviceGroup);

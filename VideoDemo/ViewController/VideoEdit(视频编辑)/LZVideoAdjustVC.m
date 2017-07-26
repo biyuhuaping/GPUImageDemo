@@ -167,15 +167,10 @@
     [self.movieFile addTarget:self.filterGroup];
     
     
-    //NSURL *movieURL = self.segment.url;
-    //NSString *filename = [LZVideoTools getFileName:[movieURL absoluteString]];
-    //movieURL = [LZVideoTools filePathWithFileName:[NSString stringWithFormat:@"%@.m4v", filename] isFilter:YES];
-    
-//    NSString *filename = [NSString stringWithFormat:@"Video-%ld.m4v", (long)self.recordSegments.count];
-//    NSURL *movieURL = [LZVideoTools filePathWithFileName:filename isFilter:YES];
-    NSURL *movieURL = [LZVideoTools filePathWithFilter:YES];
+    NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", self.recordSession.fileIndex];
+    NSURL *filePath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
 
-    movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:movieURL size:CGSizeMake(480.0, 480.0)];
+    movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:filePath size:CGSizeMake(480.0, 480.0)];
     movieWriter.shouldPassthroughAudio = YES;
     self.movieFile.audioEncodingTarget = movieWriter;
     [self.movieFile enableSynchronizedEncodingUsingMovieWriter:movieWriter];
@@ -195,7 +190,7 @@
             [strongSelf->movieWriter finishRecording];
 
             //在主线程里更新UI
-            LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:movieURL filter:nil];
+            LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:filePath filter:nil];
             [weakSelf.recordSegments removeObjectAtIndex:weakSelf.currentSelected];
             [weakSelf.recordSegments insertObject:newSegment atIndex:weakSelf.currentSelected];
             

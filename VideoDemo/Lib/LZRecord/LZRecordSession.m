@@ -17,7 +17,7 @@
     CMTime _currentSegmentDuration;//当前片段的时长
 }
 @property (strong, nonatomic) dispatch_queue_t writeQueue;
-@property (nonatomic, assign) BOOL canWrite;
+@property (assign, nonatomic) BOOL canWrite;
 
 @end
 
@@ -78,7 +78,7 @@
 
 - (NSURL *)movieURL{
     if (_movieURL == nil) {
-        NSString *filename = [NSString stringWithFormat:@"Video-%ld.m4v", (long)_segments.count];
+        NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", _fileIndex];
         _movieURL = [LZVideoTools filePathWithFileName:filename isFilter:NO];
     }
     return _movieURL;
@@ -86,7 +86,7 @@
 
 - (NSURL *)movieURLFilter{
     if (_movieURLFilter == nil) {
-        NSString *filename = [NSString stringWithFormat:@"Video-%ld.m4v", (long)_segments.count];
+        NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", _fileIndex];
         _movieURLFilter = [LZVideoTools filePathWithFileName:filename isFilter:YES];
     }
     return _movieURLFilter;
@@ -156,6 +156,7 @@
             });
         }];
     }];
+    _fileIndex++;
 }
 
 - (void)finishRecordingWithCompletionHandler:(void (^)(void))handler{

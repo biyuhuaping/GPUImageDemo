@@ -323,52 +323,6 @@
  配置文件路径
  
  @param fileName 文件名称
- @return 文件路径：..LZVideo/fileName
- */
-+ (NSURL *)filePathWithFileName:(NSString *)fileName {
-    return [self filePathWithFileName:fileName isFilter:NO];
-}
-
-
-/**
- 用时间戳配置文件路径
-
- @param isFilter 是否是滤镜文件
- @return 文件路径
- */
-+ (NSURL *)filePathWithFilter:(BOOL)isFilter{
-    //NSDate --> NSString时间戳
-    NSDate *dateNow = [NSDate date];
-    NSInteger timeInter = (long)[dateNow timeIntervalSince1970];
-    NSString *timeSp = [NSString stringWithFormat:@"%ld.m4v", timeInter];//时间戳的值
-    
-    NSString *tempPath = @"";
-    if (isFilter) {
-        tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideoFilter"];
-    }else{
-        tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideo"];
-    }
-    NSFileManager *manager = [NSFileManager defaultManager];
-    BOOL exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
-    if (!exists) {
-        [manager createDirectoryAtPath:tempPath withIntermediateDirectories:YES attributes:nil error:NULL];
-    }
-    
-    tempPath = [tempPath stringByAppendingPathComponent:timeSp];
-    exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
-    if (exists) {
-//        [manager removeItemAtPath:tempPath error:NULL];
-        NSString *timeSp1 = [NSString stringWithFormat:@"%ld.m4v", timeInter+1];//时间戳的值
-        tempPath = [tempPath stringByReplacingOccurrencesOfString:timeSp withString:timeSp1];
-    }
-
-    return [NSURL fileURLWithPath:tempPath];
-}
-
-/**
- 配置文件路径
- 
- @param fileName 文件名称
  @param isFilter 是否加滤镜
  @return 文件路径：..LZVideo/fileName
  */
@@ -393,55 +347,6 @@
     return [NSURL fileURLWithPath:tempPath];
 }
 
-/**
- 生成文件路径名称
- 
- @param fileName 文件名
- @param isFilter 是否有滤镜（存了两份文件：有滤镜和无滤镜文件）
- @return 返回完整路径
- */
-+ (NSURL *)getFilePathWithFileName:(NSString *)fileName isFilter:(BOOL)isFilter{
-    NSString *tempPath = @"";
-    if (isFilter) {
-        tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideoFilter"];
-    }else{
-        tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideo"];
-    }
-    NSFileManager *manager = [NSFileManager defaultManager];
-    BOOL exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
-    if (exists) {
-        tempPath = [tempPath stringByAppendingPathComponent:fileName];
-        exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
-        if (exists) {
-            return [NSURL fileURLWithPath:tempPath];
-        }
-    }
-    
-    return nil;
-}
-
-/**
- 获取文件名称
- 
- @param path 文件路径 如//file:///private/var/mobile/Containers/Data/Application/C91A7103-ED23-4578-AB00-DA59EEB36E86/tmp/LZVideo/Video-1.m4v
- @return 文件名称 如：Video-1
- */
-+ (NSString *)getFileName:(NSString *)path {
-    NSString *tempPath = @"";
-    if ([path containsString:@"LZVideoFilter"]) {
-        tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideoFilter"];
-    } else {
-        tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideo"];
-    }
-    
-    NSString *fileName = @"Video-";
-    NSRange range = [path rangeOfString:@"Video-"];
-    if (range.length != 0) {
-        fileName = [path substringFromIndex:range.location];
-        fileName = [fileName stringByReplacingOccurrencesOfString:@".m4v" withString:@""];
-    }
-    return fileName;
-}
 
 /**
  枚举路径

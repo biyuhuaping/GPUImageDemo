@@ -109,7 +109,12 @@
 //    NSURL *tempPath = self.segment.url;
 //    NSString *filename = [LZVideoTools getFileName:[tempPath absoluteString]];
 //    tempPath = [LZVideoTools filePathWithFileName:[NSString stringWithFormat:@"%@.m4v", filename] isFilter:YES];
-    NSURL *tempPath = [LZVideoTools filePathWithFilter:YES];
+//    NSURL *tempPath = [LZVideoTools filePathWithFilter:YES];
+    
+    NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", self.recordSession.fileIndex];
+    NSURL *tempPath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
+    
+    
     CMTime start = CMTimeMakeWithSeconds(self.segment.startTime, self.segment.duration.timescale);
     CMTime duration = CMTimeMakeWithSeconds(self.segment.endTime - self.segment.startTime, self.segment.duration.timescale);
     CMTimeRange range = CMTimeRangeMake(start, duration);
@@ -134,16 +139,16 @@
     for (int i = 0; i < weakSelf.recordSegments.count; i++) {
         LZSessionSegment * segment = weakSelf.recordSegments[i];
         NSString *filename = [NSString stringWithFormat:@"Video-%ld.m4v", (long)i];
-        NSURL *tempPath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
+        NSURL *filePath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
         
         CMTime start = CMTimeMakeWithSeconds(segment.startTime, segment.duration.timescale);
         CMTime duration = CMTimeMakeWithSeconds(segment.endTime - segment.startTime, segment.asset.duration.timescale);
         CMTimeRange range = CMTimeRangeMake(start, duration);
         
         dispatch_group_enter(serviceGroup);
-        [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:tempPath timeRange:range completion:^(NSURL *savedPath) {
-            LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:tempPath filter:nil];
-            DLog(@"url:%@", [tempPath path]);
+        [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:filePath timeRange:range completion:^(NSURL *savedPath) {
+            LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:filePath filter:nil];
+            DLog(@"url:%@", [filePath path]);
             [weakSelf.recordSegments removeObject:segment];
             [weakSelf.recordSegments insertObject:newSegment atIndex:i];
             dispatch_group_leave(serviceGroup);
@@ -157,6 +162,7 @@
             NSAssert(segment.url != nil, @"segment url must be non-nil");
             if (segment.url != nil) {
                 [weakSelf.recordSession insertSegment:segment atIndex:i];
+                self.recordSession.fileIndex = i+1;//将fileIndex恢复到现有数值，再存文件时覆盖无用的缓存文件。zhoubo 2017.07.27
             }
         }
         [weakSelf.navigationController popViewControllerAnimated:YES];

@@ -58,31 +58,9 @@
 
 
 #pragma mark - 
-/**
- 配置文件路径
- 
- @param fileName 文件名称
- @return 文件路径
- */
-+ (NSURL *)filePathWithFileName:(NSString *)fileName;
 
-/**
- 用时间戳配置文件路径
- 
- @param isFilter 是否是滤镜文件
- @return 文件路径
- */
-+ (NSURL *)filePathWithFilter:(BOOL)isFilter;
 + (NSURL *)filePathWithFileName:(NSString *)fileName isFilter:(BOOL)isFilter;
 
-
-/**
- 获取文件名称
- 
- @param path 文件路径 如//file:///private/var/mobile/Containers/Data/Application/C91A7103-ED23-4578-AB00-DA59EEB36E86/tmp/LZVideo/Video-1.m4v
- @return 文件名称 如：Video-1
- */
-+ (NSString *)getFileName:(NSString *)path;
 
 /**
  枚举路径

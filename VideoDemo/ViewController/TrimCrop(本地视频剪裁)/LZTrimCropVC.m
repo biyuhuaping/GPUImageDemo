@@ -66,12 +66,12 @@
 - (IBAction)nextButtonAction:(UIButton *)sender {
     NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:self.segment.asset];
     if ([compatiblePresets containsObject:AVAssetExportPresetHighestQuality]) {
-//        NSURL *tempPath = [LZVideoTools filePathWithFileName:@"ConponVideo.m4v"];
-        NSURL *tempPath = [LZVideoTools filePathWithFilter:YES];
+        NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", self.recordSession.fileIndex];
+        NSURL *filePath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
 
         WS(weakSelf);
-        [LZVideoTools cutVideoWith:self.segment filePath:tempPath completion:^{
-            LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:tempPath filter:nil];
+        [LZVideoTools cutVideoWith:self.segment filePath:filePath completion:^{
+            LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:filePath filter:nil];
             [weakSelf.recordSession addSegment:newSegment];
             [weakSelf.navigationController popViewControllerAnimated:YES];
         }];

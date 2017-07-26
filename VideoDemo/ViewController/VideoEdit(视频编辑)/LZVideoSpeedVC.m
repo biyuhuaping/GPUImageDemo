@@ -83,17 +83,15 @@
 
 #pragma mark - Event
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
-//    NSURL *tempPath = self.segment.url;
-//    NSString *filename = [LZVideoTools getFileName:[tempPath absoluteString]];
-//    tempPath = [LZVideoTools filePathWithFileName:[NSString stringWithFormat:@"%@.m4v", filename] isFilter:YES];
-    NSURL *tempPath = [LZVideoTools filePathWithFilter:YES];
+    NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", self.recordSession.fileIndex];
+    NSURL *filePath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
 
     AVPlayerItem *playerItem = [LZVideoTools videoSpeed:self.segment scale:self.rateValue];
 //    AVPlayerItem *playerItem = [LZVideoTools videoTailFrameStay:self.segment duration:10];
-    [LZVideoTools exportVideo:playerItem.asset videoComposition:nil filePath:tempPath timeRange:kCMTimeRangeZero completion:^(NSURL *savedPath) {
+    [LZVideoTools exportVideo:playerItem.asset videoComposition:nil filePath:filePath timeRange:kCMTimeRangeZero completion:^(NSURL *savedPath) {
         if(savedPath) {
             DLog(@"导出视频路径：%@", savedPath);
-            LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:savedPath filter:self.segment.filter];
+            LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:filePath filter:self.segment.filter];
             [self.recordSession replaceSegmentsAtIndex:self.currentSelected withSegment:newSegment];
             [self.navigationController popViewControllerAnimated:YES];
         }

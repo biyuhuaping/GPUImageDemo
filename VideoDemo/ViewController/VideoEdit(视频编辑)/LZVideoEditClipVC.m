@@ -201,16 +201,16 @@
         if ([compatiblePresets containsObject:AVAssetExportPresetHighestQuality]) {
             
             NSString *filename = [NSString stringWithFormat:@"Video-%ld.m4v", (long)i];
-            NSURL *tempPath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
+            NSURL *filePath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
             
             CMTime start = CMTimeMakeWithSeconds(segment.startTime, segment.duration.timescale);
             CMTime duration = CMTimeMakeWithSeconds(segment.endTime - segment.startTime, segment.asset.duration.timescale);
             CMTimeRange range = CMTimeRangeMake(start, duration);
             
             dispatch_group_enter(serviceGroup);
-            [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:tempPath timeRange:range completion:^(NSURL *savedPath) {
-                LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:tempPath filter:nil];
-                DLog(@"剪切url:%@", [tempPath path]);
+            [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:filePath timeRange:range completion:^(NSURL *savedPath) {
+                LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:filePath filter:nil];
+                DLog(@"剪切url:%@", [filePath path]);
                 [weakSelf.recordSegments removeObject:segment];
                 [weakSelf.recordSegments insertObject:newSegment atIndex:i];
                 dispatch_group_leave(serviceGroup);
@@ -226,6 +226,7 @@
             NSAssert(segment.url != nil, @"segment url must be non-nil");
             if (segment.url != nil) {
                 [self.recordSession insertSegment:segment atIndex:i];
+                self.recordSession.fileIndex = i+1;//将fileIndex恢复到现有数值，再存文件时覆盖无用的缓存文件。zhoubo 2017.07.27
             }
         }
         [self.navigationController popViewControllerAnimated:YES];
@@ -278,21 +279,20 @@
     NSAssert(segment.url != nil, @"segment must be non-nil");
     
     //限制视频时长
-    if (CMTimeGetSeconds(segment.duration)+[self.videoEditAuxiliary getAllVideoTimesRecordSegments:self.recordSegments] > 15) {
+    if (CMTimeGetSeconds(segment.duration)+[self.videoEditAuxiliary getAllVideoTimesRecordSegments:self.recordSegments] > 120) {
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:LZLocalizedString(@"edit_message", nil) message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
         [alert show];
         return;
     }
     
     //往缓存里复制一份，同时更新self.recordSession.segments。否则重新显示此页面时，recordSegments会取不到复制的文件。
-//    NSString *filename = [NSString stringWithFormat:@"Video-%ld.m4v", (long)self.recordSession.segments.count];
-//    NSURL *tempPath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
-    NSURL *tempPath = [LZVideoTools filePathWithFilter:YES];
+    NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", self.recordSession.fileIndex];
+    NSURL *filePath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
 
-    [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:tempPath timeRange:kCMTimeRangeZero completion:^(NSURL *savedPath) {
+    [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:filePath timeRange:kCMTimeRangeZero completion:^(NSURL *savedPath) {
         if(savedPath) {
             DLog(@"导出视频路径：%@", savedPath);
-            LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:tempPath filter:segment.filter];
+            LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:filePath filter:segment.filter];
             [self.recordSession insertSegment:newSegment atIndex:self.currentSelected];
         }
     }];
