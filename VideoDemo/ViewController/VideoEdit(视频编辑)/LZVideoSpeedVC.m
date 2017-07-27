@@ -86,7 +86,7 @@
     NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", self.recordSession.fileIndex];
     NSURL *filePath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
 
-    AVPlayerItem *playerItem = [LZVideoTools videoSpeed:self.segment scale:self.rateValue];
+    AVPlayerItem *playerItem = [LZVideoTools videoSpeed:self.segment scale:(2.6 - self.rateValue)];
 //    AVPlayerItem *playerItem = [LZVideoTools videoTailFrameStay:self.segment duration:10];
     [LZVideoTools exportVideo:playerItem.asset videoComposition:nil filePath:filePath timeRange:kCMTimeRangeZero completion:^(NSURL *savedPath) {
         if(savedPath) {

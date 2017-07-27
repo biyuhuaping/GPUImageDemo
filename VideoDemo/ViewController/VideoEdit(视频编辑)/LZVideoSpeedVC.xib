@@ -44,7 +44,7 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wfP-52-Gkn">
                     <rect key="frame" x="0.0" y="375" width="375" height="292"/>
                     <subviews>
-                        <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.10000000000000001" maxValue="2.1000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="ZHn-Qp-xx6">
+                        <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1.1000000000000001" minValue="0.10000000000000001" maxValue="2.1000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="ZHn-Qp-xx6">
                             <rect key="frame" x="28" y="131" width="319" height="31"/>
                             <connections>
                                 <action selector="updateSliderValue:" destination="-1" eventType="valueChanged" id="X3w-6A-7c7"/>

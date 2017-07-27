@@ -205,8 +205,8 @@
     
 //    3.根据速度比率调节音频和视频
     CMTimeRange range = CMTimeRangeMake(kCMTimeZero, asset.duration);
-    [videoTrack scaleTimeRange:range toDuration:CMTimeMake(asset.duration.value / scale, asset.duration.timescale)];
-    [audioTrack scaleTimeRange:range toDuration:CMTimeMake(asset.duration.value / scale, asset.duration.timescale)];
+    [videoTrack scaleTimeRange:range toDuration:CMTimeMake(asset.duration.value * scale, asset.duration.timescale)];
+    [audioTrack scaleTimeRange:range toDuration:CMTimeMake(asset.duration.value * scale, asset.duration.timescale)];
 
     AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:composition];
     return item;
