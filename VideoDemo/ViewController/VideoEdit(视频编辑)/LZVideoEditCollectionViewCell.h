@@ -1,16 +1,16 @@
 //
 //  LZVideoEditCollectionViewCell.h
-//  laziz_Merchant
+//  VideoDemo
 //
-//  Created by ZhaoDongBo on 2016/11/29.
-//  Copyright © 2016年 XBN. All rights reserved.
+//  Created by biyuhuaping on 2017/7/26.
+//  Copyright © 2017年 biyuhuaping. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
 @interface LZVideoEditCollectionViewCell : UICollectionViewCell
 
-@property (nonatomic, strong) UIImageView * imageView;
-@property (nonatomic, strong) UIView * markView;
+@property (strong, nonatomic) IBOutlet UIImageView * imageView;
+@property (strong, nonatomic) IBOutlet UIButton *deletBut;
 
 @end

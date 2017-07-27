@@ -42,9 +42,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *timeLabel;//计时显示
 
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (strong, nonatomic) IBOutlet UIButton *lzCopyButton;              //复制按钮
 @property (strong, nonatomic) IBOutlet UIButton *lzVoiceButton;             //声音按钮
-@property (strong, nonatomic) IBOutlet UIButton *lzDeleteButton;            //删除按钮
 @property (strong, nonatomic) IBOutlet UILabel *hintLabel;                  //提示信息
 @property (strong, nonatomic) IBOutlet UIProgressView *progressView;        //处理倒放视频进度
 
@@ -119,7 +117,10 @@
     layout.delegate                 = self;
     layout.dataSource               = self;
     self.collectionView.collectionViewLayout = layout;
-    [self.collectionView registerClass:[LZVideoEditCollectionViewCell class] forCellWithReuseIdentifier:@"VideoEditCollectionCell"];
+    
+    UINib *nib = [UINib nibWithNibName:@"LZVideoEditCollectionViewCell" bundle:nil];
+    [self.collectionView registerNib:nib forCellWithReuseIdentifier:@"EditCollectionViewCell"];
+//    [self.collectionView registerClass:[LZVideoEditCollectionViewCell class] forCellWithReuseIdentifier:@"VideoEditCollectionCell"];
 }
 
 //配置timeLabel
@@ -179,8 +180,7 @@
         
         if (self.currentSelected == i) {
             segment.isSelect = YES;//设置选中
-        }
-        else {
+        } else {
             segment.isSelect = NO;
         }
     }
@@ -430,33 +430,31 @@
 }
 
 //删除
-- (IBAction)lzDeleteButtonAction:(UIButton *)sender {
-    if (self.recordSegments.count == 0) {
+- (void)lzDeleteButtonAction:(UITapGestureRecognizer *)sender {
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:[sender locationInView:self.collectionView]];
+    if (self.recordSegments.count == 1) {
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:LZLocalizedString(@"edit_message", nil) message:@"至少有一段视频，才能编辑哦!zhoubo" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
+        [alert show];
         return;
     }
     
     if(self.recordSegments.count > 0) {
-        [self.recordSegments removeObjectAtIndex:self.currentSelected];
-        if (self.currentSelected >= self.recordSegments.count) {
-            self.currentSelected = self.recordSegments.count-1;
-        }
-        [self showVideo:NO];
+        [self.recordSegments removeObjectAtIndex:indexPath.row];
+        [self.collectionView reloadData];
     }
     
     //这里不能用 else if ，因为当删掉最后一个元素后，self.recordSegments.count 就等于0，需要进入方法内执行。
     if (self.recordSegments.count == 0) {
         self.navigationItem.rightBarButtonItem.enabled = NO;
-        
         [self.player pause];
-        
-//        self.playerView.hidden = YES;
-        self.collectionView.hidden  = YES;
-        
-        self.lzCopyButton.hidden    = YES;
-        self.lzVoiceButton.hidden   = YES;
-        self.lzDeleteButton.hidden  = YES;
-        
+        self.player = nil;
+        self.playButton.hidden = YES;
         self.hintLabel.hidden = NO;
+    }
+    
+    if (self.currentSelected == indexPath.row) {
+        self.currentSelected = 0;
+        [self showVideo:NO];
     }
 }
 
@@ -470,19 +468,20 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *identify = @"VideoEditCollectionCell";
+    static NSString *identify = @"EditCollectionViewCell";
     LZVideoEditCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identify forIndexPath:indexPath];
     LZSessionSegment * segment = self.recordSegments[indexPath.row];
     NSAssert(segment.url != nil, @"segment must be non-nil");
     if (segment) {
         cell.imageView.image = segment.thumbnail;
+        cell.deletBut.hidden = NO;
+        UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(lzDeleteButtonAction:)];
+        [cell.deletBut addGestureRecognizer:singleTap];
         if (segment.isSelect == YES) {
-            cell.markView.hidden = YES;
             cell.imageView.layer.borderWidth = 1;
             cell.imageView.layer.borderColor = [UIColor greenColor].CGColor;
         }
         else {
-            cell.markView.hidden = NO;
             cell.imageView.layer.borderWidth = 0;
             cell.imageView.layer.borderColor = [UIColor clearColor].CGColor;
         }

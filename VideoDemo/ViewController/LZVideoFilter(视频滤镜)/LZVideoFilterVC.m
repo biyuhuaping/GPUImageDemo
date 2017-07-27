@@ -9,9 +9,8 @@
 #import "LZVideoFilterVC.h"
 #import "LZCameraFilterCollectionView.h"
 #import "LZVideoEditCollectionViewCell.h"
-#import "LewReorderableLayout.h"
 
-@interface LZVideoFilterVC ()<LZCameraFilterViewDelegate,LewReorderableLayoutDelegate, LewReorderableLayoutDataSource>
+@interface LZVideoFilterVC ()<LZCameraFilterViewDelegate>
 
 @property (strong, nonatomic) IBOutlet GPUImageView *gpuImageView;
 @property (strong, nonatomic) IBOutlet UIButton *playButton;
@@ -115,16 +114,17 @@
 
 //配置collectionView
 - (void)configCollectionView{
-    LewReorderableLayout *layout = [LewReorderableLayout new];
+    UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
     layout.itemSize                 = CGSizeMake(60, 60);
     layout.minimumInteritemSpacing  = 10;
     layout.minimumLineSpacing       = 10;
     layout.sectionInset             = UIEdgeInsetsMake(10, 10, 10, 10);
     layout.scrollDirection          = UICollectionViewScrollDirectionHorizontal;
-    layout.delegate                 = self;
-    layout.dataSource               = self;
     self.collectionView.collectionViewLayout = layout;
-    [self.collectionView registerClass:[LZVideoEditCollectionViewCell class] forCellWithReuseIdentifier:@"VideoEditCollectionCell"];
+    
+    UINib *nib = [UINib nibWithNibName:@"LZVideoEditCollectionViewCell" bundle:nil];
+    [self.collectionView registerNib:nib forCellWithReuseIdentifier:@"EditCollectionViewCell"];
+//    [self.collectionView registerClass:[LZVideoEditCollectionViewCell class] forCellWithReuseIdentifier:@"VideoEditCollectionCell"];
 }
 
 #pragma mark - Event
@@ -153,19 +153,19 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *identify = @"VideoEditCollectionCell";
+    static NSString *identify = @"EditCollectionViewCell";
     LZVideoEditCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identify forIndexPath:indexPath];
     LZSessionSegment * segment = self.recordSegments[indexPath.row];
     NSAssert(segment.url != nil, @"segment must be non-nil");
     if (segment) {
         cell.imageView.image = segment.thumbnail;
         if (segment.isSelect == YES) {
-            cell.markView.hidden = YES;
+//            cell.markView.hidden = YES;
             cell.imageView.layer.borderWidth = 1;
             cell.imageView.layer.borderColor = [UIColor greenColor].CGColor;
         }
         else {
-            cell.markView.hidden = NO;
+//            cell.markView.hidden = NO;
             cell.imageView.layer.borderWidth = 0;
             cell.imageView.layer.borderColor = [UIColor clearColor].CGColor;
         }

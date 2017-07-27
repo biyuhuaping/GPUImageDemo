@@ -232,7 +232,6 @@
 		FB69C50E1EB983E5007B38BD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FB69C5101EB983E5007B38BD /* Localizable.strings */; };
 		FB69C5181EB9A2C4007B38BD /* LZSelectVideoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C5171EB9A2C4007B38BD /* LZSelectVideoCollectionViewCell.m */; };
 		FB69C51C1EB9A947007B38BD /* LewReorderableLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C51B1EB9A947007B38BD /* LewReorderableLayout.m */; };
-		FB69C51F1EB9A97A007B38BD /* LZVideoEditCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C51E1EB9A97A007B38BD /* LZVideoEditCollectionViewCell.m */; };
 		FB69C5231EB9B690007B38BD /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB69C5221EB9B690007B38BD /* ViewController.xib */; };
 		FB69C5271EB9C1DF007B38BD /* UINavigationController+FDFullscreenPopGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C5261EB9C1DF007B38BD /* UINavigationController+FDFullscreenPopGesture.m */; };
 		FB69C5291EBAD0CC007B38BD /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB69C5281EBAD0CC007B38BD /* MobileCoreServices.framework */; };
@@ -242,6 +241,8 @@
 		FB6CCA221F1C9E150065E45C /* LZSelectVideoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FB6CCA201F1C9E150065E45C /* LZSelectVideoVC.m */; };
 		FB6CCA231F1C9E150065E45C /* LZSelectVideoVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB6CCA211F1C9E150065E45C /* LZSelectVideoVC.xib */; };
 		FB6EAD721EEE3E1B00FAFD97 /* LZCameraFilterCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB6EAD711EEE3E1B00FAFD97 /* LZCameraFilterCollectionView.m */; };
+		FB7138891F28807000660712 /* LZVideoEditCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FB7138871F28807000660712 /* LZVideoEditCollectionViewCell.m */; };
+		FB71388A1F28807000660712 /* LZVideoEditCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB7138881F28807000660712 /* LZVideoEditCollectionViewCell.xib */; };
 		FB8341711EFA38650010F690 /* LZPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB8341701EFA38650010F690 /* LZPlayerView.m */; };
 		FB8341791EFCEAB30010F690 /* LZVideoTailoringVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FB8341771EFCEAB30010F690 /* LZVideoTailoringVC.m */; };
 		FB83417A1EFCEAB30010F690 /* LZVideoTailoringVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB8341781EFCEAB30010F690 /* LZVideoTailoringVC.xib */; };
@@ -738,8 +739,6 @@
 		FB69C5171EB9A2C4007B38BD /* LZSelectVideoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZSelectVideoCollectionViewCell.m; sourceTree = "<group>"; };
 		FB69C51A1EB9A947007B38BD /* LewReorderableLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LewReorderableLayout.h; sourceTree = "<group>"; };
 		FB69C51B1EB9A947007B38BD /* LewReorderableLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LewReorderableLayout.m; sourceTree = "<group>"; };
-		FB69C51D1EB9A97A007B38BD /* LZVideoEditCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZVideoEditCollectionViewCell.h; sourceTree = "<group>"; };
-		FB69C51E1EB9A97A007B38BD /* LZVideoEditCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZVideoEditCollectionViewCell.m; sourceTree = "<group>"; };
 		FB69C5221EB9B690007B38BD /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
 		FB69C5251EB9C1DF007B38BD /* UINavigationController+FDFullscreenPopGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+FDFullscreenPopGesture.h"; sourceTree = "<group>"; };
 		FB69C5261EB9C1DF007B38BD /* UINavigationController+FDFullscreenPopGesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+FDFullscreenPopGesture.m"; sourceTree = "<group>"; };
@@ -755,6 +754,9 @@
 		FB6CCA211F1C9E150065E45C /* LZSelectVideoVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LZSelectVideoVC.xib; sourceTree = "<group>"; };
 		FB6EAD701EEE3E1B00FAFD97 /* LZCameraFilterCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZCameraFilterCollectionView.h; sourceTree = "<group>"; };
 		FB6EAD711EEE3E1B00FAFD97 /* LZCameraFilterCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZCameraFilterCollectionView.m; sourceTree = "<group>"; };
+		FB7138861F28807000660712 /* LZVideoEditCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZVideoEditCollectionViewCell.h; sourceTree = "<group>"; };
+		FB7138871F28807000660712 /* LZVideoEditCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZVideoEditCollectionViewCell.m; sourceTree = "<group>"; };
+		FB7138881F28807000660712 /* LZVideoEditCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LZVideoEditCollectionViewCell.xib; sourceTree = "<group>"; };
 		FB83416F1EFA38650010F690 /* LZPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZPlayerView.h; sourceTree = "<group>"; };
 		FB8341701EFA38650010F690 /* LZPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZPlayerView.m; sourceTree = "<group>"; };
 		FB8341761EFCEAB30010F690 /* LZVideoTailoringVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZVideoTailoringVC.h; sourceTree = "<group>"; };
@@ -1352,8 +1354,9 @@
 		FB69C43F1EB96ED2007B38BD /* VideoEdit(视频编辑) */ = {
 			isa = PBXGroup;
 			children = (
-				FB69C51D1EB9A97A007B38BD /* LZVideoEditCollectionViewCell.h */,
-				FB69C51E1EB9A97A007B38BD /* LZVideoEditCollectionViewCell.m */,
+				FB7138861F28807000660712 /* LZVideoEditCollectionViewCell.h */,
+				FB7138871F28807000660712 /* LZVideoEditCollectionViewCell.m */,
+				FB7138881F28807000660712 /* LZVideoEditCollectionViewCell.xib */,
 				FB69C4401EB96ED2007B38BD /* LZVideoEditAuxiliary.h */,
 				FB69C4411EB96ED2007B38BD /* LZVideoEditAuxiliary.m */,
 				FB69C4421EB96ED2007B38BD /* LZVideoEditClipVC.h */,
@@ -1713,6 +1716,7 @@
 				FB69C50E1EB983E5007B38BD /* Localizable.strings in Resources */,
 				FB69C4D21EB975EE007B38BD /* LICENSE in Resources */,
 				FB4D35F71EE64007000A92C8 /* Info.plist in Resources */,
+				FB71388A1F28807000660712 /* LZVideoEditCollectionViewCell.xib in Resources */,
 				FB69C4091EB96ADC007B38BD /* Assets.xcassets in Resources */,
 				FB69C4521EB96ED2007B38BD /* LZVideoDetailsVC.xib in Resources */,
 				FB8341991F037DA80010F690 /* LZVideoSpeedVC.xib in Resources */,
@@ -1750,7 +1754,6 @@
 				FB4D35871EE64007000A92C8 /* GPUImageGlassSphereFilter.m in Sources */,
 				FB4D35981EE64007000A92C8 /* GPUImageJFAVoronoiFilter.m in Sources */,
 				FB4D35691EE64007000A92C8 /* GPUImageContrastFilter.m in Sources */,
-				FB69C51F1EB9A97A007B38BD /* LZVideoEditCollectionViewCell.m in Sources */,
 				FB4D35741EE64007000A92C8 /* GPUImageEmbossFilter.m in Sources */,
 				FB69C4DE1EB975EE007B38BD /* LZImageView.m in Sources */,
 				FB4D35501EE64007000A92C8 /* GPUImageAddBlendFilter.m in Sources */,
@@ -1907,6 +1910,7 @@
 				FB4D35BA1EE64007000A92C8 /* GPUImagePerlinNoiseFilter.m in Sources */,
 				FB4D35FC1EE64007000A92C8 /* GPUImageView.m in Sources */,
 				FB4F35291F0E24960084B37E /* LZSessionSegment.m in Sources */,
+				FB7138891F28807000660712 /* LZVideoEditCollectionViewCell.m in Sources */,
 				FB4D35551EE64007000A92C8 /* GPUImageBilateralFilter.m in Sources */,
 				FB28D17C1ECC199000531210 /* HKMediaOperationTools.m in Sources */,
 				FB4D35D31EE64007000A92C8 /* GPUImageSmoothToonFilter.m in Sources */,

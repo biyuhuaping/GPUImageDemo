@@ -16,8 +16,7 @@
                 <outlet property="collectionView" destination="HqY-y0-qrC" id="qCF-w8-5OK"/>
                 <outlet property="gpuImageView" destination="k1z-HP-DI4" id="hRe-8x-eK0"/>
                 <outlet property="hintLabel" destination="xMb-1e-kRb" id="nI0-cd-CBU"/>
-                <outlet property="lzCopyButton" destination="huv-mn-5XT" id="FO2-Ka-lSh"/>
-                <outlet property="lzVoiceButton" destination="sqn-xh-d30" id="LAN-89-fRN"/>
+                <outlet property="lzVoiceButton" destination="sqn-xh-d30" id="hqH-C9-GPr"/>
                 <outlet property="playButton" destination="d4C-RB-7z4" id="cSh-pm-RIF"/>
                 <outlet property="progressView" destination="FKf-lv-IJ0" id="WYi-kY-PEc"/>
                 <outlet property="timeLabel" destination="xTK-HS-Zmo" id="sTh-az-pKE"/>
@@ -81,7 +80,7 @@
                                 <constraint firstAttribute="height" constant="80" id="ziC-cM-nzX"/>
                             </constraints>
                             <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="94Q-vi-X2T">
-                                <size key="itemSize" width="50" height="50"/>
+                                <size key="itemSize" width="60" height="60"/>
                                 <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                 <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                 <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>

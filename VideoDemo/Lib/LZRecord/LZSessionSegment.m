@@ -64,7 +64,8 @@
 }
 
 - (CMTime)duration {
-    return [self asset].duration;
+    return CMTimeMakeWithSeconds(_endTime - _startTime, self.asset.duration.timescale);
+//    return [self asset].duration;
 }
 
 - (UIImage *)thumbnail {
