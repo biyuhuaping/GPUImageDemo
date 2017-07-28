@@ -43,7 +43,6 @@
     [self configPlayerView:YES];
     [self configCameraFilterView];
     [self configCollectionView];
-    [self didSelectPlayerItem];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -99,6 +98,7 @@
             [weakSelf.playButton setImage:[UIImage imageNamed:@"播放"] forState:UIControlStateNormal];
         }
     }];
+    [self didSelectPlayerItem];
 }
 
 //配置选择滤镜的CollectionView
@@ -190,7 +190,6 @@
 
     //显示当前片段
     [self configPlayerView:NO];
-    [self didSelectPlayerItem];
 }
 
 #pragma mark - cameraFilterView delegate
@@ -250,8 +249,7 @@
             } else {
                 self.player.volume = 1;
             }
-        }
-        else {
+        } else {
             segment.isSelect = NO;
         }
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -52,6 +52,12 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9eH-0Q-sHx">
                     <rect key="frame" x="0.0" y="375" width="375" height="292"/>
                     <subviews>
+                        <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IdQ-6s-PKW">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="2"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="2" id="aJb-Mo-vog"/>
+                            </constraints>
+                        </progressView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W0O-m2-pC6">
                             <rect key="frame" x="0.0" y="243" width="62.5" height="49"/>
                             <constraints>
@@ -145,7 +151,9 @@
                         <constraint firstItem="W0O-m2-pC6" firstAttribute="leading" secondItem="9eH-0Q-sHx" secondAttribute="leading" id="7E6-qX-pzG"/>
                         <constraint firstItem="Dz9-DN-gfW" firstAttribute="top" secondItem="nI3-dX-gHt" secondAttribute="bottom" constant="20" id="7cG-FD-skh"/>
                         <constraint firstItem="q27-E4-4Ge" firstAttribute="leading" secondItem="Dbf-eN-P4V" secondAttribute="trailing" id="7wV-2o-s0S"/>
+                        <constraint firstItem="IdQ-6s-PKW" firstAttribute="top" secondItem="9eH-0Q-sHx" secondAttribute="top" id="9Cm-3O-lqt"/>
                         <constraint firstItem="hpr-hd-7L7" firstAttribute="top" secondItem="9eH-0Q-sHx" secondAttribute="top" constant="30" id="9sQ-S1-58i"/>
+                        <constraint firstAttribute="trailing" secondItem="IdQ-6s-PKW" secondAttribute="trailing" id="Aw8-rA-7il"/>
                         <constraint firstItem="id1-bS-SE8" firstAttribute="width" secondItem="W0O-m2-pC6" secondAttribute="width" id="BPV-PF-Ugj"/>
                         <constraint firstItem="hpr-hd-7L7" firstAttribute="width" secondItem="hpr-hd-7L7" secondAttribute="height" id="CJS-py-5dC"/>
                         <constraint firstItem="22X-g9-aM4" firstAttribute="width" secondItem="22X-g9-aM4" secondAttribute="height" id="EeR-Bn-V84"/>
@@ -160,6 +168,7 @@
                         <constraint firstItem="nI3-dX-gHt" firstAttribute="width" secondItem="nI3-dX-gHt" secondAttribute="height" id="Prc-Wb-zpH"/>
                         <constraint firstItem="Dbf-eN-P4V" firstAttribute="centerY" secondItem="W0O-m2-pC6" secondAttribute="centerY" id="SJW-B0-Fk1"/>
                         <constraint firstItem="q27-E4-4Ge" firstAttribute="top" secondItem="da2-C9-RAl" secondAttribute="bottom" constant="20" id="SO6-78-TSB"/>
+                        <constraint firstItem="IdQ-6s-PKW" firstAttribute="leading" secondItem="9eH-0Q-sHx" secondAttribute="leading" id="UQy-hx-9IV"/>
                         <constraint firstItem="YKx-xy-L3I" firstAttribute="top" secondItem="9eH-0Q-sHx" secondAttribute="top" constant="30" id="Wcg-mG-S1p"/>
                         <constraint firstItem="n8c-f3-BaD" firstAttribute="leading" secondItem="q27-E4-4Ge" secondAttribute="trailing" id="XyC-Hn-KLi"/>
                         <constraint firstItem="Dbf-eN-P4V" firstAttribute="width" secondItem="W0O-m2-pC6" secondAttribute="width" id="Y0B-cw-aVQ"/>
