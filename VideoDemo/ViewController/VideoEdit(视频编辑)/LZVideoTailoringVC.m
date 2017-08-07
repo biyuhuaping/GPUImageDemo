@@ -30,7 +30,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = LZLocalizedString(@"edit_video", nil);
+    self.title = @"裁剪";
     self.segment = self.recordSegments[self.currentSelected];
 
     [self.trimmerView performSelectorInBackground:@selector(getMovieFrameWithAsset:) withObject:self.segment.asset];
@@ -105,15 +105,10 @@
     [self saveCutVideo];
 }
 
+//弃用此方法（完全可以剪辑视频，唯一缺点是文件名没有重新排序）
 - (void)cutVideo {
-//    NSURL *tempPath = self.segment.url;
-//    NSString *filename = [LZVideoTools getFileName:[tempPath absoluteString]];
-//    tempPath = [LZVideoTools filePathWithFileName:[NSString stringWithFormat:@"%@.m4v", filename] isFilter:YES];
-//    NSURL *tempPath = [LZVideoTools filePathWithFilter:YES];
-    
     NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", self.recordSession.fileIndex];
-    NSURL *tempPath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
-    
+    NSURL *tempPath = [LZVideoTools filePathWithFileName:filename];
     
     CMTime start = CMTimeMakeWithSeconds(self.segment.startTime, self.segment.duration.timescale);
     CMTime duration = CMTimeMakeWithSeconds(self.segment.endTime - self.segment.startTime, self.segment.duration.timescale);
@@ -134,12 +129,11 @@
     [self.recordSegments removeObjectAtIndex:self.currentSelected];
     [self.recordSegments insertObject:self.segment atIndex:self.currentSelected];
     
-    WS(weakSelf);
     dispatch_group_t serviceGroup = dispatch_group_create();
-    for (int i = 0; i < weakSelf.recordSegments.count; i++) {
-        LZSessionSegment * segment = weakSelf.recordSegments[i];
+    for (int i = 0; i < self.recordSegments.count; i++) {
+        LZSessionSegment * segment = self.recordSegments[i];
         NSString *filename = [NSString stringWithFormat:@"Video-%ld.m4v", (long)i];
-        NSURL *filePath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
+        NSURL *filePath = [LZVideoTools filePathWithFileName:filename];
         
         CMTime start = CMTimeMakeWithSeconds(segment.startTime, segment.duration.timescale);
         CMTime duration = CMTimeMakeWithSeconds(segment.endTime - segment.startTime, segment.asset.duration.timescale);
@@ -149,23 +143,23 @@
         [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:filePath timeRange:range completion:^(NSURL *savedPath) {
             LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:filePath filter:nil];
             DLog(@"url:%@", [filePath path]);
-            [weakSelf.recordSegments removeObject:segment];
-            [weakSelf.recordSegments insertObject:newSegment atIndex:i];
+            [self.recordSegments removeObject:segment];
+            [self.recordSegments insertObject:newSegment atIndex:i];
             dispatch_group_leave(serviceGroup);
         }];
     }
     
     dispatch_group_notify(serviceGroup, dispatch_get_main_queue(),^{
         [self.recordSession removeAllSegments:NO];
-        for (int i = 0; i < weakSelf.recordSegments.count; i++) {
-            LZSessionSegment * segment = weakSelf.recordSegments[i];
+        for (int i = 0; i < self.recordSegments.count; i++) {
+            LZSessionSegment * segment = self.recordSegments[i];
             NSAssert(segment.url != nil, @"segment url must be non-nil");
             if (segment.url != nil) {
-                [weakSelf.recordSession insertSegment:segment atIndex:i];
+                [self.recordSession insertSegment:segment atIndex:i];
                 self.recordSession.fileIndex = i+1;//将fileIndex恢复到现有数值，再存文件时覆盖无用的缓存文件。zhoubo 2017.07.27
             }
         }
-        [weakSelf.navigationController popViewControllerAnimated:YES];
+        [self.navigationController popViewControllerAnimated:YES];
     });
 }
 

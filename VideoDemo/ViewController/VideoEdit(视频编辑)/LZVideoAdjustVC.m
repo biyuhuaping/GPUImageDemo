@@ -168,7 +168,7 @@
     
     
     NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", self.recordSession.fileIndex];
-    NSURL *filePath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
+    NSURL *filePath = [LZVideoTools filePathWithFileName:filename];
 
     movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:filePath size:CGSizeMake(480.0, 480.0)];
     movieWriter.shouldPassthroughAudio = YES;

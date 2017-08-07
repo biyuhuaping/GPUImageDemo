@@ -58,7 +58,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.title = LZLocalizedString(@"edit_video", nil);
+    self.title = @"片段剪辑";
     _hintLabel.text = LZLocalizedString(@"all_video_delete", nil);
     self.videoEditAuxiliary = [[LZVideoEditAuxiliary alloc]init];
     self.currentSelected = 0;
@@ -67,9 +67,7 @@
     self.timeLabel.layer.cornerRadius = 10;
     
     [self configNavigationBar];
-    [self configCollectionView];
-    
-    [LZVideoTools enumPathisFilter:YES];
+    [self configCollectionView];    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -77,7 +75,6 @@
     self.recordSegments = [NSMutableArray arrayWithArray:self.recordSession.segments];
 
     [self showVideo:YES];
-    [self configTimeLabel];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -109,7 +106,7 @@
 //配置collectionView
 - (void)configCollectionView{
     LewReorderableLayout *layout = [LewReorderableLayout new];
-    layout.itemSize                 = CGSizeMake(60, 60);
+    layout.itemSize                 = CGSizeMake(70, 70);
     layout.minimumInteritemSpacing  = 10;
     layout.minimumLineSpacing       = 10;
     layout.sectionInset             = UIEdgeInsetsMake(10, 10, 10, 10);
@@ -124,12 +121,11 @@
 }
 
 //配置timeLabel
-- (void)configTimeLabel{
+- (NSString *)configTimeLabel:(Float64)durationSeconds{
     //显示总时间
-    CGFloat durationSeconds = CMTimeGetSeconds(self.recordSession.assetRepresentingSegments.duration);
     int seconds = lround(durationSeconds) % 60;
     int minutes = (lround(durationSeconds) / 60) % 60;
-    self.timeLabel.text = [NSString stringWithFormat:@" %02d:%02d ", minutes, seconds];
+    return [NSString stringWithFormat:@" %02d:%02d ", minutes, seconds];
 }
 
 //选中视频
@@ -180,11 +176,11 @@
         
         if (self.currentSelected == i) {
             segment.isSelect = YES;//设置选中
+            self.timeLabel.text = [self configTimeLabel:CMTimeGetSeconds(segment.duration)];
         } else {
             segment.isSelect = NO;
         }
     }
-    
     [self.collectionView reloadData];
 }
 
@@ -201,16 +197,11 @@
         if ([compatiblePresets containsObject:AVAssetExportPresetHighestQuality]) {
             
             NSString *filename = [NSString stringWithFormat:@"Video-%ld.m4v", (long)i];
-            NSURL *filePath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
-            
-            CMTime start = CMTimeMakeWithSeconds(segment.startTime, segment.duration.timescale);
-            CMTime duration = CMTimeMakeWithSeconds(segment.endTime - segment.startTime, segment.asset.duration.timescale);
-            CMTimeRange range = CMTimeRangeMake(start, duration);
-            
+            NSURL *filePath = [LZVideoTools filePathWithFileName:filename];
+
             dispatch_group_enter(serviceGroup);
-            [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:filePath timeRange:range completion:^(NSURL *savedPath) {
+            [LZVideoTools cutVideoWith:segment filePath:filePath completion:^{
                 LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:filePath filter:nil];
-                DLog(@"剪切url:%@", [filePath path]);
                 [weakSelf.recordSegments removeObject:segment];
                 [weakSelf.recordSegments insertObject:newSegment atIndex:i];
                 dispatch_group_leave(serviceGroup);
@@ -287,7 +278,7 @@
     
     //往缓存里复制一份，同时更新self.recordSession.segments。否则重新显示此页面时，recordSegments会取不到复制的文件。
     NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", self.recordSession.fileIndex];
-    NSURL *filePath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
+    NSURL *filePath = [LZVideoTools filePathWithFileName:filename];
 
     [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:filePath timeRange:kCMTimeRangeZero completion:^(NSURL *savedPath) {
         if(savedPath) {
@@ -368,7 +359,7 @@
     __block LZSessionSegment *segment = self.recordSegments[self.currentSelected];
     __block LZSessionSegment *newSegment = nil;
     
-    NSURL *tempPath = [LZVideoTools filePathWithFileName:@"BackwardsVideo.m4v" isFilter:YES];
+    NSURL *tempPath = [LZVideoTools filePathWithFileName:@"BackwardsVideo.m4v"];
     
     if (segment.isReverse == YES && segment.assetSourcePath != nil) {
         newSegment = [LZSessionSegment segmentWithURL:segment.assetSourcePath filter:segment.filter];
@@ -475,6 +466,8 @@
     if (segment) {
         cell.imageView.image = segment.thumbnail;
         cell.deletBut.hidden = NO;
+        cell.timeLabel.text = [self configTimeLabel:CMTimeGetSeconds(segment.duration)];
+        
         UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(lzDeleteButtonAction:)];
         [cell.deletBut addGestureRecognizer:singleTap];
         if (segment.isSelect == YES) {

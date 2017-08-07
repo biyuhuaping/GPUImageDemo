@@ -113,79 +113,27 @@
                     <rect key="frame" x="0.0" y="320" width="320" height="111"/>
                     <subviews>
                         <button opaque="NO" tag="100" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HYy-iW-m7z">
-                            <rect key="frame" x="0.0" y="5" width="80" height="46"/>
+                            <rect key="frame" x="0.0" y="32.5" width="160" height="46"/>
                             <state key="normal" image="片段剪辑"/>
                             <connections>
                                 <action selector="clipsButtonActions:" destination="-1" eventType="touchUpInside" id="yqV-bu-oLB"/>
                             </connections>
                         </button>
                         <button opaque="NO" tag="101" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ehW-3i-Fy4">
-                            <rect key="frame" x="80" y="5" width="80" height="46"/>
-                            <state key="normal" image="字幕"/>
+                            <rect key="frame" x="160" y="32.5" width="159.5" height="46"/>
+                            <state key="normal" image="添加片段button"/>
                             <connections>
                                 <action selector="clipsButtonActions:" destination="-1" eventType="touchUpInside" id="tDK-hz-Hdm"/>
                             </connections>
                         </button>
-                        <button opaque="NO" tag="102" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PDY-Jb-2tT">
-                            <rect key="frame" x="160" y="5" width="80" height="46"/>
-                            <state key="normal" image="滤镜"/>
-                            <connections>
-                                <action selector="clipsButtonActions:" destination="-1" eventType="touchUpInside" id="LV0-Nf-GaR"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" tag="103" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3bo-3N-nSi">
-                            <rect key="frame" x="240" y="5" width="80" height="46"/>
-                            <state key="normal" image="转场特技"/>
-                            <connections>
-                                <action selector="clipsButtonActions:" destination="-1" eventType="touchUpInside" id="9tg-VB-xGj"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" tag="104" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Xe-m6-TNC">
-                            <rect key="frame" x="0.0" y="56" width="80" height="45.5"/>
-                            <state key="normal" image="尾帧停留"/>
-                            <connections>
-                                <action selector="clipsButtonActions:" destination="-1" eventType="touchUpInside" id="t9q-yF-jNu"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" tag="105" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Mh-Np-T4d">
-                            <rect key="frame" x="80" y="56" width="80" height="45.5"/>
-                            <state key="normal" image="添加片段button"/>
-                            <connections>
-                                <action selector="clipsButtonActions:" destination="-1" eventType="touchUpInside" id="ou3-m3-rGp"/>
-                            </connections>
-                        </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Clip edit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="opm-Xn-o3l">
-                            <rect key="frame" x="13" y="53" width="54" height="17"/>
+                            <rect key="frame" x="53.5" y="80.5" width="54" height="17"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Text" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hue-hI-MBJ">
-                            <rect key="frame" x="105.5" y="53" width="28" height="17"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Filter" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IxY-I5-jgP">
-                            <rect key="frame" x="183" y="53" width="33" height="17"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Transition" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YJP-3b-JhG">
-                            <rect key="frame" x="247.5" y="53" width="64" height="17"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="End Frame" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fGA-QC-RLv">
-                            <rect key="frame" x="5" y="103.5" width="69" height="17"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add clips" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cfL-IN-d8x">
-                            <rect key="frame" x="89.5" y="103.5" width="60" height="17"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add clips" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hue-hI-MBJ">
+                            <rect key="frame" x="210" y="80.5" width="59.5" height="17"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
@@ -193,41 +141,17 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="3bo-3N-nSi" firstAttribute="height" secondItem="HYy-iW-m7z" secondAttribute="height" id="13M-XY-zM5"/>
-                        <constraint firstItem="HYy-iW-m7z" firstAttribute="top" secondItem="U0o-Ov-oXS" secondAttribute="top" constant="5" id="2hy-dN-kvz"/>
                         <constraint firstItem="Hue-hI-MBJ" firstAttribute="centerX" secondItem="ehW-3i-Fy4" secondAttribute="centerX" id="6EM-VT-QOj"/>
-                        <constraint firstItem="IxY-I5-jgP" firstAttribute="top" secondItem="PDY-Jb-2tT" secondAttribute="centerY" constant="25" id="AHk-Ar-O9e"/>
-                        <constraint firstItem="PDY-Jb-2tT" firstAttribute="centerY" secondItem="ehW-3i-Fy4" secondAttribute="centerY" id="Dro-bI-FC4"/>
                         <constraint firstItem="ehW-3i-Fy4" firstAttribute="height" secondItem="HYy-iW-m7z" secondAttribute="height" id="K3X-Un-gN8"/>
-                        <constraint firstItem="9Xe-m6-TNC" firstAttribute="width" secondItem="HYy-iW-m7z" secondAttribute="width" id="LFa-uF-KU5"/>
-                        <constraint firstItem="PDY-Jb-2tT" firstAttribute="width" secondItem="HYy-iW-m7z" secondAttribute="width" id="La4-qh-Ara"/>
                         <constraint firstItem="Hue-hI-MBJ" firstAttribute="top" secondItem="ehW-3i-Fy4" secondAttribute="centerY" constant="25" id="MzH-d4-2uP"/>
-                        <constraint firstItem="9Xe-m6-TNC" firstAttribute="height" secondItem="HYy-iW-m7z" secondAttribute="height" id="SX1-HX-vcf"/>
-                        <constraint firstItem="9Xe-m6-TNC" firstAttribute="leading" secondItem="U0o-Ov-oXS" secondAttribute="leading" id="UTg-pE-BRs"/>
-                        <constraint firstItem="fGA-QC-RLv" firstAttribute="centerX" secondItem="9Xe-m6-TNC" secondAttribute="centerX" id="UUO-jr-XPs"/>
-                        <constraint firstItem="PDY-Jb-2tT" firstAttribute="leading" secondItem="ehW-3i-Fy4" secondAttribute="trailing" id="VhF-Tg-rpl"/>
-                        <constraint firstItem="3Mh-Np-T4d" firstAttribute="leading" secondItem="9Xe-m6-TNC" secondAttribute="trailing" id="W70-lp-9Tl"/>
                         <constraint firstItem="opm-Xn-o3l" firstAttribute="top" secondItem="HYy-iW-m7z" secondAttribute="centerY" constant="25" id="WIH-hQ-S14"/>
-                        <constraint firstItem="3bo-3N-nSi" firstAttribute="leading" secondItem="PDY-Jb-2tT" secondAttribute="trailing" id="WyR-dG-ewy"/>
                         <constraint firstItem="HYy-iW-m7z" firstAttribute="leading" secondItem="U0o-Ov-oXS" secondAttribute="leading" id="ZwU-rK-5eb"/>
-                        <constraint firstItem="3bo-3N-nSi" firstAttribute="centerY" secondItem="PDY-Jb-2tT" secondAttribute="centerY" id="adZ-6q-evB"/>
-                        <constraint firstItem="cfL-IN-d8x" firstAttribute="centerX" secondItem="3Mh-Np-T4d" secondAttribute="centerX" id="anU-AJ-FTl"/>
-                        <constraint firstItem="3Mh-Np-T4d" firstAttribute="width" secondItem="HYy-iW-m7z" secondAttribute="width" id="bU9-PG-Wvc"/>
-                        <constraint firstItem="3Mh-Np-T4d" firstAttribute="height" secondItem="HYy-iW-m7z" secondAttribute="height" id="d3P-HG-8Jl"/>
-                        <constraint firstItem="IxY-I5-jgP" firstAttribute="centerX" secondItem="PDY-Jb-2tT" secondAttribute="centerX" id="eIj-2Y-lX8"/>
+                        <constraint firstItem="HYy-iW-m7z" firstAttribute="centerY" secondItem="U0o-Ov-oXS" secondAttribute="centerY" id="g0K-r5-Uh6"/>
                         <constraint firstItem="HYy-iW-m7z" firstAttribute="height" secondItem="U0o-Ov-oXS" secondAttribute="height" multiplier="0.41" id="gKo-gK-SGz"/>
-                        <constraint firstItem="YJP-3b-JhG" firstAttribute="top" secondItem="3bo-3N-nSi" secondAttribute="centerY" constant="25" id="gPh-VI-YnX"/>
-                        <constraint firstItem="fGA-QC-RLv" firstAttribute="top" secondItem="9Xe-m6-TNC" secondAttribute="centerY" constant="25" id="hDa-mE-qNn"/>
                         <constraint firstItem="ehW-3i-Fy4" firstAttribute="centerY" secondItem="HYy-iW-m7z" secondAttribute="centerY" id="hu9-Lv-ccS"/>
-                        <constraint firstItem="3Mh-Np-T4d" firstAttribute="centerY" secondItem="9Xe-m6-TNC" secondAttribute="centerY" id="ia1-1u-Uei"/>
-                        <constraint firstItem="HYy-iW-m7z" firstAttribute="width" secondItem="U0o-Ov-oXS" secondAttribute="width" multiplier="1:4" id="m96-PD-iXg"/>
-                        <constraint firstItem="YJP-3b-JhG" firstAttribute="centerX" secondItem="3bo-3N-nSi" secondAttribute="centerX" id="mP2-xz-xgy"/>
+                        <constraint firstItem="HYy-iW-m7z" firstAttribute="width" secondItem="U0o-Ov-oXS" secondAttribute="width" multiplier="1:2" id="m96-PD-iXg"/>
                         <constraint firstItem="opm-Xn-o3l" firstAttribute="centerX" secondItem="HYy-iW-m7z" secondAttribute="centerX" id="rP9-7J-pfC"/>
-                        <constraint firstItem="PDY-Jb-2tT" firstAttribute="height" secondItem="HYy-iW-m7z" secondAttribute="height" id="rgA-EI-LP1"/>
-                        <constraint firstItem="9Xe-m6-TNC" firstAttribute="top" secondItem="HYy-iW-m7z" secondAttribute="bottom" constant="5" id="vky-GD-D1F"/>
-                        <constraint firstItem="3bo-3N-nSi" firstAttribute="width" secondItem="HYy-iW-m7z" secondAttribute="width" id="waf-sU-4qB"/>
                         <constraint firstItem="ehW-3i-Fy4" firstAttribute="width" secondItem="HYy-iW-m7z" secondAttribute="width" multiplier="1:1" id="xKz-1P-g1x"/>
-                        <constraint firstItem="cfL-IN-d8x" firstAttribute="top" secondItem="3Mh-Np-T4d" secondAttribute="centerY" constant="25" id="z8G-Kk-VKT"/>
                         <constraint firstItem="ehW-3i-Fy4" firstAttribute="leading" secondItem="HYy-iW-m7z" secondAttribute="trailing" id="zHF-VN-1ls"/>
                     </constraints>
                 </view>
@@ -256,12 +180,8 @@
         <image name="剪裁高亮" width="20" height="20"/>
         <image name="剪辑" width="18" height="17"/>
         <image name="剪辑_高亮" width="18" height="17"/>
-        <image name="字幕" width="45" height="45"/>
-        <image name="尾帧停留" width="45" height="45"/>
         <image name="播放" width="69" height="69"/>
         <image name="添加片段button" width="45" height="45"/>
-        <image name="滤镜" width="45" height="45"/>
         <image name="片段剪辑" width="45" height="45"/>
-        <image name="转场特技" width="45" height="45"/>
     </resources>
 </document>

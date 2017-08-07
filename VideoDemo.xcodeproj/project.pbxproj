@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FB1C3BC21F385B7200782FD8 /* GPUImageVideoCameraEx.m in Sources */ = {isa = PBXBuildFile; fileRef = FB1C3BBD1F385B7200782FD8 /* GPUImageVideoCameraEx.m */; };
+		FB1C3BC31F385B7200782FD8 /* LZRecordSession.m in Sources */ = {isa = PBXBuildFile; fileRef = FB1C3BBF1F385B7200782FD8 /* LZRecordSession.m */; };
+		FB1C3BC41F385B7200782FD8 /* LZSessionSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = FB1C3BC11F385B7200782FD8 /* LZSessionSegment.m */; };
 		FB28CDB71ECAD90400531210 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB28CDB61ECAD90400531210 /* CoreMedia.framework */; };
 		FB28CDBD1ECAD90F00531210 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB28CDBC1ECAD90F00531210 /* CoreVideo.framework */; };
 		FB28CDBF1ECAD91C00531210 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB28CDBE1ECAD91B00531210 /* OpenGLES.framework */; };
@@ -188,10 +191,6 @@
 		FB4D35FA1EE64007000A92C8 /* GPUImagePicture+TextureSubimage.m in Sources */ = {isa = PBXBuildFile; fileRef = FB4D35371EE64007000A92C8 /* GPUImagePicture+TextureSubimage.m */; };
 		FB4D35FB1EE64007000A92C8 /* GPUImagePicture.m in Sources */ = {isa = PBXBuildFile; fileRef = FB4D35391EE64007000A92C8 /* GPUImagePicture.m */; };
 		FB4D35FC1EE64007000A92C8 /* GPUImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB4D353B1EE64007000A92C8 /* GPUImageView.m */; };
-		FB4F35261F0E24960084B37E /* GPUImageVideoCameraEx.m in Sources */ = {isa = PBXBuildFile; fileRef = FB4F351F1F0E24960084B37E /* GPUImageVideoCameraEx.m */; };
-		FB4F35271F0E24960084B37E /* LZMovieWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = FB4F35211F0E24960084B37E /* LZMovieWriter.m */; };
-		FB4F35281F0E24960084B37E /* LZRecordSession.m in Sources */ = {isa = PBXBuildFile; fileRef = FB4F35231F0E24960084B37E /* LZRecordSession.m */; };
-		FB4F35291F0E24960084B37E /* LZSessionSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = FB4F35251F0E24960084B37E /* LZSessionSegment.m */; };
 		FB69C3FE1EB96ADC007B38BD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C3FD1EB96ADC007B38BD /* main.m */; };
 		FB69C4011EB96ADC007B38BD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C4001EB96ADC007B38BD /* AppDelegate.m */; };
 		FB69C4041EB96ADC007B38BD /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C4031EB96ADC007B38BD /* ViewController.m */; };
@@ -230,7 +229,6 @@
 		FB69C5091EB9790E007B38BD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB69C5081EB9790E007B38BD /* Foundation.framework */; };
 		FB69C50B1EB97916007B38BD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB69C50A1EB97916007B38BD /* UIKit.framework */; };
 		FB69C50E1EB983E5007B38BD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FB69C5101EB983E5007B38BD /* Localizable.strings */; };
-		FB69C5181EB9A2C4007B38BD /* LZSelectVideoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C5171EB9A2C4007B38BD /* LZSelectVideoCollectionViewCell.m */; };
 		FB69C51C1EB9A947007B38BD /* LewReorderableLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C51B1EB9A947007B38BD /* LewReorderableLayout.m */; };
 		FB69C5231EB9B690007B38BD /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB69C5221EB9B690007B38BD /* ViewController.xib */; };
 		FB69C5271EB9C1DF007B38BD /* UINavigationController+FDFullscreenPopGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C5261EB9C1DF007B38BD /* UINavigationController+FDFullscreenPopGesture.m */; };
@@ -291,6 +289,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FB1C3BBC1F385B7200782FD8 /* GPUImageVideoCameraEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageVideoCameraEx.h; sourceTree = "<group>"; };
+		FB1C3BBD1F385B7200782FD8 /* GPUImageVideoCameraEx.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImageVideoCameraEx.m; sourceTree = "<group>"; };
+		FB1C3BBE1F385B7200782FD8 /* LZRecordSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZRecordSession.h; sourceTree = "<group>"; };
+		FB1C3BBF1F385B7200782FD8 /* LZRecordSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZRecordSession.m; sourceTree = "<group>"; };
+		FB1C3BC01F385B7200782FD8 /* LZSessionSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZSessionSegment.h; sourceTree = "<group>"; };
+		FB1C3BC11F385B7200782FD8 /* LZSessionSegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZSessionSegment.m; sourceTree = "<group>"; };
 		FB28CDB61ECAD90400531210 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		FB28CDBC1ECAD90F00531210 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		FB28CDBE1ECAD91B00531210 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -652,14 +656,6 @@
 		FB4D35391EE64007000A92C8 /* GPUImagePicture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImagePicture.m; sourceTree = "<group>"; };
 		FB4D353A1EE64007000A92C8 /* GPUImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageView.h; sourceTree = "<group>"; };
 		FB4D353B1EE64007000A92C8 /* GPUImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImageView.m; sourceTree = "<group>"; };
-		FB4F351E1F0E24960084B37E /* GPUImageVideoCameraEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageVideoCameraEx.h; sourceTree = "<group>"; };
-		FB4F351F1F0E24960084B37E /* GPUImageVideoCameraEx.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImageVideoCameraEx.m; sourceTree = "<group>"; };
-		FB4F35201F0E24960084B37E /* LZMovieWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZMovieWriter.h; sourceTree = "<group>"; };
-		FB4F35211F0E24960084B37E /* LZMovieWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZMovieWriter.m; sourceTree = "<group>"; };
-		FB4F35221F0E24960084B37E /* LZRecordSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZRecordSession.h; sourceTree = "<group>"; };
-		FB4F35231F0E24960084B37E /* LZRecordSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZRecordSession.m; sourceTree = "<group>"; };
-		FB4F35241F0E24960084B37E /* LZSessionSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZSessionSegment.h; sourceTree = "<group>"; };
-		FB4F35251F0E24960084B37E /* LZSessionSegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZSessionSegment.m; sourceTree = "<group>"; };
 		FB69C3F91EB96ADC007B38BD /* VideoDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB69C3FD1EB96ADC007B38BD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		FB69C3FF1EB96ADC007B38BD /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -735,8 +731,6 @@
 		FB69C50A1EB97916007B38BD /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FB69C50F1EB983E5007B38BD /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FB69C5111EB983E9007B38BD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		FB69C5161EB9A2C4007B38BD /* LZSelectVideoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZSelectVideoCollectionViewCell.h; sourceTree = "<group>"; };
-		FB69C5171EB9A2C4007B38BD /* LZSelectVideoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZSelectVideoCollectionViewCell.m; sourceTree = "<group>"; };
 		FB69C51A1EB9A947007B38BD /* LewReorderableLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LewReorderableLayout.h; sourceTree = "<group>"; };
 		FB69C51B1EB9A947007B38BD /* LewReorderableLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LewReorderableLayout.m; sourceTree = "<group>"; };
 		FB69C5221EB9B690007B38BD /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
@@ -815,6 +809,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FB1C3BBB1F385B7200782FD8 /* LZRecord */ = {
+			isa = PBXGroup;
+			children = (
+				FB1C3BBC1F385B7200782FD8 /* GPUImageVideoCameraEx.h */,
+				FB1C3BBD1F385B7200782FD8 /* GPUImageVideoCameraEx.m */,
+				FB1C3BBE1F385B7200782FD8 /* LZRecordSession.h */,
+				FB1C3BBF1F385B7200782FD8 /* LZRecordSession.m */,
+				FB1C3BC01F385B7200782FD8 /* LZSessionSegment.h */,
+				FB1C3BC11F385B7200782FD8 /* LZSessionSegment.m */,
+			);
+			path = LZRecord;
+			sourceTree = "<group>";
+		};
 		FB28D1761ECC199000531210 /* HKMediaOperationTools */ = {
 			isa = PBXGroup;
 			children = (
@@ -1218,21 +1225,6 @@
 			path = Framework;
 			sourceTree = "<group>";
 		};
-		FB4F351D1F0E24960084B37E /* LZRecord */ = {
-			isa = PBXGroup;
-			children = (
-				FB4F351E1F0E24960084B37E /* GPUImageVideoCameraEx.h */,
-				FB4F351F1F0E24960084B37E /* GPUImageVideoCameraEx.m */,
-				FB4F35201F0E24960084B37E /* LZMovieWriter.h */,
-				FB4F35211F0E24960084B37E /* LZMovieWriter.m */,
-				FB4F35221F0E24960084B37E /* LZRecordSession.h */,
-				FB4F35231F0E24960084B37E /* LZRecordSession.m */,
-				FB4F35241F0E24960084B37E /* LZSessionSegment.h */,
-				FB4F35251F0E24960084B37E /* LZSessionSegment.m */,
-			);
-			path = LZRecord;
-			sourceTree = "<group>";
-		};
 		FB69C3F01EB96ADC007B38BD = {
 			isa = PBXGroup;
 			children = (
@@ -1304,6 +1296,7 @@
 		FB69C42F1EB96ED1007B38BD /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				FB1C3BBB1F385B7200782FD8 /* LZRecord */,
 				FB69C4591EB97467007B38BD /* View */,
 				FB69C4301EB96ED1007B38BD /* LZNewPromotionVC.h */,
 				FB69C4311EB96ED1007B38BD /* LZNewPromotionVC.m */,
@@ -1320,8 +1313,6 @@
 		FB69C4351EB96ED2007B38BD /* SelectVideo(选择视频) */ = {
 			isa = PBXGroup;
 			children = (
-				FB69C5161EB9A2C4007B38BD /* LZSelectVideoCollectionViewCell.h */,
-				FB69C5171EB9A2C4007B38BD /* LZSelectVideoCollectionViewCell.m */,
 				FB6CCA1F1F1C9E150065E45C /* LZSelectVideoVC.h */,
 				FB6CCA201F1C9E150065E45C /* LZSelectVideoVC.m */,
 				FB6CCA211F1C9E150065E45C /* LZSelectVideoVC.xib */,
@@ -1406,7 +1397,6 @@
 				FB69C5011EB97863007B38BD /* XBNSensorManager */,
 				FB69C46B1EB975EE007B38BD /* Masonry */,
 				FB69C4881EB975EE007B38BD /* SAVideoRangeSlider */,
-				FB4F351D1F0E24960084B37E /* LZRecord */,
 			);
 			path = Lib;
 			sourceTree = "<group>";
@@ -1799,7 +1789,6 @@
 				FB4D35BE1EE64007000A92C8 /* GPUImagePoissonBlendFilter.m in Sources */,
 				FB4D35E41EE64007000A92C8 /* GPUImageThresholdSketchFilter.m in Sources */,
 				FB4D354E1EE64007000A92C8 /* GPUImage3x3TextureSamplingFilter.m in Sources */,
-				FB4F35281F0E24960084B37E /* LZRecordSession.m in Sources */,
 				FB4D35CC1EE64007000A92C8 /* GPUImageScreenBlendFilter.m in Sources */,
 				FB4D35641EE64007000A92C8 /* GPUImageColorLocalBinaryPatternFilter.m in Sources */,
 				FB4D35F91EE64007000A92C8 /* GPUImageMovieWriter.m in Sources */,
@@ -1842,6 +1831,7 @@
 				FB4D35831EE64007000A92C8 /* GPUImageGammaFilter.m in Sources */,
 				FB69C5311EBC45A5007B38BD /* ClearCacheTool.m in Sources */,
 				FB4D354F1EE64007000A92C8 /* GPUImageAdaptiveThresholdFilter.m in Sources */,
+				FB1C3BC31F385B7200782FD8 /* LZRecordSession.m in Sources */,
 				FB4D354C1EE64007000A92C8 /* GLProgram.m in Sources */,
 				FB4D356E1EE64007000A92C8 /* GPUImageDifferenceBlendFilter.m in Sources */,
 				FB69C5271EB9C1DF007B38BD /* UINavigationController+FDFullscreenPopGesture.m in Sources */,
@@ -1887,8 +1877,6 @@
 				FB69C4DA1EB975EE007B38BD /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				FB4D355C1EE64007000A92C8 /* GPUImageChromaKeyBlendFilter.m in Sources */,
 				FB69C51C1EB9A947007B38BD /* LewReorderableLayout.m in Sources */,
-				FB69C5181EB9A2C4007B38BD /* LZSelectVideoCollectionViewCell.m in Sources */,
-				FB4F35271F0E24960084B37E /* LZMovieWriter.m in Sources */,
 				FB4D35861EE64007000A92C8 /* GPUImageGaussianSelectiveBlurFilter.m in Sources */,
 				FB69C44C1EB96ED2007B38BD /* LZNewPromotionVC.m in Sources */,
 				FB4D35BC1EE64007000A92C8 /* GPUImagePixellateFilter.m in Sources */,
@@ -1909,7 +1897,6 @@
 				FB4D35A91EE64007000A92C8 /* GPUImageMedianFilter.m in Sources */,
 				FB4D35BA1EE64007000A92C8 /* GPUImagePerlinNoiseFilter.m in Sources */,
 				FB4D35FC1EE64007000A92C8 /* GPUImageView.m in Sources */,
-				FB4F35291F0E24960084B37E /* LZSessionSegment.m in Sources */,
 				FB7138891F28807000660712 /* LZVideoEditCollectionViewCell.m in Sources */,
 				FB4D35551EE64007000A92C8 /* GPUImageBilateralFilter.m in Sources */,
 				FB28D17C1ECC199000531210 /* HKMediaOperationTools.m in Sources */,
@@ -1922,7 +1909,7 @@
 				FB4D35D71EE64007000A92C8 /* GPUImageSolarizeFilter.m in Sources */,
 				FB4D35F21EE64007000A92C8 /* GPUImageVoronoiConsumerFilter.m in Sources */,
 				FB4D354D1EE64007000A92C8 /* GPUImage3x3ConvolutionFilter.m in Sources */,
-				FB4F35261F0E24960084B37E /* GPUImageVideoCameraEx.m in Sources */,
+				FB1C3BC21F385B7200782FD8 /* GPUImageVideoCameraEx.m in Sources */,
 				FB4D35C81EE64007000A92C8 /* GPUImageRGBFilter.m in Sources */,
 				FB69C4DC1EB975EE007B38BD /* ViewController+MASAdditions.m in Sources */,
 				FB69C4D81EB975EE007B38BD /* MASViewConstraint.m in Sources */,
@@ -1955,6 +1942,7 @@
 				FB69C4D61EB975EE007B38BD /* MASLayoutConstraint.m in Sources */,
 				FB4D35D11EE64007000A92C8 /* GPUImageSketchFilter.m in Sources */,
 				FB28D17B1ECC199000531210 /* AVUtilities.m in Sources */,
+				FB1C3BC41F385B7200782FD8 /* LZSessionSegment.m in Sources */,
 				FB4D35D81EE64007000A92C8 /* GPUImageSolidColorGenerator.m in Sources */,
 				FB4D35761EE64007000A92C8 /* GPUImageExclusionBlendFilter.m in Sources */,
 				FB4D35AA1EE64007000A92C8 /* GPUImageMissEtikateFilter.m in Sources */,

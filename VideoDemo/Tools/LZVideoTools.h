@@ -38,10 +38,11 @@
 /**
  视频、声音淡出
  
- @param segment 输入：LZSessionSegment
- @return 返回：AVPlayerItem
+ @param asset    视频资源
+ @param duration 淡出时长
+ @return 返回AVPlayerItem
  */
-+ (AVPlayerItem *)videoFadeOut:(LZSessionSegment *)segment;
++ (AVPlayerItem *)videoFadeOut:(AVAsset *)asset duration:(Float64)duration;
 
 
 /**
@@ -53,13 +54,9 @@
  */
 + (AVPlayerItem *)videoSpeed:(LZSessionSegment *)segment scale:(CGFloat)scale;
 
-//视频尾帧停留
-+ (AVPlayerItem *)videoTailFrameStay:(LZSessionSegment *)segment duration:(Float64)duration;
-
 
 #pragma mark - 
-
-+ (NSURL *)filePathWithFileName:(NSString *)fileName isFilter:(BOOL)isFilter;
++ (NSURL *)filePathWithFileName:(NSString *)fileName;
 
 
 /**

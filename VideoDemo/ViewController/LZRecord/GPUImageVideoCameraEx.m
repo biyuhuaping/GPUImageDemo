@@ -9,18 +9,6 @@
 #import "GPUImageVideoCameraEx.h"
 
 @implementation GPUImageVideoCameraEx
-
-- (void)setFlash:(BOOL)flash
-{
-    self->_flash = flash;
-    if (self.backFacingCameraPresent) {
-        [GPUImageVideoCameraEx setTorch:_flash forCameraInPosition:AVCaptureDevicePositionBack];
-    }
-    else {
-        [GPUImageVideoCameraEx setTorch:_flash forCameraInPosition:AVCaptureDevicePositionFront];
-    }
-}
-
 - (void)startCameraCapture{
     _status = GPUImageVideoCapturing;
     [super startCameraCapture];
@@ -41,12 +29,21 @@
     [super stopCameraCapture];
 }
 
-+ (void)setTorch:(BOOL)torch forCameraInPosition:(AVCaptureDevicePosition)position
-{
+//设置闪光灯
+- (void)setFlash:(BOOL)flash {
+    self->_flash = flash;
+    if (self.backFacingCameraPresent) {
+        [self setTorch:_flash forCameraInPosition:AVCaptureDevicePositionBack];
+    }
+    else {
+        [self setTorch:_flash forCameraInPosition:AVCaptureDevicePositionFront];
+    }
+}
+
+- (void)setTorch:(BOOL)torch forCameraInPosition:(AVCaptureDevicePosition)position {
     if ([[self cameraInPosition:position] hasTorch]) {
         if ([[self cameraInPosition:position] lockForConfiguration:nil]) {
-            if (torch)
-            {
+            if (torch) {
                 if ([[self cameraInPosition:position] isTorchModeSupported:AVCaptureTorchModeOn]) {
                     [[self cameraInPosition:position] setTorchMode:AVCaptureTorchModeOn];
                 }
@@ -60,7 +57,7 @@
     }
 }
 
-+ (AVCaptureDevice *)cameraInPosition:(AVCaptureDevicePosition)position
+- (AVCaptureDevice *)cameraInPosition:(AVCaptureDevicePosition)position
 {
     NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
     for (AVCaptureDevice *device in devices) {
@@ -70,19 +67,6 @@
     }
     
     return nil;
-}
-
-- (void)setCameraPosition:(AVCaptureDevicePosition)device {
-    [self willChangeValueForKey:@"cameraPosition"];
-    
-//    if (_resetZoomOnChangeDevice) {
-//        self.videoZoomFactor = 1;
-//    }
-//    if (_captureSession != nil) {
-//        [self reconfigureVideoInput:self.videoConfiguration.enabled audioInput:NO];
-//    }
-    
-    [self didChangeValueForKey:@"cameraPosition"];
 }
 
 - (void)setVideoZoomFactor:(CGFloat)videoZoomFactor {

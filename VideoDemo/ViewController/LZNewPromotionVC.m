@@ -12,7 +12,6 @@
 
 #import "LZGridView.h"
 #import "LZLevelView.h"
-#import "RecordProgressView.h"
 #import "LZButton.h"
 #import "LZVideoEditCollectionViewCell.h"
 
@@ -39,11 +38,9 @@
 @property (strong, nonatomic) LZRecordSession *recordSession;
 
 
-@property (strong, nonatomic) IBOutlet UIView *previewView;         //试映view
 @property (strong, nonatomic) IBOutlet LZGridView *girdView;        //网格view
 @property (strong, nonatomic) IBOutlet UIImageView *ghostImageView; //快照imageView
 @property (strong, nonatomic) IBOutlet LZLevelView *levelView;      //水平仪view
-@property (strong, nonatomic) IBOutlet RecordProgressView *progressView;    //进度条
 //@property (strong, nonatomic) IBOutlet SCRecorderToolsView *focusView;
 
 @property (strong, nonatomic) IBOutlet UIButton *recordBtn;         //录制按钮
@@ -56,15 +53,16 @@
 //@property (nonatomic, strong) SCRecorder *recorder;
 @property (nonatomic, strong) NSMutableArray *videoListSegmentArrays; //音频库
 
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *recordBtnWidth;
-
 //titleView
+@property (strong, nonatomic) UIView *dotView;//绿色点点
 @property (strong, nonatomic) UILabel *labelTime;//计时显示
 @property (strong, nonatomic) UILabel *labelCount;//段数
 
 @property (strong, nonatomic) IBOutlet UIView *maskView;//遮罩View
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *toTopDistance;
 @property (strong, nonatomic) IBOutlet LZCameraFilterCollectionView *cameraFilterView;
+
+@property (nonatomic)          CGFloat scale;
 
 @end
 
@@ -78,9 +76,6 @@
     
     [self configNavigationBar];
     
-    self.recordBtn.layer.cornerRadius = 26;
-    self.recordBtn.layer.masksToBounds = YES;
-    
     self.recordSession = [[LZRecordSession alloc]init];
     self.recordSession.delegate = self;
     
@@ -91,39 +86,35 @@
     self.filter = [[GPUImageFilter alloc] init];
     [self.filter addTarget:self.filterView];
 
-//    [self configGPUImageView];
-    [self.recordSession initGPUImageView:self.filter];
     [self configCameraFilterView];
+    
+    
+    //    两个手指捏合动作
+    UIPinchGestureRecognizer *pinchGestureRecognizer = [[UIPinchGestureRecognizer  alloc] init];
+    [pinchGestureRecognizer addTarget:self action:@selector(gestureRecognizerHandle:)];
+    [self.filterView addGestureRecognizer:pinchGestureRecognizer];
+    self.scale = 1;
 }
 
-//- (void)configGPUImageView {
-//    GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
-//    [cropFilter addTarget:self.recordSession.movieWriterFilter];
-//    [self.filter addTarget:cropFilter];
-//    [self.filter addTarget:self.filterView];
-//    [self.recordSession.videoCamera addTarget:self.filter];
-//
-////    //设置声音
-//    self.recordSession.videoCamera.audioEncodingTarget = self.recordSession.movieWriterFilter;
-//}
+- (void)gestureRecognizerHandle:(UIPinchGestureRecognizer *)sender{
+    CGFloat f = sender.scale - 1;
+    self.scale += f/10;
+
+    if (self.scale < 1.0f) {
+        self.scale = 1.0f;
+    }else if (self.scale > 4.0f){
+        self.scale = 4.0f;
+    }
+    self.recordSession.videoCamera.videoZoomFactor = self.scale;
+}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.recordSession initGPUImageView:self.filter];
     [self.recordSession.videoCamera startCameraCapture];
     [self updateGhostImage];
-    [self updateProgressBar];
     [self enumVideoUrl];
     [self configButtonState];
-}
-
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-//    [_recorder previewViewFrameChanged];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-//    [self.recordSession.videoCamera startCameraCapture];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -133,7 +124,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void)dealloc{
@@ -159,7 +149,8 @@
     dotView.backgroundColor = [UIColor greenColor];
     dotView.layer.masksToBounds = YES;
     dotView.layer.cornerRadius = 2;
-    
+    dotView.hidden = YES;
+    self.dotView = dotView;
     
     UILabel *label1 = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 48, 44)];
     label1.backgroundColor = [UIColor blackColor];
@@ -168,11 +159,11 @@
     label1.text = @"00:00";
     self.labelTime = label1;
     
-    UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(64, 12, 20, 20)];
-    label2.backgroundColor = [UIColor redColor];
+    UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(64, 12, 18, 18)];
+    label2.backgroundColor = [UIColor whiteColor];
     label2.textAlignment = NSTextAlignmentCenter;
     label2.layer.masksToBounds = YES;
-    label2.layer.cornerRadius = 10;
+    label2.layer.cornerRadius = 9;
     label2.adjustsFontSizeToFitWidth = YES;
     label2.text = @"1";
     self.labelCount = label2;
@@ -231,52 +222,16 @@
 - (void)configButtonState{
     if (self.recordSession.segments.count > 0) {
         self.cancelButton.enabled = YES;
+        self.confirmButton.enabled = YES;
+        self.navigationItem.titleView.hidden = NO;
+        self.labelCount.text = [NSString stringWithFormat:@"%lu",self.recordSession.segments.count];
+        self.labelTime.text = [self timeFormatted:CMTimeGetSeconds(self.recordSession.assetRepresentingSegments.duration)];
     } else {
         self.cancelButton.enabled = NO;
         self.confirmButton.enabled = NO;
+        self.navigationItem.titleView.hidden = YES;
     }
     self.cancelButton.selected = NO;
-}
-
-//更新进度条
-- (void)updateProgressBar {
-//    if (CMTimeGetSeconds(self.recordSession.duration) >= 3) {
-    if (self.recordSession.segments.count > 0) {
-        self.confirmButton.enabled = YES;
-    }else{
-        self.confirmButton.enabled = NO;
-        [self.progressView updateProgressWithValue:0];
-        return;
-    }
-    
-    CGFloat progress = 0;
-    for (int i = 0; i < self.recordSession.segments.count; i++) {
-        LZSessionSegment * segment = self.recordSession.segments[i];
-        
-        NSAssert(segment != nil, @"segment must be non-nil");
-        CMTime currentTime = kCMTimeZero;
-        if (segment) {
-            currentTime = segment.duration;
-            progress += CMTimeGetSeconds(currentTime) / MAX_VIDEO_DUR;
-        }
-    }
-    [self.progressView updateProgressWithValue:progress];
-}
-
-- (void)changeToRecordStyle {
-    [UIView animateWithDuration:0.25 animations:^{
-        self.recordBtnWidth.constant = 28;
-        self.recordBtn.layer.cornerRadius = 4;
-        [self.view layoutIfNeeded];
-    }];
-}
-
-- (void)changeToStopStyle {
-    [UIView animateWithDuration:0.25 animations:^{
-        self.recordBtnWidth.constant = 52;
-        self.recordBtn.layer.cornerRadius = 26;
-        [self.view layoutIfNeeded];
-    }];
 }
 
 //更新快照
@@ -306,7 +261,6 @@
 
 //滑动调整景深
 - (IBAction)sliderAction:(UISlider *)sender {
-//    _recorder.videoZoomFactor = sender.value;
     self.recordSession.videoCamera.videoZoomFactor = sender.value;
 }
 
@@ -314,12 +268,13 @@
 - (IBAction)cancelButton:(UIButton *)sender {
     if (sender.selected == NO && sender.enabled == YES) {//第一次按下删除按钮
         sender.selected = YES;
+        self.labelCount.backgroundColor = [UIColor redColor];
     }
     else if (sender.selected == YES) {//第二次按下删除按钮
         [self.recordSession removeLastSegment];
-        [self updateProgressBar];
         [self updateGhostImage];
         [self configButtonState];
+        self.labelCount.backgroundColor = [UIColor whiteColor];
     }
 }
 
@@ -327,22 +282,21 @@
 - (IBAction)recordButton:(UIControl *)sender {
     if (sender.selected == NO) {
         self.ghostImageView.hidden = YES;
-        self.cancelButton.enabled = NO;
-        [self changeToRecordStyle];
         [self.recordSession startRecording];
+        self.navigationItem.titleView.hidden = NO;
+        self.labelCount.backgroundColor = [UIColor whiteColor];
     }else {
-        self.cancelButton.enabled = YES;
-        self.confirmButton.enabled = YES;
-        [self changeToStopStyle];
         [self.recordSession endRecordingFilter:self.filter Completion:^(NSMutableArray<NSURL *> *segments) {
             DLog("===================== %@",segments);
             [self updateGhostImage];
             [self.recordSession initGPUImageView:self.filter];
+            [self configButtonState];
         }];
     }
+    
     self.fd_interactivePopDisabled = !sender.selected;
+    self.dotView.hidden = sender.selected;
     self.maskView.hidden = sender.selected;
-    self.navigationItem.titleView.hidden = sender.selected;
     self.navigationItem.hidesBackButton = !sender.selected;
     self.navigationItem.rightBarButtonItem.customView.hidden = !sender.selected;
     sender.selected = !sender.selected;
@@ -456,112 +410,8 @@
     }
 }
 
-
-#pragma mark - 调整焦距方法
-/*/调整焦距方法
--(void)focusDisdance:(UIPinchGestureRecognizer*)pinch {
-    self.effectiveScale = self.beginGestureScale * pinch.scale;
-    if (self.effectiveScale < 1.0f) {
-        self.effectiveScale = 1.0f;
-    }
-    CGFloat maxScaleAndCropFactor = 3.0f;//设置最大放大倍数为3倍
-    if (self.effectiveScale > maxScaleAndCropFactor)
-        self.effectiveScale = maxScaleAndCropFactor;
-    [CATransaction begin];
-    [CATransaction setAnimationDuration:.025];
-    NSError *error;
-    if([self.cameraManager.inputCamera lockForConfiguration:&error]){
-        [self.cameraManager.inputCamera setVideoZoomFactor:self.effectiveScale];
-        [self.cameraManager.inputCamera unlockForConfiguration];
-    }
-    else {
-        NSLog(@"ERROR = %@", error);
-    }
-    
-    [CATransaction commit];
-}
-
-//手势代理方法
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
-{
-    if ( [gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] ) {
-        self.beginGestureScale = self.effectiveScale;
-    }
-    return YES;
-}
-
-#pragma mark - 对焦方法
-//对焦方法
-- (void)focus:(UITapGestureRecognizer *)tap {
-    self.preview.userInteractionEnabled = NO;
-    CGPoint touchPoint = [tap locationInView:tap.view];
-    // CGContextRef *touchContext = UIGraphicsGetCurrentContext();
-    [self layerAnimationWithPoint:touchPoint];
-    //下面是照相机焦点坐标轴和屏幕坐标轴的映射问题，这个坑困惑了我好久，花了各种方案来解决这个问题，以下是最简单的解决方案也是最准确的坐标转换方式
-    if(_cameraManager.cameraPosition == AVCaptureDevicePositionBack){
-        touchPoint = CGPointMake( touchPoint.y /tap.view.bounds.size.height ,1-touchPoint.x/tap.view.bounds.size.width);
-    }
-    else
-        touchPoint = CGPointMake(touchPoint.y /tap.view.bounds.size.height ,touchPoint.x/tap.view.bounds.size.width);
-    //以下是相机的聚焦和曝光设置，前置不支持聚焦但是可以曝光处理，后置相机两者都支持，下面的方法是通过点击一个点同时设置聚焦和曝光，当然根据需要也可以分开进行处理
-
-    if([self.cameraManager.inputCamera isExposurePointOfInterestSupported] && [self.cameraManager.inputCamera isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure])
-    {
-        NSError *error;
-        if ([self.cameraManager.inputCamera lockForConfiguration:&error]) {
-            [self.cameraManager.inputCamera setExposurePointOfInterest:touchPoint];
-            [self.cameraManager.inputCamera setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
-            if ([self.cameraManager.inputCamera isFocusPointOfInterestSupported] && [self.cameraManager.inputCamera isFocusModeSupported:AVCaptureFocusModeAutoFocus]) {
-                [self.cameraManager.inputCamera setFocusPointOfInterest:touchPoint];
-                [self.cameraManager.inputCamera setFocusMode:AVCaptureFocusModeAutoFocus];
-            }
-            [self.cameraManager.inputCamera unlockForConfiguration];
-        } else {
-            NSLog(@"ERROR = %@", error);
-        }
-    }
-}
-
-//对焦动画
-- (void)layerAnimationWithPoint:(CGPoint)point {
-    if (_focusLayer) {
-        ///聚焦点聚焦动画设置
-        CALayer *focusLayer = _focusLayer;
-        focusLayer.hidden = NO;
-        [CATransaction begin];
-        [CATransaction setDisableActions:YES];
-        [focusLayer setPosition:point];
-        focusLayer.transform = CATransform3DMakeScale(2.0f,2.0f,1.0f);
-        [CATransaction commit];
-        
-        CABasicAnimation *animation = [ CABasicAnimation animationWithKeyPath: @"transform" ];
-        animation.toValue = [ NSValue valueWithCATransform3D: CATransform3DMakeScale(1.0f,1.0f,1.0f)];
-        animation.delegate = self;
-        animation.duration = 0.3f;
-        animation.repeatCount = 1;
-        animation.removedOnCompletion = NO;
-        animation.fillMode = kCAFillModeForwards;
-        [focusLayer addAnimation: animation forKey:@"animation"];
-    }
-}
-
-//动画的delegate方法
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
-    //    1秒钟延时
-    [self performSelector:@selector(focusLayerNormal) withObject:self afterDelay:0.5f];
-}
-
-//focusLayer回到初始化状态
-- (void)focusLayerNormal {
-    self.preview.userInteractionEnabled = YES;
-    _focusLayer.hidden = YES;
-}*/
-
 #pragma mark - LZRecorderDelegate 更新进度条
 - (void)didAppendVideoSampleBufferInSession:(Float64)time {
-    CGFloat progress = time / MAX_VIDEO_DUR;
-    [self.progressView updateProgressWithValue:progress];
-    
     self.labelTime.text = [self timeFormatted:time];
     self.labelCount.text = [NSString stringWithFormat:@"%lu",self.recordSession.segments.count + 1];
 }

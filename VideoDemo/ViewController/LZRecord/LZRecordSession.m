@@ -18,6 +18,7 @@
 }
 @property (strong, nonatomic) dispatch_queue_t writeQueue;
 @property (assign, nonatomic) BOOL canWrite;
+@property (assign, nonatomic) BOOL stopWrite;
 
 @end
 
@@ -53,25 +54,20 @@
 }
 
 - (void)initGPUImageView:(GPUImageOutput<GPUImageInput> * _Nullable)filter {
+    [self _destroyAssetWriter];
+    
     GPUImageCropFilter *cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.f, 0.125f, 1.f, .75f)];
-    [cropFilter addTarget:self.movieWriterFilter];
+    [cropFilter addTarget:self.movieWriter];
     [filter addTarget:cropFilter];
     [self.videoCamera addTarget:filter];
     
     //设置声音
-    self.videoCamera.audioEncodingTarget = self.movieWriterFilter;
+    self.videoCamera.audioEncodingTarget = self.movieWriter;
 }
 
-- (GPUImageMovieWriter *)movieWriterFilter {
-    if (_movieWriterFilter == nil) {
-        _movieWriterFilter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURLFilter size:CGSizeMake(480.0, 480.0)];
-    }
-    return _movieWriterFilter;
-}
-
-- (LZMovieWriter *)movieWriter {
+- (GPUImageMovieWriter *)movieWriter {
     if (_movieWriter == nil) {
-        _movieWriter = [[LZMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
+        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:self.movieURL size:CGSizeMake(480.0, 480.0)];
     }
     return _movieWriter;
 }
@@ -79,30 +75,16 @@
 - (NSURL *)movieURL{
     if (_movieURL == nil) {
         NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", _fileIndex];
-        _movieURL = [LZVideoTools filePathWithFileName:filename isFilter:NO];
+        _movieURL = [LZVideoTools filePathWithFileName:filename];
     }
     return _movieURL;
 }
 
-- (NSURL *)movieURLFilter{
-    if (_movieURLFilter == nil) {
-        NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", _fileIndex];
-        _movieURLFilter = [LZVideoTools filePathWithFileName:filename isFilter:YES];
-    }
-    return _movieURLFilter;
-}
-
 - (AVAsset *)assetRepresentingSegments {
-    __block AVAsset *asset = nil;
-    if (_segments.count == 1) {
-        LZSessionSegment *segment = _segments.firstObject;
-        asset = segment.asset;
-    } else {
-        AVMutableComposition *composition = [AVMutableComposition composition];
-        [self appendSegmentsToComposition:composition audioMix:nil];
-        
-        asset = composition;
-    }
+    AVAsset *asset = nil;
+    AVMutableComposition *composition = [AVMutableComposition composition];
+    [self appendSegmentsToComposition:composition audioMix:nil];
+    asset = composition;
     return asset;
 }
 
@@ -118,8 +100,9 @@
 //开始录制
 - (void)startRecording{
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.movieWriterFilter startRecording];
+        [self.movieWriter startRecording];
         self.canWrite = YES;
+        self.stopWrite = YES;
     });
     DLog(@"开始录制");
 }
@@ -134,38 +117,18 @@
 
 //结束录制
 - (void)endRecordingFilter:(GPUImageOutput<GPUImageInput> * _Nullable)filter Completion:(void (^)(NSMutableArray * _Nullable segments))completion {
-    DLog(@"保存地址:----  %@",_movieURL);
-    DLog(@"filter:----  %@",filter);
-    
-    
-//    [self.movieWriter finishRecordingWithCompletionHandler:^{
-    [self finishRecordingWithCompletionHandler:^{
-//        [self appendRecordSegmentUrl:_movieURL filter:filter Completion:^(LZSessionSegment *segment) {
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                //在主线程里更新UI
-//                completion(_segments);
-//            });
-//        }];
-    }];
-    
-    [self.movieWriterFilter finishRecordingWithCompletionHandler:^{
-        [self appendRecordSegmentUrl:_movieURLFilter filter:filter Completion:^(LZSessionSegment *segment) {
+    [self.movieWriter finishRecordingWithCompletionHandler:^{
+        [self appendRecordSegmentUrl:_movieURL filter:filter Completion:^(LZSessionSegment *segment) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 //在主线程里更新UI
                 completion(_segments);
             });
         }];
+        self.stopWrite = NO;
     }];
     _fileIndex++;
 }
 
-- (void)finishRecordingWithCompletionHandler:(void (^)(void))handler{
-    [self.movieWriter.assetWriterVideoInput markAsFinished];
-    [self.movieWriter.assetWriterAudioInput markAsFinished];
-    [self.movieWriter.assetWriter finishWritingWithCompletionHandler:^{
-        handler();
-    }];
-}
 
 #pragma mark -
 - (void)appendRecordSegmentUrl:(NSURL *)url filter:(GPUImageOutput<GPUImageInput> * _Nullable)filter Completion:(void (^)(LZSessionSegment *))completion {
@@ -260,20 +223,6 @@
 }
 
 #pragma mark -
-
-
-//- (void)newFrameReadyAtTime:(CMTime)frameTime atIndex:(NSInteger)textureIndex{
-//    CMTime newTime = frameTime;
-//    if (_timeOffset.value > 0) {
-//        newTime = CMTimeSubtract(frameTime, _timeOffset);
-//    }
-//    if (newTime.value > _videoTimestamp.value) {
-//        [self.movieWriter newFrameReadyAtTime:newTime atIndex:textureIndex];
-//        _videoTimestamp = newTime;
-//        _currentFrame++;
-//    }
-//}
-
 - (void)appendSegmentsToComposition:(AVMutableComposition *)composition audioMix:(AVMutableAudioMix *)audioMix {
     AVMutableCompositionTrack *audioTrack = nil;
     AVMutableCompositionTrack *videoTrack = nil;
@@ -287,12 +236,10 @@
         NSArray *videoAssetTracks = [asset tracksWithMediaType:AVMediaTypeVideo];
         
         CMTime maxBounds = kCMTimeInvalid;
-        
         CMTime videoTime = currentTime;
         for (AVAssetTrack *videoAssetTrack in videoAssetTracks) {
             if (videoTrack == nil) {
                 NSArray *videoTracks = [composition tracksWithMediaType:AVMediaTypeVideo];
-                
                 if (videoTracks.count > 0) {
                     videoTrack = [videoTracks firstObject];
                 } else {
@@ -309,7 +256,6 @@
         for (AVAssetTrack *audioAssetTrack in audioAssetTracks) {
             if (audioTrack == nil) {
                 NSArray *audioTracks = [composition tracksWithMediaType:AVMediaTypeAudio];
-                
                 if (audioTracks.count > 0) {
                     audioTrack = [audioTracks firstObject];
                 } else {
@@ -317,11 +263,10 @@
                 }
             }
             
-            audioTime = [self _appendTrack:audioAssetTrack toCompositionTrack:audioTrack atTime:audioTime withBounds:maxBounds];
+            audioTime = [self _appendTrack:(recordSegment.isMute?nil:audioAssetTrack) toCompositionTrack:audioTrack atTime:audioTime withBounds:maxBounds];
         }
         
         currentTime = composition.duration;
-        
         currentSegment++;
     }
 }
@@ -359,17 +304,6 @@
 - (void)_destroyAssetWriter {
     _movieWriter = nil;
     _movieURL = nil;
-    
-    _movieWriterFilter = nil;
-    _movieURLFilter = nil;
-
-//    _currentSegmentHasAudio = NO;
-//    _currentSegmentHasVideo = NO;
-//    _assetWriter = nil;
-//    _lastTimeAudio = kCMTimeInvalid;
-//    _lastTimeVideo = kCMTimeInvalid;
-//    _sessionStartTime = kCMTimeInvalid;
-//    _movieFileOutput = nil;
 }
 
 
@@ -399,30 +333,21 @@
 - (void)myCaptureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
     CFRetain(sampleBuffer);
     dispatch_async(self.writeQueue, ^{
-//        if (self.movieWriter.assetWriter == AVAssetWriterStatusUnknown) {
         if (self.canWrite){
             CMTime startTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
             _startTime = startTime;
-            [self.movieWriter.assetWriter startWriting];
-            [self.movieWriter.assetWriter startSessionAtSourceTime:startTime];
             self.canWrite = NO;
         }
         
         if ([captureOutput isKindOfClass:[AVCaptureVideoDataOutput class]]) {
-            if (self.movieWriter.assetWriter.status == AVAssetWriterStatusWriting && [self.movieWriter.assetWriterVideoInput isReadyForMoreMediaData]) {
-                [self.movieWriter.assetWriterVideoInput appendSampleBuffer:sampleBuffer];
+            if (self.stopWrite) {
                 _endTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
-//                _currentSegmentDuration = CMTimeGetSeconds(CMTimeSubtract(_endTime, _startTime));
                 _currentSegmentDuration = CMTimeSubtract(_endTime, _startTime);
                 DLog(@"%lld",_currentSegmentDuration.value/_currentSegmentDuration.timescale);
                 [self updateProgress];
             }
         }
-        if ([captureOutput isKindOfClass:[AVCaptureAudioDataOutput class]]) {
-            if (self.movieWriter.assetWriter.status == AVAssetWriterStatusWriting  && [self.movieWriter.assetWriterAudioInput isReadyForMoreMediaData]) {
-                [self.movieWriter.assetWriterAudioInput appendSampleBuffer:sampleBuffer];
-            }
-        }
+
         CFRelease(sampleBuffer);
     });
 }

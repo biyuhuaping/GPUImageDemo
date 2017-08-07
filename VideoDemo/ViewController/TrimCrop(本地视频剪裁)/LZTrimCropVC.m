@@ -34,6 +34,11 @@
     [self showVideo];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.player pause];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -67,13 +72,12 @@
     NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:self.segment.asset];
     if ([compatiblePresets containsObject:AVAssetExportPresetHighestQuality]) {
         NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", self.recordSession.fileIndex];
-        NSURL *filePath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
+        NSURL *filePath = [LZVideoTools filePathWithFileName:filename];
 
-        WS(weakSelf);
         [LZVideoTools cutVideoWith:self.segment filePath:filePath completion:^{
             LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:filePath filter:nil];
-            [weakSelf.recordSession addSegment:newSegment];
-            [weakSelf.navigationController popViewControllerAnimated:YES];
+            [self.recordSession addSegment:newSegment];
+            [self.navigationController popViewControllerAnimated:YES];
         }];
     }
 }
@@ -106,6 +110,11 @@
         CMTime time = CMTimeMakeWithSeconds(f, self.player.currentTime.timescale);
         [self.player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
     }
+}
+
+- (void)dealloc{
+    [self.player removeTimeObserver:self.timeObser];
+    DLog(@"========= dealloc =========");
 }
 
 @end

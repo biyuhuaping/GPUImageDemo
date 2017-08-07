@@ -26,7 +26,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.title = @"变速";
+
     self.segment = self.recordSegments[self.currentSelected];
     self.rateValue = 1.0;
 
@@ -84,7 +85,7 @@
 #pragma mark - Event
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
     NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", self.recordSession.fileIndex];
-    NSURL *filePath = [LZVideoTools filePathWithFileName:filename isFilter:YES];
+    NSURL *filePath = [LZVideoTools filePathWithFileName:filename];
 
     AVPlayerItem *playerItem = [LZVideoTools videoSpeed:self.segment scale:(2.6 - self.rateValue)];
 //    AVPlayerItem *playerItem = [LZVideoTools videoTailFrameStay:self.segment duration:10];

@@ -20,7 +20,7 @@
 @property (strong, nonatomic) IBOutlet LZPlayerView *playerView;
 @property (strong, nonatomic) IBOutlet UIImageView *imageView;
 @property (strong, nonatomic) IBOutlet SAVideoRangeSlider *trimmerView;     //微调视图
-@property (strong, nonatomic) AVAsset *asset;
+@property (weak, nonatomic) AVAsset *asset;
 
 
 @property (strong, nonatomic) IBOutlet UIButton *tailoringButton;//剪裁按钮
@@ -41,21 +41,42 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self configNavigationBar];
+    
+    self.timeLabel.layer.masksToBounds = YES;
+    self.timeLabel.layer.cornerRadius = 10;
+    
+    self.trimmerView.delegate = self;
+    self.trimmerView.maxGap = MAX_VIDEO_DUR;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+    CGFloat durationSeconds = CMTimeGetSeconds(self.asset.duration);
+
     self.startTime = 0.00;
-    self.endTime = CMTimeGetSeconds(self.asset.duration);
+    self.endTime = durationSeconds;
     
-    [self.trimmerView performSelectorInBackground:@selector(getMovieFrameWithAsset:) withObject:self.asset];
-    self.trimmerView.delegate = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // 处理耗时操作的代码块...
+        [self.trimmerView getMovieFrameWithAsset:self.asset];
+        //通知主线程刷新
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //回调或者说是通知主线程刷新，
+            [self.trimmerView setNewLeftPosition:0];
+            if (durationSeconds > MAX_VIDEO_DUR) {
+                [self.trimmerView setNewRightPosition:MAX_VIDEO_DUR];
+                self.timeLabel.text = @" 00:15 ";
+            }else{
+                [self.trimmerView setNewRightPosition:durationSeconds];
+                self.timeLabel.text = [NSString stringWithFormat:@" 00:%02ld ", lround(durationSeconds)];
+            }
+        });
+    });
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playOrPause)];
     [self.playerView addGestureRecognizer:tap];
     
     [self configPlayerView];
-    [self configTimeLabel];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -87,7 +108,7 @@
     [button sizeToFit];
     button.frame = CGRectMake(0, 0, CGRectGetWidth(button.bounds), 40);
     button.titleEdgeInsets = UIEdgeInsetsMake(0, 8, 0, -8);
-    [button addTarget:self action:@selector(cutVideoAndSavedPhotosAlbum:) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(navbarRightButtonClickAction:) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *button1 = [UIButton buttonWithType:UIButtonTypeCustom];
     button1.titleLabel.font = [UIFont systemFontOfSize:15];
@@ -95,22 +116,21 @@
     [button1 setTitleColor:UIColorFromRGB(0xffffff, 1) forState:UIControlStateNormal];
     [button1 sizeToFit];
     button1.frame = CGRectMake(0, 0, CGRectGetWidth(button1.bounds), 40);
-    [button1 addTarget:self action:@selector(navbarRightButtonClickAction:) forControlEvents:UIControlEventTouchUpInside];
-    
+    [button1 addTarget:self action:@selector(cutVideoAndSavedPhotosAlbum) forControlEvents:UIControlEventTouchUpInside];
+
     self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc]initWithCustomView:button],[[UIBarButtonItem alloc]initWithCustomView:button1]];
 }
 
 - (void)configPlayerView{
     AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:self.asset];
     self.playerView.player = [AVPlayer playerWithPlayerItem:item];
-//    self.player.volume = self.segment.isMute?0:1;
 
     WS(weakSelf);
     _timeObser = [self.playerView.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time){
         double current = CMTimeGetSeconds(time);
         double total = CMTimeGetSeconds(weakSelf.asset.duration);
         DLog(@"当前已经播放%.2fs.",current);
-        if (current >= total) {
+        if (current >= total || self.playerView.player.rate == 0) {
             DLog(@"播放完毕");
             CMTime time = CMTimeMakeWithSeconds(0, weakSelf.asset.duration.timescale);
             [weakSelf.playerView.player seekToTime:time];
@@ -119,33 +139,21 @@
     }];
 }
 
-- (void)configTimeLabel{
-    self.timeLabel.layer.masksToBounds = YES;
-    self.timeLabel.layer.cornerRadius = 10;
-    
-    CGFloat durationSeconds = CMTimeGetSeconds(self.asset.duration);
-    if (durationSeconds > MAX_VIDEO_DUR) {
-        self.trimmerView.maxGap = MAX_VIDEO_DUR;
-        self.timeLabel.text = @" 00:15 ";
-    }else{
-        self.timeLabel.text = [NSString stringWithFormat:@" 00:%02ld ", lround(durationSeconds)];
-    }
-}
-
 #pragma mark - Event
+//提交
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
-    [self cutVideoAndSavedPhotosAlbum:YES];
+//    LZCreatePromotionViewController * vc = [[LZCreatePromotionViewController alloc] init];
+//    vc.recordSession = self.recordSession;
+//    [self.navigationController pushViewController:vc animated:YES];
 }
 
 //剪裁视频，保存到本地
-- (void)cutVideoAndSavedPhotosAlbum:(BOOL)isSave {
-    NSURL *tempPath = [LZVideoTools filePathWithFileName:@"LZVideoEdit-0.m4v" isFilter:YES];
+- (void)cutVideoAndSavedPhotosAlbum {
+    NSURL *tempPath = [LZVideoTools filePathWithFileName:@"LZVideoEdit-0.m4v"];
     [self.recordSession removeAllSegments];
     
-    if (isSave) {
-        self.startTime = 0.00;
-        self.endTime = CMTimeGetSeconds(self.asset.duration);
-    }
+    self.startTime = 0.00;
+    self.endTime = CMTimeGetSeconds(self.asset.duration);
     
     CMTime start = CMTimeMakeWithSeconds(self.startTime, self.asset.duration.timescale);
     CMTime duration = CMTimeMakeWithSeconds(self.endTime - self.startTime, self.asset.duration.timescale);
@@ -156,17 +164,15 @@
             DLog(@"导出视频路径：%@", savedPath);
             LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:tempPath filter:nil];
             [self.recordSession addSegment:newSegment];
-            if (isSave) {
-                //保存到本地
-                ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
-                if ([assetsLibrary videoAtPathIsCompatibleWithSavedPhotosAlbum:savedPath]) {
-                    [assetsLibrary writeVideoAtPathToSavedPhotosAlbum:savedPath completionBlock:^(NSURL *assetURL, NSError *error) {
-                        if (!error) {
-                            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:LZLocalizedString(@"edit_message", nil) message:@"保存成功zhoubo" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
-                            [alert show];
-                        }
-                    }];
-                }
+            //保存到本地
+            ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
+            if ([assetsLibrary videoAtPathIsCompatibleWithSavedPhotosAlbum:savedPath]) {
+                [assetsLibrary writeVideoAtPathToSavedPhotosAlbum:savedPath completionBlock:^(NSURL *assetURL, NSError *error) {
+                    if (!error) {
+                        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"保存成功" message:@"zhoubo" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                        [alert show];
+                    }
+                }];
             }
         }
     }];
@@ -232,28 +238,9 @@
             [self.navigationController pushViewController:vc animated:YES];
         }
             break;
-        case 101:{//Text
-            
+        case 101:{//Add clips
+            [self.navigationController popViewControllerAnimated:YES];
         }
-            break;
-        case 102:{//Filter
-            LZVideoFilterVC *vc = [[LZVideoFilterVC alloc]initWithNibName:@"LZVideoFilterVC" bundle:nil];
-            vc.recordSession = self.recordSession;
-            [self.navigationController pushViewController:vc animated:YES];
-        }
-            break;
-        case 103:{//Transition
-            
-        }
-            break;
-        case 104:{//End Frame
-            
-        }
-            break;
-        case 105:{//Add clips
-            [self.navigationController popViewControllerAnimated:YES]; 
-        }
-            break;
     }
 }
 

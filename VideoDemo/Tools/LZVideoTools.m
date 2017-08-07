@@ -22,15 +22,17 @@
 //    1.将素材拖入到素材库中
     AVAsset *asset = segment.asset;
     AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] firstObject];//素材的视频轨
-    AVAssetTrack *audioAssertTrack = [[asset tracksWithMediaType:AVMediaTypeAudio] firstObject];//素材的音频轨
+    AVAssetTrack *audioAssetTrack = [[asset tracksWithMediaType:AVMediaTypeAudio] firstObject];//素材的音频轨
     
     
 //    2.将素材的视频插入视频轨，音频插入音频轨
     AVMutableComposition *composition = [[AVMutableComposition alloc] init];//这是工程文件
     AVMutableCompositionTrack *videoTrack = [composition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];//视频轨道
-    AVMutableCompositionTrack *audioTrack = [composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];//音频轨道
     [videoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, asset.duration) ofTrack:videoAssetTrack atTime:kCMTimeZero error:nil];//在视频轨道插入一个时间段的视频
-    [audioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, asset.duration) ofTrack:audioAssertTrack atTime:kCMTimeZero error:nil];//插入音频数据，否则没有声音
+
+    AVMutableCompositionTrack *audioTrack = [composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];//音频轨道
+    [audioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, asset.duration) ofTrack:audioAssetTrack atTime:kCMTimeZero error:nil];//插入音频数据，否则没有声音
+
     
     
 //    3.裁剪视频，就是要将所有视频轨进行裁剪，就需要得到所有的视频轨，而得到一个视频轨就需要得到它上面所有的视频素材
@@ -48,20 +50,20 @@
     [layerInstruction setTransform:layerTransform atTime:kCMTimeZero];//得到视频素材
 
     
-    //设置淡出时间
-//    CMTime start1 = CMTimeMake(composition.duration.value - composition.duration.timescale*1, composition.duration.timescale);
+//    //设置淡出时间
+//    CMTime start1 = CMTimeMake(composition.duration.value - composition.duration.timescale*5, composition.duration.timescale);
 //    CMTimeRange timeRange = CMTimeRangeFromTimeToTime(start1, composition.duration);
 //
 //    //设置不透明度，从开始不透明
 //    [layerInstruction setOpacityRampFromStartOpacity:1 toEndOpacity:0 timeRange:timeRange];
-
-    
+//
 //    //设置音频输出参数
 //    AVMutableAudioMixInputParameters *parameters = [AVMutableAudioMixInputParameters audioMixInputParametersWithTrack:audioTrack];
 //    [parameters setVolumeRampFromStartVolume:1 toEndVolume:0 timeRange:timeRange];
 //    
 //    AVMutableAudioMix *audioMix = [AVMutableAudioMix audioMix];
 //    audioMix.inputParameters = @[parameters];
+    
     
     
     AVMutableVideoCompositionInstruction *instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
@@ -131,12 +133,12 @@
 /**
  视频、声音淡出
 
- @param segment 输入LZSessionSegment视频资源
+ @param asset    视频资源
+ @param duration 淡出时长
  @return 返回AVPlayerItem
  */
-+ (AVPlayerItem *)videoFadeOut:(LZSessionSegment *)segment {
++ (AVPlayerItem *)videoFadeOut:(AVAsset *)asset duration:(Float64)duration{
 //    1.将素材拖入到素材库中
-    AVAsset *asset = segment.asset;
     AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] firstObject];//素材的视频轨
     AVAssetTrack *audioAssertTrack = [[asset tracksWithMediaType:AVMediaTypeAudio] firstObject];//素材的音频轨
     
@@ -150,7 +152,7 @@
     
     
 //    3.设置声音淡出时间
-    CMTime start = CMTimeMake(composition.duration.value - composition.duration.timescale*1, composition.duration.timescale);
+    CMTime start = CMTimeMake(composition.duration.value - composition.duration.timescale * duration, composition.duration.timescale);
     CMTimeRange fadeOutTimeRange = CMTimeRangeFromTimeToTime(start, composition.duration);
     
     //视频淡出
@@ -173,9 +175,9 @@
     //整合视频合成的参数
     AVMutableVideoComposition *videoComposition = [AVMutableVideoComposition videoComposition];
     videoComposition.instructions = @[instruction];
-    videoComposition.renderSize = videoTrack.naturalSize;
     videoComposition.frameDuration = CMTimeMake(1, 30);
-    
+    videoComposition.renderSize = videoTrack.naturalSize;
+
     AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:composition];
     item.videoComposition = videoComposition;
     item.audioMix = audioMix;
@@ -204,6 +206,8 @@
     [audioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, asset.duration) ofTrack:audioAssertTrack atTime:kCMTimeZero error:nil];//插入音频数据，否则没有声音
     
 //    3.根据速度比率调节音频和视频
+//    scale = 0.2f;  // 快速 x5
+//    scale = 4.0f;  // 慢速 x4
     CMTimeRange range = CMTimeRangeMake(kCMTimeZero, asset.duration);
     [videoTrack scaleTimeRange:range toDuration:CMTimeMake(asset.duration.value * scale, asset.duration.timescale)];
     [audioTrack scaleTimeRange:range toDuration:CMTimeMake(asset.duration.value * scale, asset.duration.timescale)];
@@ -211,65 +215,6 @@
     AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:composition];
     return item;
 }
-
-//视频尾帧停留
-+ (AVPlayerItem *)videoTailFrameStay:(LZSessionSegment *)segment duration:(Float64)duration{
-    //    1.将素材拖入到素材库中
-    AVAsset *asset = segment.asset;
-    AVAssetTrack *videoAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] firstObject];//素材的视频轨
-    AVAssetTrack *audioAssertTrack = [[asset tracksWithMediaType:AVMediaTypeAudio] firstObject];//素材的音频轨
-    
-    
-    //    2.将素材的视频插入视频轨，音频插入音频轨
-    CMTimeRange range = CMTimeRangeMake(kCMTimeZero, CMTimeAdd(asset.duration, CMTimeMake(duration, asset.duration.timescale)));
-    AVMutableComposition *composition = [[AVMutableComposition alloc] init];//这是工程文件
-    AVMutableCompositionTrack *videoTrack = [composition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];//视频轨道
-    AVMutableCompositionTrack *audioTrack = [composition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];//音频轨道
-    [videoTrack insertTimeRange:range ofTrack:videoAssetTrack atTime:kCMTimeZero error:nil];//在视频轨道插入一个时间段的视频
-    [audioTrack insertTimeRange:range ofTrack:audioAssertTrack atTime:kCMTimeZero error:nil];//插入音频数据，否则没有声音
-    
-    
-    
-    
-    
-    // 根据速度比率调节音频和视频
-    CMTime start1 = CMTimeMake(composition.duration.value - 1000, composition.duration.timescale);
-    CMTimeRange range1 = CMTimeRangeMake(start1, CMTimeMake(duration, 1));
-//    CMTimeRange range1 = CMTimeRangeMake(kCMTimeZero, CMTimeMake(asset.duration.value, asset.duration.timescale));
-
-    [videoTrack scaleTimeRange:range1 toDuration:CMTimeMake(duration, 1)];
-    [audioTrack scaleTimeRange:range1 toDuration:CMTimeMake(duration, 1)];
-    [videoTrack insertEmptyTimeRange:range1];
-    [audioTrack insertEmptyTimeRange:range1];
-    
-    
-    
-    
-    
-    
-    
-    //    3.设置淡出时间
-    CMTime start = CMTimeMake(composition.duration.value - composition.duration.timescale*1, composition.duration.timescale);
-    CMTimeRange fadeOutTimeRange = CMTimeRangeFromTimeToTime(start, composition.duration);
-    AVMutableVideoCompositionLayerInstruction *layerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoAssetTrack];
-    [layerInstruction setOpacity:1 atTime:kCMTimeZero];
-//    [layerInstruction setOpacityRampFromStartOpacity:1 toEndOpacity:0 timeRange:fadeOutTimeRange];
-    
-    //得到视频轨道
-    AVMutableVideoCompositionInstruction *instruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-    instruction.timeRange = CMTimeRangeMake(kCMTimeZero, composition.duration);
-    instruction.layerInstructions = @[layerInstruction];
-    
-    AVMutableVideoComposition *videoComposition = [AVMutableVideoComposition videoComposition];
-    videoComposition.instructions = @[instruction];
-    videoComposition.renderSize = videoTrack.naturalSize;
-    videoComposition.frameDuration = CMTimeMake(1, 30);
-    
-    AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:composition];
-    item.videoComposition = videoComposition;
-    return item;
-}
-
 
 //将多个视频合并为一个视频
 - (void)mergeVideosWithPaths:(NSArray *)paths completed:(void(^)(NSString *videoPath))completed {
@@ -323,16 +268,10 @@
  配置文件路径
  
  @param fileName 文件名称
- @param isFilter 是否加滤镜
  @return 文件路径：..LZVideo/fileName
  */
-+ (NSURL *)filePathWithFileName:(NSString *)fileName isFilter:(BOOL)isFilter{
-    NSString *tempPath = @"";
-    if (isFilter) {
-        tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideoFilter"];
-    }else{
-        tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideo"];
-    }
++ (NSURL *)filePathWithFileName:(NSString *)fileName{
+    NSString *tempPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"LZVideoFilter"];
     NSFileManager *manager = [NSFileManager defaultManager];
     BOOL exists = [manager fileExistsAtPath:tempPath isDirectory:NULL];
     if (!exists) {

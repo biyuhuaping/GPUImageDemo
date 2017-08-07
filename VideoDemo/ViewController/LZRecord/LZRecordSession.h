@@ -10,7 +10,6 @@
 #import "GPUImage.h"
 #import "GPUImageVideoCameraEx.h"
 #import "LZSessionSegment.h"
-#import "LZMovieWriter.h"
 
 @class LZRecordSession;
 @protocol LZRecorderDelegate <NSObject>
@@ -21,12 +20,10 @@
 @interface LZRecordSession : NSObject
 
 @property (strong, nonatomic) GPUImageVideoCameraEx * _Nullable videoCamera;
-@property (strong, nonatomic) LZMovieWriter * _Nullable movieWriter;
 @property (strong, nonatomic) NSMutableArray * _Nullable segments;
-@property (strong, nonatomic) NSURL * _Nullable movieURL;
 
-@property (strong, nonatomic) GPUImageMovieWriter * _Nullable movieWriterFilter;
-@property (strong, nonatomic) NSURL * _Nullable movieURLFilter;
+@property (strong, nonatomic) GPUImageMovieWriter * _Nullable movieWriter;
+@property (strong, nonatomic) NSURL * _Nullable movieURL;
 
 
 @property (weak, nonatomic) id<LZRecorderDelegate> __nullable delegate;

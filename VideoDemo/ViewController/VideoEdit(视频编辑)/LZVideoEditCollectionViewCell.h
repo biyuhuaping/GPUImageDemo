@@ -12,5 +12,6 @@
 
 @property (strong, nonatomic) IBOutlet UIImageView * imageView;
 @property (strong, nonatomic) IBOutlet UIButton *deletBut;
+@property (strong, nonatomic) IBOutlet UILabel *timeLabel;
 
 @end

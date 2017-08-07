@@ -8,7 +8,7 @@
 
 #import "LZSelectVideoVC.h"
 #import "LZTrimCropVC.h"
-#import "LZSelectVideoCollectionViewCell.h"
+#import "LZVideoEditCollectionViewCell.h"
 #import "LZVideoEditAuxiliary.h"
 
 @interface LZSelectVideoVC ()
@@ -50,7 +50,9 @@
     layout.sectionInset             = UIEdgeInsetsMake(10, 10, 10, 10);
     layout.scrollDirection          = UICollectionViewScrollDirectionHorizontal;
     self.collectionView.collectionViewLayout = layout;
-    [self.collectionView registerClass:[LZSelectVideoCollectionViewCell class] forCellWithReuseIdentifier:@"SelectVideoCollectionCell"];
+    
+    UINib *nib = [UINib nibWithNibName:@"LZVideoEditCollectionViewCell" bundle:nil];
+    [self.collectionView registerNib:nib forCellWithReuseIdentifier:@"EditCollectionViewCell"];
 }
 
 - (void)showVideo:(BOOL)isFirstTime{
@@ -151,8 +153,8 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *identify = @"SelectVideoCollectionCell";
-    LZSelectVideoCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identify forIndexPath:indexPath];
+    static NSString *identify = @"EditCollectionViewCell";
+    LZVideoEditCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identify forIndexPath:indexPath];
     LZSessionSegment * segment = self.videoListSegmentArrays[indexPath.row];
     NSAssert(segment.url != nil, @"segment must be non-nil");
     if (segment) {
@@ -177,6 +179,11 @@
     }
     self.currentSelected = indexPath.row;
     [self showVideo:NO];
+}
+
+- (void)dealloc{
+    [self.player removeTimeObserver:self.timeObser];
+    DLog(@"========= dealloc =========");
 }
 
 @end
