@@ -15,13 +15,6 @@
 #import "LZButton.h"
 #import "LZVideoEditCollectionViewCell.h"
 
-//#import "SCRecorder.h"
-//#import "SCRecordSessionManager.h"
-//#import <AVFoundation/AVFoundation.h>
-
-//#import <MobileCoreServices/MobileCoreServices.h>
-//#import <MediaPlayer/MediaPlayer.h>
-
 #import "ClearCacheTool.h"
 
 #import "GPUImage.h"
@@ -34,14 +27,14 @@
 @interface LZNewPromotionVC ()<LZRecorderDelegate,LZCameraFilterViewDelegate>
 
 @property (strong, nonatomic) IBOutlet GPUImageView *filterView;
-@property (strong, nonatomic) GPUImageOutput<GPUImageInput> *filter;
+@property (strong, nonatomic) GPUImageFilterGroup *filterGroup;         //滤镜池
+@property (strong, nonatomic) GPUImageExposureFilter *exposureFilter;   //曝光度
 @property (strong, nonatomic) LZRecordSession *recordSession;
 
 
 @property (strong, nonatomic) IBOutlet LZGridView *girdView;        //网格view
 @property (strong, nonatomic) IBOutlet UIImageView *ghostImageView; //快照imageView
 @property (strong, nonatomic) IBOutlet LZLevelView *levelView;      //水平仪view
-//@property (strong, nonatomic) IBOutlet SCRecorderToolsView *focusView;
 
 @property (strong, nonatomic) IBOutlet UIButton *recordBtn;         //录制按钮
 @property (strong, nonatomic) IBOutlet UIButton *cancelButton;      //删除按钮
@@ -49,8 +42,6 @@
 @property (strong, nonatomic) IBOutlet LZButton *gridOrlineButton;  //网格按钮
 @property (strong, nonatomic) IBOutlet UIButton *snapshotButton;    //快照按钮
 
-//recorder
-//@property (nonatomic, strong) SCRecorder *recorder;
 @property (nonatomic, strong) NSMutableArray *videoListSegmentArrays; //音频库
 
 //titleView
@@ -62,7 +53,8 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *toTopDistance;
 @property (strong, nonatomic) IBOutlet LZCameraFilterCollectionView *cameraFilterView;
 
-@property (nonatomic)          CGFloat scale;
+@property (assign, nonatomic) CGFloat scale;//缩放比例
+@property (assign, nonatomic) CGFloat exposure;//曝光度
 
 @end
 
@@ -75,7 +67,8 @@
     [_gridOrlineButton setLoopImages:@[[UIImage imageNamed:@"lz_recorder_grid"], [UIImage imageNamed:@"lz_recorder_grid_hd"], [UIImage imageNamed:@"lz_recorder_line_hd"]] ];
     
     [self configNavigationBar];
-    
+    [self configCameraFilterView];
+
     self.recordSession = [[LZRecordSession alloc]init];
     self.recordSession.delegate = self;
     
@@ -83,34 +76,30 @@
     [self.filterView setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
     
     //滤镜
-    self.filter = [[GPUImageFilter alloc] init];
-    [self.filter addTarget:self.filterView];
+    self.filterGroup = [[GPUImageFilterGroup alloc]init];
+    
+    //曝光度
+    _exposureFilter = [[GPUImageExposureFilter alloc]init];
+    [self.filterGroup addFilter:_exposureFilter];
+    _filterGroup.initialFilters = @[_exposureFilter];
+    _filterGroup.terminalFilter = _exposureFilter;
+    [self.filterGroup addTarget:self.filterView];
 
-    [self configCameraFilterView];
     
     
-    //    两个手指捏合动作
+//    两个手指捏合动作
     UIPinchGestureRecognizer *pinchGestureRecognizer = [[UIPinchGestureRecognizer  alloc] init];
     [pinchGestureRecognizer addTarget:self action:@selector(gestureRecognizerHandle:)];
     [self.filterView addGestureRecognizer:pinchGestureRecognizer];
     self.scale = 1;
-}
-
-- (void)gestureRecognizerHandle:(UIPinchGestureRecognizer *)sender{
-    CGFloat f = sender.scale - 1;
-    self.scale += f/10;
-
-    if (self.scale < 1.0f) {
-        self.scale = 1.0f;
-    }else if (self.scale > 4.0f){
-        self.scale = 4.0f;
-    }
-    self.recordSession.videoCamera.videoZoomFactor = self.scale;
+    
+    UIPanGestureRecognizer *recognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
+    [self.filterView addGestureRecognizer:recognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.recordSession initGPUImageView:self.filter];
+    [self.recordSession initGPUImageView:self.filterGroup];
     [self.recordSession.videoCamera startCameraCapture];
     [self updateGhostImage];
     [self enumVideoUrl];
@@ -210,8 +199,11 @@
 //配置选择滤镜的CollectionView
 - (void)configCameraFilterView {
     NSMutableArray *filterNameArray = [[NSMutableArray alloc] initWithCapacity:9];
-    for (NSInteger index = 0; index < 10; index++) {
-        UIImage *image = [UIImage imageNamed:@"18"];
+    UIImage *image = [UIImage imageNamed:@"1"];
+    [filterNameArray addObject:image];
+    
+    for (NSInteger index = 0; index < 9; index++) {
+        UIImage *image = [UIImage imageNamed:@"2"];
         [filterNameArray addObject:image];
     }
     _cameraFilterView.cameraFilterDelegate = self;
@@ -245,6 +237,57 @@
     }
 }
 
+//手指滑动
+- (void)handleSwipe:(UIPanGestureRecognizer *)swipe{
+    if (swipe.state == UIGestureRecognizerStateChanged) {
+        [self commitTranslation:[swipe translationInView:self.filterView]];
+    }
+}
+
+//判断手势方向
+- (void)commitTranslation:(CGPoint)translation{
+    CGFloat absX = fabs(translation.x);
+    CGFloat absY = fabs(translation.y);
+    
+    // 设置滑动有效距离
+    if (MAX(absX, absY) < 10)
+        return;
+    
+    if (absX > absY ) {
+        self.scale += translation.x*0.001;
+        
+        if (self.scale < 1.0f) {
+            self.scale = 1.0f;
+        }else if (self.scale > 4.0f){
+            self.scale = 4.0f;
+        }
+        self.recordSession.videoCamera.videoZoomFactor = self.scale;
+        
+//        if (translation.x < 0) {
+//            //向左滑动
+//            NSLog(@"左x:%f  y:%f",translation.x,translation.y);
+//        }else{
+//            //向右滑动
+//            NSLog(@"右x:%f  y:%f",translation.x,translation.y);
+//        }
+    } else if (absY > absX) {
+        self.exposure += -translation.y * 0.001;
+        if (self.exposure < -3.0f) {
+            self.exposure = -3.0f;
+        }else if (self.exposure > 3.0f){
+            self.exposure = 3.0f;
+        }
+        _exposureFilter.exposure = self.exposure;
+//        if (translation.y < 0) {
+//            //向上滑动
+//            NSLog(@"上x:%f  y:%f",translation.x,translation.y);
+//        }else{
+//            //向下滑动
+//            NSLog(@"下x:%f  y:%f",translation.x,translation.y);
+//        }
+    }
+}
+
 #pragma mark - Event
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
     if (self.videoListSegmentArrays.count > 0) {
@@ -257,6 +300,19 @@
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"暂无可选视频" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
     }
+}
+
+//两个手指捏合动作
+- (void)gestureRecognizerHandle:(UIPinchGestureRecognizer *)sender{
+    CGFloat f = sender.scale - 1;
+    self.scale += f/10;
+    
+    if (self.scale < 1.0f) {
+        self.scale = 1.0f;
+    }else if (self.scale > 4.0f){
+        self.scale = 4.0f;
+    }
+    self.recordSession.videoCamera.videoZoomFactor = self.scale;
 }
 
 //滑动调整景深
@@ -286,10 +342,10 @@
         self.navigationItem.titleView.hidden = NO;
         self.labelCount.backgroundColor = [UIColor whiteColor];
     }else {
-        [self.recordSession endRecordingFilter:self.filter Completion:^(NSMutableArray<NSURL *> *segments) {
+        [self.recordSession endRecordingFilter:self.filterGroup Completion:^(NSMutableArray<NSURL *> *segments) {
             DLog("===================== %@",segments);
             [self updateGhostImage];
-            [self.recordSession initGPUImageView:self.filter];
+            [self.recordSession initGPUImageView:self.filterGroup];
             [self configButtonState];
         }];
     }
@@ -363,7 +419,7 @@
         [self.filterView.layer addAnimation:animation forKey:@"animation"];
     } completion:^(BOOL finished) {
         if (finished) {
-            [self.recordSession switchCaptureDevices:_filter];
+            [self.recordSession switchCaptureDevices:_filterGroup];
         }
     }];
 }
@@ -428,42 +484,122 @@
 #pragma mark - cameraFilterView delegate
 - (void)switchCameraFilter:(NSInteger)index {
     [self.recordSession.videoCamera removeAllTargets];
-    
+    [self.filterGroup removeTarget:self.filterView];
+    [_exposureFilter removeAllTargets];
+
     switch (index) {
-        case 0:
-            _filter = [[GPUImageFilter alloc] init];//原图
+        case 0:{
+            GPUImageFilter *f = [[GPUImageFilter alloc] init];//原图
+            [_exposureFilter addTarget:f];
+            self.filterGroup.terminalFilter = f;
+        }
             break;
-        case 1:
-            _filter = [[GPUImageHueFilter alloc] init];//绿巨人
+        case 1:{
+            GPUImageHueFilter *f = [[GPUImageHueFilter alloc] init];//绿巨人
+            [_exposureFilter addTarget:f];
+            self.filterGroup.terminalFilter = f;
+        }
             break;
-        case 2:
-            _filter = [[GPUImageColorInvertFilter alloc] init];//负片
+        case 2:{
+            GPUImageColorInvertFilter *f = [[GPUImageColorInvertFilter alloc] init];//负片
+            [_exposureFilter addTarget:f];
+            self.filterGroup.terminalFilter = f;
+        }
             break;
-        case 3:
-            _filter = [[GPUImageSepiaFilter alloc] init];//老照片
+        case 3:{
+            GPUImageSepiaFilter *f = [[GPUImageSepiaFilter alloc] init];//褐色（怀旧）
+            [_exposureFilter addTarget:f];
+            self.filterGroup.terminalFilter = f;
+        }
             break;
-        case 4:
-            _filter = [[GPUImageToonFilter alloc] init];//卡通滤镜
+        case 4:{
+            GPUImageSmoothToonFilter *f = [[GPUImageSmoothToonFilter alloc] init];//卡通滤镜GPUImageToonFilter
+            [_exposureFilter addTarget:f];
+            self.filterGroup.terminalFilter = f;
+        }
             break;
-        case 5:
-            _filter = [[GPUImageSketchFilter alloc] init];//素描
+        case 5:{
+            GPUImageSketchFilter *f = [[GPUImageSketchFilter alloc] init];//素描
+            [_exposureFilter addTarget:f];
+            self.filterGroup.terminalFilter = f;
+        }
             break;
-        case 6:
-            _filter = [[GPUImageVignetteFilter alloc] init];//黑晕
+        case 6:{
+            GPUImageVignetteFilter *f = [[GPUImageVignetteFilter alloc] init];//黑晕
+            [_exposureFilter addTarget:f];
+            self.filterGroup.terminalFilter = f;
+        }
             break;
-        case 7:
-            _filter = [[GPUImageGrayscaleFilter alloc] init];//灰度
+        case 7:{
+            GPUImageGrayscaleFilter *f = [[GPUImageGrayscaleFilter alloc] init];//灰度
+            [_exposureFilter addTarget:f];
+            self.filterGroup.terminalFilter = f;
+        }
             break;
-        case 8:
-            _filter = [[GPUImageBilateralFilter alloc] init];
+        case 8:{
+            GPUImageBilateralFilter *f = [[GPUImageBilateralFilter alloc] init];//美颜
+            [_exposureFilter addTarget:f];
+            self.filterGroup.terminalFilter = f;
+        }
             break;
-        case 9:
-            _filter = [[GPUImageEmbossFilter alloc] init];//浮雕
+        case 9:{
+            GPUImageEmbossFilter *f = [[GPUImageEmbossFilter alloc] init];//浮雕
+            [_exposureFilter addTarget:f];
+            self.filterGroup.terminalFilter = f;
+        }
             break;
+//
+//        case 10:{//红
+//            GPUImageRGBFilter *filter = [[GPUImageRGBFilter alloc] init];
+//            filter.red = 0.9;
+//            filter.green = 0.8;
+//            filter.blue = 0.9;
+//            _filter = filter;
+//        }
+//            break;
+//        case 11:{//蓝
+//            GPUImageRGBFilter *filter = [[GPUImageRGBFilter alloc] init];
+//            filter.red = 0.8;
+//            filter.green = 0.8;
+//            filter.blue = 0.9;
+//            _filter = filter;
+//        }
+//            break;
+//        case 12:{//绿
+//            GPUImageRGBFilter *filter = [[GPUImageRGBFilter alloc] init];
+//            filter.red = 0.8;
+//            filter.green = 0.9;
+//            filter.blue = 0.8;
+//            _filter = filter;
+//            
+//        }
+//            break;
+//        case 13:
+//            _filter = [[GPUImageLuminanceThresholdFilter alloc] init];
+//            break;
+//        case 14:{//饱和
+//            GPUImageSaturationFilter *filter = [[GPUImageSaturationFilter alloc] init];
+//            filter.saturation = 1.5;
+//            _filter = filter;
+//        }
+//            
+//            break;
+//        case 15:{//亮度
+//            GPUImageBrightnessFilter *filter = [[GPUImageBrightnessFilter alloc] init];
+//            filter.brightness = 0.2;
+//            _filter = filter;
+//        }
+//            break;
+//        case 16:{
+//            GPUImageOpacityFilter *f = [[GPUImageOpacityFilter alloc]init];
+//            f.opacity = 0.5;
+//            _filter = f;
+//        }
+//            break;
     }
-    
-    [self.filter addTarget:self.filterView];
-    [self.recordSession initGPUImageView:self.filter];
+
+    [self.filterGroup addTarget:self.filterView];
+    [self.recordSession initGPUImageView:self.filterGroup];
 }
 
 @end
