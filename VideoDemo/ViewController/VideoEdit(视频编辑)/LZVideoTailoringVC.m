@@ -114,7 +114,7 @@
     CMTime duration = CMTimeMakeWithSeconds(self.segment.endTime - self.segment.startTime, self.segment.duration.timescale);
     CMTimeRange range = CMTimeRangeMake(start, duration);
     
-    [LZVideoTools exportVideo:self.segment.asset videoComposition:nil filePath:tempPath timeRange:range completion:^(NSURL *savedPath) {
+    [LZVideoTools exportVideo:self.segment.asset filePath:tempPath timeRange:range duration:0 completion:^(NSURL *savedPath) {
         if(savedPath) {
             DLog(@"导出视频路径：%@", savedPath);
             LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:savedPath filter:self.segment.filter];
@@ -140,7 +140,7 @@
         CMTimeRange range = CMTimeRangeMake(start, duration);
         
         dispatch_group_enter(serviceGroup);
-        [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:filePath timeRange:range completion:^(NSURL *savedPath) {
+        [LZVideoTools exportVideo:segment.asset filePath:filePath timeRange:range duration:0 completion:^(NSURL *savedPath) {
             LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:filePath filter:nil];
             DLog(@"url:%@", [filePath path]);
             [self.recordSegments removeObject:segment];

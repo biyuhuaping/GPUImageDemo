@@ -88,8 +88,7 @@
     NSURL *filePath = [LZVideoTools filePathWithFileName:filename];
 
     AVPlayerItem *playerItem = [LZVideoTools videoSpeed:self.segment scale:(2.6 - self.rateValue)];
-//    AVPlayerItem *playerItem = [LZVideoTools videoTailFrameStay:self.segment duration:10];
-    [LZVideoTools exportVideo:playerItem.asset videoComposition:nil filePath:filePath timeRange:kCMTimeRangeZero completion:^(NSURL *savedPath) {
+    [LZVideoTools exportVideo:playerItem.asset filePath:filePath timeRange:kCMTimeRangeZero duration:0 completion:^(NSURL *savedPath) {
         if(savedPath) {
             DLog(@"导出视频路径：%@", savedPath);
             LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:filePath filter:self.segment.filter];

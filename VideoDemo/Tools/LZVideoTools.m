@@ -51,8 +51,8 @@
 
     
 //    //设置淡出时间
-//    CMTime start1 = CMTimeMake(composition.duration.value - composition.duration.timescale*5, composition.duration.timescale);
-//    CMTimeRange timeRange = CMTimeRangeFromTimeToTime(start1, composition.duration);
+//    CMTime start = CMTimeMake(composition.duration.value - composition.duration.timescale * 2, composition.duration.timescale);
+//    CMTimeRange timeRange = CMTimeRangeFromTimeToTime(start, composition.duration);
 //
 //    //设置不透明度，从开始不透明
 //    [layerInstruction setOpacityRampFromStartOpacity:1 toEndOpacity:0 timeRange:timeRange];
@@ -78,14 +78,34 @@
     
     
 //    4.导出
-    CMTime start = CMTimeMakeWithSeconds(segment.startTime, segment.duration.timescale);
-    CMTime duration = CMTimeMakeWithSeconds(segment.endTime - segment.startTime, segment.asset.duration.timescale);
-    CMTimeRange range = CMTimeRangeMake(start, duration);
+    CMTime start1 = CMTimeMakeWithSeconds(segment.startTime, segment.duration.timescale);
+    CMTime duration1 = CMTimeMakeWithSeconds(segment.endTime - segment.startTime, segment.asset.duration.timescale);
+    CMTimeRange range = CMTimeRangeMake(start1, duration1);
     
-    [self exportVideo:composition videoComposition:videoComposition filePath:filePath timeRange:range completion:^(NSURL *savedPath) {
-        if (completion) {
-            completion();
-            DLog(@"视频导出成功：%@", savedPath);
+    
+    //导出
+    AVAssetExportSession *session = [[AVAssetExportSession alloc] initWithAsset:composition presetName:AVAssetExportPresetHighestQuality];
+    session.videoComposition = videoComposition;
+//    session.audioMix = audioMix;
+    session.outputURL = filePath;
+    session.shouldOptimizeForNetworkUse = YES;
+    session.outputFileType = AVFileTypeQuickTimeMovie;
+    session.timeRange = range;
+    [session exportAsynchronouslyWithCompletionHandler:^{
+        if ([session status] == AVAssetExportSessionStatusCompleted) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (completion) {
+                    completion();
+                    DLog(@"视频导出成功：%@", [session.outputURL path]);
+                }
+            });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (completion) {
+                    completion();
+                    DLog(@"视频导出失败：%@", [session.outputURL path]);
+                }
+            });
         }
     }];
 }
@@ -95,16 +115,21 @@
  导出视频
  
  @param asset 视频资源
- @param videoComposition 视频合成物
  @param filePath 文件路径
  @param range 时长范围
+ @param duration 淡出时长
  @param completion 完成回调
  */
-+ (void)exportVideo:(AVAsset *)asset videoComposition:(AVVideoComposition *)videoComposition filePath:(NSURL *)filePath timeRange:(CMTimeRange)range completion:(void (^)(NSURL *savedPath))completion {
++ (void)exportVideo:(AVAsset *)asset filePath:(NSURL *)filePath timeRange:(CMTimeRange)range duration:(Float64)duration completion:(void (^)(NSURL *savedPath))completion {
+    AVPlayerItem *item = nil;
     
+    if (duration > 0) {
+        item = [self videoFadeOut:asset duration:duration];
+    }
     //导出
     AVAssetExportSession *session = [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetHighestQuality];
-    session.videoComposition = videoComposition;
+    session.videoComposition = item.videoComposition;
+    session.audioMix = item.audioMix;
     session.outputURL = filePath;
     session.shouldOptimizeForNetworkUse = YES;
     session.outputFileType = AVFileTypeQuickTimeMovie;

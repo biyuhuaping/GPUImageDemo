@@ -93,6 +93,7 @@
     [self.filterView addGestureRecognizer:pinchGestureRecognizer];
     self.scale = 1;
     
+    //手指滑动
     UIPanGestureRecognizer *recognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
     [self.filterView addGestureRecognizer:recognizer];
 }

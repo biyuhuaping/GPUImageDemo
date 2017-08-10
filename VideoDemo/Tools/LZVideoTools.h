@@ -26,12 +26,12 @@
  导出视频
  
  @param asset 视频资源
- @param videoComposition 视频合成物
  @param filePath 文件路径
  @param range 时长范围
+ @param duration 淡出时长
  @param completion 完成回调
  */
-+ (void)exportVideo:(AVAsset *)asset videoComposition:(AVVideoComposition *)videoComposition filePath:(NSURL *)filePath timeRange:(CMTimeRange)range completion:(void (^)(NSURL *savedPath))completion;
++ (void)exportVideo:(AVAsset *)asset filePath:(NSURL *)filePath timeRange:(CMTimeRange)range duration:(Float64)duration completion:(void (^)(NSURL *savedPath))completion;
 
 
 

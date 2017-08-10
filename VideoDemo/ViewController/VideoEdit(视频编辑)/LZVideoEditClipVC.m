@@ -187,7 +187,6 @@
 #pragma mark - Event
 //保存
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
-    
     WS(weakSelf);
     dispatch_group_t serviceGroup = dispatch_group_create();
     for (int i = 0; i < weakSelf.recordSegments.count; i++) {
@@ -200,11 +199,13 @@
             NSURL *filePath = [LZVideoTools filePathWithFileName:filename];
 
             dispatch_group_enter(serviceGroup);
-            [LZVideoTools cutVideoWith:segment filePath:filePath completion:^{
-                LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:filePath filter:nil];
-                [weakSelf.recordSegments removeObject:segment];
-                [weakSelf.recordSegments insertObject:newSegment atIndex:i];
-                dispatch_group_leave(serviceGroup);
+            [LZVideoTools exportVideo:segment.asset filePath:filePath timeRange:kCMTimeRangeZero duration:0 completion:^(NSURL *savedPath) {
+                if (savedPath) {
+                    LZSessionSegment * newSegment = [[LZSessionSegment alloc] initWithURL:filePath filter:nil];
+                    [weakSelf.recordSegments removeObject:segment];
+                    [weakSelf.recordSegments insertObject:newSegment atIndex:i];
+                    dispatch_group_leave(serviceGroup);
+                }
             }];
         }
     }
@@ -280,7 +281,7 @@
     NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", self.recordSession.fileIndex];
     NSURL *filePath = [LZVideoTools filePathWithFileName:filename];
 
-    [LZVideoTools exportVideo:segment.asset videoComposition:nil filePath:filePath timeRange:kCMTimeRangeZero completion:^(NSURL *savedPath) {
+    [LZVideoTools exportVideo:segment.asset filePath:filePath timeRange:kCMTimeRangeZero duration:0 completion:^(NSURL *savedPath) {
         if(savedPath) {
             DLog(@"导出视频路径：%@", savedPath);
             LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:filePath filter:segment.filter];

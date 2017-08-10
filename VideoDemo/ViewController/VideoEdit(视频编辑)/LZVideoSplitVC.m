@@ -112,7 +112,7 @@
         CMTimeRange range = CMTimeRangeMake(start, duration);
         
         dispatch_group_enter(serviceGroup);
-        [LZVideoTools exportVideo:self.segment.asset videoComposition:nil filePath:filePath timeRange:range completion:^(NSURL *savedPath) {
+        [LZVideoTools exportVideo:self.segment.asset filePath:filePath timeRange:range duration:0 completion:^(NSURL *savedPath) {
             if(savedPath) {
                 DLog(@"导出视频路径：%@", savedPath);
                 LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:filePath filter:self.segment.filter];

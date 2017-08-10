@@ -122,8 +122,8 @@
 }
 
 - (void)configPlayerView{
-    AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:self.asset];
-    self.playerView.player = [AVPlayer playerWithPlayerItem:item];
+    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:self.asset];
+    self.playerView.player = [AVPlayer playerWithPlayerItem:playerItem];
 
     WS(weakSelf);
     _timeObser = [self.playerView.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time){
@@ -159,7 +159,7 @@
     CMTime duration = CMTimeMakeWithSeconds(self.endTime - self.startTime, self.asset.duration.timescale);
     CMTimeRange range = CMTimeRangeMake(start, duration);
     
-    [LZVideoTools exportVideo:self.asset videoComposition:nil filePath:tempPath timeRange:range completion:^(NSURL *savedPath) {
+    [LZVideoTools exportVideo:self.asset filePath:tempPath timeRange:range duration:0 completion:^(NSURL *savedPath) {
         if(savedPath) {
             DLog(@"导出视频路径：%@", savedPath);
             LZSessionSegment * newSegment = [LZSessionSegment segmentWithURL:tempPath filter:nil];
@@ -169,8 +169,11 @@
             if ([assetsLibrary videoAtPathIsCompatibleWithSavedPhotosAlbum:savedPath]) {
                 [assetsLibrary writeVideoAtPathToSavedPhotosAlbum:savedPath completionBlock:^(NSURL *assetURL, NSError *error) {
                     if (!error) {
-                        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"保存成功" message:@"zhoubo" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-                        [alert show];
+                        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"保存成功" message:@"zhoubo" preferredStyle:UIAlertControllerStyleAlert];
+                        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                            DLog(@"点击了确定");
+                        }]];
+                        [self presentViewController:alert animated:YES completion:nil];
                     }
                 }];
             }
