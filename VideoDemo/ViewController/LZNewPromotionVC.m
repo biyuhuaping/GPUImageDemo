@@ -43,7 +43,7 @@
 @property (strong, nonatomic) IBOutlet LZButton *gridOrlineButton;  //网格按钮
 @property (strong, nonatomic) IBOutlet UIButton *snapshotButton;    //快照按钮
 
-@property (nonatomic, strong) NSMutableArray *videoListSegmentArrays; //音频库
+@property (nonatomic, strong) NSMutableArray *videoListSegmentArrays; //视频库
 
 //titleView
 @property (strong, nonatomic) UIView *dotView;//绿色点点
@@ -112,6 +112,21 @@
     recognizer.delegate = self;
     [self.filterView addGestureRecognizer:recognizer];
     self.horizontalScale = 1;
+    
+    //判断相机权限
+    NSString *mediaType = AVMediaTypeVideo;
+    AVAuthorizationStatus  authorizationStatus = [AVCaptureDevice authorizationStatusForMediaType:mediaType];
+    if (authorizationStatus == AVAuthorizationStatusRestricted || authorizationStatus == AVAuthorizationStatusDenied) {
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"访问相机权限受限,请在设置中启用" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            [self.navigationController popViewControllerAnimated:YES];
+        }]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            //去设置
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+        }]];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -350,15 +365,28 @@
 
 #pragma mark - Event
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
-    if (self.videoListSegmentArrays.count > 0) {
-        LZSelectVideoVC *vc = [[LZSelectVideoVC alloc]initWithNibName:@"LZSelectVideoVC" bundle:nil];
-        vc.recordSession = self.recordSession;
-        vc.videoListSegmentArrays = self.videoListSegmentArrays;
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-    else {
-        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"暂无可选视频" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert show];
+    //相册访问权限
+    ALAuthorizationStatus author = [ALAssetsLibrary authorizationStatus];
+    if(author == ALAuthorizationStatusRestricted || author == ALAuthorizationStatusDenied){ //无权限
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"访问相册受限,请在设置中启用" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        }]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            //去设置
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+        }]];
+        [self presentViewController:alert animated:YES completion:nil];
+    }else{ //有权限
+        if (self.videoListSegmentArrays.count > 0) {
+            LZSelectVideoVC *vc = [[LZSelectVideoVC alloc]initWithNibName:@"LZSelectVideoVC" bundle:nil];
+            vc.recordSession = self.recordSession;
+            vc.videoListSegmentArrays = self.videoListSegmentArrays;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+        else {
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"暂无可选视频" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert show];
+        }
     }
 }
 
@@ -378,26 +406,39 @@
 
 //开始录制按钮
 - (IBAction)recordButton:(UIControl *)sender {
-    if (sender.selected == NO) {
-        self.ghostImageView.hidden = YES;
-        [self.recordSession startRecording];
-        self.navigationItem.titleView.hidden = NO;
-        self.labelCount.backgroundColor = [UIColor whiteColor];
-    }else {
-        [self.recordSession endRecordingFilter:self.filterGroup Completion:^(NSMutableArray<NSURL *> *segments) {
-            DLog("===================== %@",segments);
-            [self updateGhostImage];
-            [self.recordSession initGPUImageView:self.filterGroup];
-            [self configButtonState];
-        }];
+    //判断麦克风权限
+    AVAuthorizationStatus  authorizationStatus1 = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
+    if (authorizationStatus1 == AVAuthorizationStatusRestricted || authorizationStatus1 == AVAuthorizationStatusDenied) {
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"麦克风权限受限,请在设置中启用" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        }]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            //去设置
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+        }]];
+        [self presentViewController:alert animated:YES completion:nil];
+    }else{
+        if (sender.selected == NO) {
+            self.ghostImageView.hidden = YES;
+            [self.recordSession startRecording];
+            self.navigationItem.titleView.hidden = NO;
+            self.labelCount.backgroundColor = [UIColor whiteColor];
+        }else {
+            [self.recordSession endRecordingFilter:self.filterGroup Completion:^(NSMutableArray<NSURL *> *segments) {
+                DLog("===================== %@",segments);
+                [self updateGhostImage];
+                [self.recordSession initGPUImageView:self.filterGroup];
+                [self configButtonState];
+            }];
+        }
+        
+        self.fd_interactivePopDisabled = !sender.selected;
+        self.dotView.hidden = sender.selected;
+        self.maskView.hidden = sender.selected;
+        self.navigationItem.hidesBackButton = !sender.selected;
+        self.navigationItem.rightBarButtonItem.customView.hidden = !sender.selected;
+        sender.selected = !sender.selected;
     }
-    
-    self.fd_interactivePopDisabled = !sender.selected;
-    self.dotView.hidden = sender.selected;
-    self.maskView.hidden = sender.selected;
-    self.navigationItem.hidesBackButton = !sender.selected;
-    self.navigationItem.rightBarButtonItem.customView.hidden = !sender.selected;
-    sender.selected = !sender.selected;
 }
 
 //确认按钮

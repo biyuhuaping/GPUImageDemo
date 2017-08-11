@@ -25,7 +25,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "337"
             endingLineNumber = "337"
-            landmarkName = "-gestureRecognizerShouldBegin:"
+            landmarkName = "-gestureRecognizerHandle:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
