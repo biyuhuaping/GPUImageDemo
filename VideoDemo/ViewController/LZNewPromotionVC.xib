@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -23,6 +24,7 @@
                 <outlet property="levelView" destination="YGh-h4-lhj" id="Em3-UF-p71"/>
                 <outlet property="maskView" destination="Ahh-gQ-1tA" id="rjg-yC-uHt"/>
                 <outlet property="recordBtn" destination="gez-5Y-VGK" id="gwR-Pj-MC8"/>
+                <outlet property="slider" destination="0O3-Dz-eSF" id="8Jb-gt-2hF"/>
                 <outlet property="snapshotButton" destination="cZo-bM-lGj" id="12B-bS-tZ3"/>
                 <outlet property="toTopDistance" destination="Pfe-bt-h4t" id="uP0-Cn-DS8"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -52,10 +54,13 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
-                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="1" maxValue="4" translatesAutoresizingMaskIntoConstraints="NO" id="em2-hW-3kc">
-                    <rect key="frame" x="28" y="325" width="319" height="31"/>
+                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-3" maxValue="3" translatesAutoresizingMaskIntoConstraints="NO" id="0O3-Dz-eSF">
+                    <rect key="frame" x="259.5" y="172.5" width="191.5" height="31"/>
+                    <color key="minimumTrackTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="maximumTrackTintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="thumbTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <connections>
-                        <action selector="sliderAction:" destination="-1" eventType="valueChanged" id="3rg-Mk-vHG"/>
+                        <action selector="sliderAction:" destination="-1" eventType="valueChanged" id="H0i-XW-aab"/>
                     </connections>
                 </slider>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AMw-fI-DcK">
@@ -233,13 +238,14 @@
                 <constraint firstItem="Nbh-Xr-mn6" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="9Ku-pa-WV2"/>
                 <constraint firstItem="s4r-Er-HdQ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="BlF-g0-IGc"/>
                 <constraint firstAttribute="trailing" secondItem="JMy-kw-3j3" secondAttribute="trailing" id="FZ8-5z-PZY"/>
+                <constraint firstAttribute="trailing" secondItem="0O3-Dz-eSF" secondAttribute="centerX" constant="20" id="Gvt-3m-zwC"/>
                 <constraint firstItem="YGh-h4-lhj" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="HuG-ld-6Qd"/>
                 <constraint firstItem="JMy-kw-3j3" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="KPU-M5-mlo"/>
                 <constraint firstItem="JMy-kw-3j3" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Lcx-cA-I8c"/>
                 <constraint firstItem="s4r-Er-HdQ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="MXc-O1-fuF"/>
                 <constraint firstItem="AMw-fI-DcK" firstAttribute="top" secondItem="JMy-kw-3j3" secondAttribute="bottom" id="NAX-hu-o9u"/>
-                <constraint firstItem="AMw-fI-DcK" firstAttribute="top" secondItem="em2-hW-3kc" secondAttribute="bottom" constant="20" id="NGo-Mj-O2M"/>
                 <constraint firstItem="YGh-h4-lhj" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="ULT-jA-7Wm"/>
+                <constraint firstItem="0O3-Dz-eSF" firstAttribute="centerY" secondItem="Nbh-Xr-mn6" secondAttribute="centerY" id="X5i-En-1TY"/>
                 <constraint firstAttribute="bottom" secondItem="AMw-fI-DcK" secondAttribute="bottom" id="ZtH-gE-IeS"/>
                 <constraint firstAttribute="trailing" secondItem="AMw-fI-DcK" secondAttribute="trailing" id="a2I-Ab-fFo"/>
                 <constraint firstAttribute="trailing" secondItem="s4r-Er-HdQ" secondAttribute="trailing" id="bsk-Bg-6IB"/>
@@ -247,8 +253,7 @@
                 <constraint firstItem="AMw-fI-DcK" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="dxF-SK-jat"/>
                 <constraint firstItem="Nbh-Xr-mn6" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="jc8-1c-Y2I"/>
                 <constraint firstAttribute="trailing" secondItem="YGh-h4-lhj" secondAttribute="trailing" id="kCn-Lx-FVb"/>
-                <constraint firstAttribute="trailing" secondItem="em2-hW-3kc" secondAttribute="trailing" constant="30" id="oSt-aC-Gwk"/>
-                <constraint firstItem="em2-hW-3kc" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="30" id="rYf-dH-Rkb"/>
+                <constraint firstItem="0O3-Dz-eSF" firstAttribute="width" secondItem="Nbh-Xr-mn6" secondAttribute="width" multiplier="1:2" id="kLf-aE-2BL"/>
                 <constraint firstItem="AMw-fI-DcK" firstAttribute="top" secondItem="Nbh-Xr-mn6" secondAttribute="bottom" id="yXw-F0-khi"/>
             </constraints>
             <point key="canvasLocation" x="33.5" y="53.5"/>

@@ -24,7 +24,7 @@
 #import "LZRecordSession.h"
 #import "LZCameraFilterCollectionView.h"
 
-@interface LZNewPromotionVC ()<LZRecorderDelegate,LZCameraFilterViewDelegate>
+@interface LZNewPromotionVC ()<LZRecorderDelegate, LZCameraFilterViewDelegate, UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) IBOutlet GPUImageView *filterView;
 @property (strong, nonatomic) GPUImageFilterGroup *filterGroup;         //滤镜池
@@ -35,6 +35,7 @@
 @property (strong, nonatomic) IBOutlet LZGridView *girdView;        //网格view
 @property (strong, nonatomic) IBOutlet UIImageView *ghostImageView; //快照imageView
 @property (strong, nonatomic) IBOutlet LZLevelView *levelView;      //水平仪view
+@property (strong, nonatomic) IBOutlet UISlider *slider;
 
 @property (strong, nonatomic) IBOutlet UIButton *recordBtn;         //录制按钮
 @property (strong, nonatomic) IBOutlet UIButton *cancelButton;      //删除按钮
@@ -53,8 +54,18 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *toTopDistance;
 @property (strong, nonatomic) IBOutlet LZCameraFilterCollectionView *cameraFilterView;
 
-@property (assign, nonatomic) CGFloat scale;//缩放比例
-@property (assign, nonatomic) CGFloat exposure;//曝光度
+
+//竖直方向-曝光度
+@property (assign, nonatomic) CGFloat verticalScale;
+@property (assign, nonatomic) CGFloat verticalBegin;
+
+//水平方向-远近
+@property (assign, nonatomic) CGFloat horizontalScale;
+@property (assign, nonatomic) CGFloat horizontalBegin;
+
+//双指捏合
+@property (assign, nonatomic) CGFloat effectiveScale;//有效缩放比例
+@property (assign, nonatomic) CGFloat beginGestureScale;
 
 @end
 
@@ -85,17 +96,22 @@
     _filterGroup.terminalFilter = _exposureFilter;
     [self.filterGroup addTarget:self.filterView];
 
-    
+    //设置滑块图标图片
+    [self.slider setThumbImage:[UIImage imageNamed:@"main_slider_btn"] forState:UIControlStateNormal];
+    [self.slider setThumbImage:[UIImage imageNamed:@"main_slider_btn"] forState:UIControlStateHighlighted];
+    self.slider.transform = CGAffineTransformMakeRotation(-M_PI_2);
     
 //    两个手指捏合动作
     UIPinchGestureRecognizer *pinchGestureRecognizer = [[UIPinchGestureRecognizer  alloc] init];
     [pinchGestureRecognizer addTarget:self action:@selector(gestureRecognizerHandle:)];
+    pinchGestureRecognizer.delegate = self;
     [self.filterView addGestureRecognizer:pinchGestureRecognizer];
-    self.scale = 1;
     
     //手指滑动
     UIPanGestureRecognizer *recognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
+    recognizer.delegate = self;
     [self.filterView addGestureRecognizer:recognizer];
+    self.horizontalScale = 1;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -238,6 +254,8 @@
     }
 }
 
+
+#pragma mark - 手势
 //手指滑动
 - (void)handleSwipe:(UIPanGestureRecognizer *)swipe{
     if (swipe.state == UIGestureRecognizerStateChanged) {
@@ -255,14 +273,14 @@
         return;
     
     if (absX > absY ) {
-        self.scale += translation.x*0.001;
-        
-        if (self.scale < 1.0f) {
-            self.scale = 1.0f;
-        }else if (self.scale > 4.0f){
-            self.scale = 4.0f;
+        self.horizontalScale = self.horizontalBegin + translation.x * 0.01;
+
+        if (self.horizontalScale < 1.0f) {
+            self.horizontalScale = 1.0f;
+        }else if (self.horizontalScale > 4.0f){
+            self.horizontalScale = 4.0f;
         }
-        self.recordSession.videoCamera.videoZoomFactor = self.scale;
+        self.recordSession.videoCamera.videoZoomFactor = self.horizontalScale;
         
 //        if (translation.x < 0) {
 //            //向左滑动
@@ -272,13 +290,15 @@
 //            NSLog(@"右x:%f  y:%f",translation.x,translation.y);
 //        }
     } else if (absY > absX) {
-        self.exposure += -translation.y * 0.001;
-        if (self.exposure < -3.0f) {
-            self.exposure = -3.0f;
-        }else if (self.exposure > 3.0f){
-            self.exposure = 3.0f;
+        self.verticalScale = self.verticalBegin - translation.y * 0.01;
+        if (self.verticalScale < -3.0f) {
+            self.verticalScale = -3.0f;
+        }else if (self.verticalScale > 3.0f){
+            self.verticalScale = 3.0f;
         }
-        _exposureFilter.exposure = self.exposure;
+        self.slider.value = self.verticalScale;
+        _exposureFilter.exposure = self.verticalScale;
+        
 //        if (translation.y < 0) {
 //            //向上滑动
 //            NSLog(@"上x:%f  y:%f",translation.x,translation.y);
@@ -288,6 +308,45 @@
 //        }
     }
 }
+
+
+//滑动调整曝光度
+- (IBAction)sliderAction:(UISlider *)sender {
+    DLog(@"%f",sender.value);
+    self.verticalScale = sender.value;
+    _exposureFilter.exposure = self.verticalScale;
+}
+
+//两个手指捏合动作
+- (void)gestureRecognizerHandle:(UIPinchGestureRecognizer *)pinch {
+    self.effectiveScale = self.beginGestureScale * pinch.scale;
+    if (self.effectiveScale < 1.0f) {
+        self.effectiveScale = 1.0f;
+    }
+    CGFloat maxScaleAndCropFactor = 4.0f;//设置最大放大倍数为4倍
+    if (self.effectiveScale > maxScaleAndCropFactor)
+        self.effectiveScale = maxScaleAndCropFactor;
+//    [CATransaction begin];
+//    [CATransaction setAnimationDuration:.025];
+    self.recordSession.videoCamera.videoZoomFactor = self.effectiveScale;
+//    [CATransaction commit];
+}
+
+//手势代理方法
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    if ( [gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] ) {
+        self.beginGestureScale = self.effectiveScale;
+    }
+    if ( [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] ) {
+        self.verticalBegin = self.verticalScale;
+        self.horizontalBegin = self.horizontalScale;
+    }
+    return YES;
+}
+
+
+
+
 
 #pragma mark - Event
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
@@ -301,24 +360,6 @@
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"暂无可选视频" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
     }
-}
-
-//两个手指捏合动作
-- (void)gestureRecognizerHandle:(UIPinchGestureRecognizer *)sender{
-    CGFloat f = sender.scale - 1;
-    self.scale += f/10;
-    
-    if (self.scale < 1.0f) {
-        self.scale = 1.0f;
-    }else if (self.scale > 4.0f){
-        self.scale = 4.0f;
-    }
-    self.recordSession.videoCamera.videoZoomFactor = self.scale;
-}
-
-//滑动调整景深
-- (IBAction)sliderAction:(UISlider *)sender {
-    self.recordSession.videoCamera.videoZoomFactor = sender.value;
 }
 
 //取消/删除视频按钮
@@ -357,32 +398,6 @@
     self.navigationItem.hidesBackButton = !sender.selected;
     self.navigationItem.rightBarButtonItem.customView.hidden = !sender.selected;
     sender.selected = !sender.selected;
-}
-
-- (void)stopWrite {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-        NSArray *segments = self.recordSession.segments;
-        for (int i = 0; i < segments.count; i++) {
-            LZSessionSegment *segment = (LZSessionSegment *)segments[i];
-            NSURL *url = segment.url;
-            DLog(@"+++++++:url:%@",url);
-            
-            if ([library videoAtPathIsCompatibleWithSavedPhotosAlbum:url]) {
-                [library writeVideoAtPathToSavedPhotosAlbum:url completionBlock:^(NSURL *assetURL, NSError *error) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (error) {
-                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Video Saving Failed" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                            [alert show];
-                        } else {
-                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Video Saved" message:@"Saved To Photo Album" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                            [alert show];
-                        }
-                    });
-                }];
-            }
-        }
-    });
 }
 
 //确认按钮
