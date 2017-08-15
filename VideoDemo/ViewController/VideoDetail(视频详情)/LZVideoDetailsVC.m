@@ -130,7 +130,7 @@
         double current = CMTimeGetSeconds(time);
         double total = CMTimeGetSeconds(weakSelf.asset.duration);
         DLog(@"当前已经播放%.2fs.",current);
-        if (current >= total || self.playerView.player.rate == 0) {
+        if (current >= total) {
             DLog(@"播放完毕");
             CMTime time = CMTimeMakeWithSeconds(0, weakSelf.asset.duration.timescale);
             [weakSelf.playerView.player seekToTime:time];
