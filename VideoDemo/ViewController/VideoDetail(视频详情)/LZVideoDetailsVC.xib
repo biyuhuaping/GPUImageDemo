@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina3_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -113,27 +113,40 @@
                     <rect key="frame" x="0.0" y="320" width="320" height="111"/>
                     <subviews>
                         <button opaque="NO" tag="100" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HYy-iW-m7z">
-                            <rect key="frame" x="0.0" y="32.5" width="160" height="46"/>
+                            <rect key="frame" x="0.0" y="32.5" width="106.5" height="46"/>
                             <state key="normal" image="片段剪辑"/>
                             <connections>
                                 <action selector="clipsButtonActions:" destination="-1" eventType="touchUpInside" id="yqV-bu-oLB"/>
                             </connections>
                         </button>
                         <button opaque="NO" tag="101" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ehW-3i-Fy4">
-                            <rect key="frame" x="160" y="32.5" width="159.5" height="46"/>
-                            <state key="normal" image="添加片段button"/>
+                            <rect key="frame" x="106.5" y="32.5" width="106.5" height="46"/>
+                            <state key="normal" image="尾帧停留"/>
                             <connections>
                                 <action selector="clipsButtonActions:" destination="-1" eventType="touchUpInside" id="tDK-hz-Hdm"/>
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Clip edit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="opm-Xn-o3l">
-                            <rect key="frame" x="53.5" y="80.5" width="54" height="17"/>
+                            <rect key="frame" x="27" y="80.5" width="54" height="17"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add clips" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hue-hI-MBJ">
-                            <rect key="frame" x="210" y="80.5" width="59.5" height="17"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="End Frame" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hue-hI-MBJ">
+                            <rect key="frame" x="125.5" y="80.5" width="69" height="17"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" tag="102" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b2m-Pn-anK">
+                            <rect key="frame" x="213" y="33" width="106.5" height="45"/>
+                            <state key="normal" image="添加片段button"/>
+                            <connections>
+                                <action selector="clipsButtonActions:" destination="-1" eventType="touchUpInside" id="4NC-7V-iCq"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add clips" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Lt-9d-t84">
+                            <rect key="frame" x="237" y="80.5" width="59.5" height="17"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
@@ -142,14 +155,19 @@
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="Hue-hI-MBJ" firstAttribute="centerX" secondItem="ehW-3i-Fy4" secondAttribute="centerX" id="6EM-VT-QOj"/>
+                        <constraint firstItem="b2m-Pn-anK" firstAttribute="centerY" secondItem="ehW-3i-Fy4" secondAttribute="centerY" id="9bJ-98-qy9"/>
                         <constraint firstItem="ehW-3i-Fy4" firstAttribute="height" secondItem="HYy-iW-m7z" secondAttribute="height" id="K3X-Un-gN8"/>
+                        <constraint firstItem="9Lt-9d-t84" firstAttribute="centerX" secondItem="b2m-Pn-anK" secondAttribute="centerX" id="L3x-5l-d06"/>
                         <constraint firstItem="Hue-hI-MBJ" firstAttribute="top" secondItem="ehW-3i-Fy4" secondAttribute="centerY" constant="25" id="MzH-d4-2uP"/>
+                        <constraint firstItem="b2m-Pn-anK" firstAttribute="width" secondItem="HYy-iW-m7z" secondAttribute="width" id="W0Y-SV-ehf"/>
                         <constraint firstItem="opm-Xn-o3l" firstAttribute="top" secondItem="HYy-iW-m7z" secondAttribute="centerY" constant="25" id="WIH-hQ-S14"/>
                         <constraint firstItem="HYy-iW-m7z" firstAttribute="leading" secondItem="U0o-Ov-oXS" secondAttribute="leading" id="ZwU-rK-5eb"/>
+                        <constraint firstItem="b2m-Pn-anK" firstAttribute="leading" secondItem="ehW-3i-Fy4" secondAttribute="trailing" id="bSF-et-ztN"/>
                         <constraint firstItem="HYy-iW-m7z" firstAttribute="centerY" secondItem="U0o-Ov-oXS" secondAttribute="centerY" id="g0K-r5-Uh6"/>
+                        <constraint firstItem="9Lt-9d-t84" firstAttribute="top" secondItem="b2m-Pn-anK" secondAttribute="centerY" constant="25" id="g3k-ZH-Fv8"/>
                         <constraint firstItem="HYy-iW-m7z" firstAttribute="height" secondItem="U0o-Ov-oXS" secondAttribute="height" multiplier="0.41" id="gKo-gK-SGz"/>
                         <constraint firstItem="ehW-3i-Fy4" firstAttribute="centerY" secondItem="HYy-iW-m7z" secondAttribute="centerY" id="hu9-Lv-ccS"/>
-                        <constraint firstItem="HYy-iW-m7z" firstAttribute="width" secondItem="U0o-Ov-oXS" secondAttribute="width" multiplier="1:2" id="m96-PD-iXg"/>
+                        <constraint firstItem="HYy-iW-m7z" firstAttribute="width" secondItem="U0o-Ov-oXS" secondAttribute="width" multiplier="1:3" id="m96-PD-iXg"/>
                         <constraint firstItem="opm-Xn-o3l" firstAttribute="centerX" secondItem="HYy-iW-m7z" secondAttribute="centerX" id="rP9-7J-pfC"/>
                         <constraint firstItem="ehW-3i-Fy4" firstAttribute="width" secondItem="HYy-iW-m7z" secondAttribute="width" multiplier="1:1" id="xKz-1P-g1x"/>
                         <constraint firstItem="ehW-3i-Fy4" firstAttribute="leading" secondItem="HYy-iW-m7z" secondAttribute="trailing" id="zHF-VN-1ls"/>
@@ -180,6 +198,7 @@
         <image name="剪裁高亮" width="20" height="20"/>
         <image name="剪辑" width="18" height="17"/>
         <image name="剪辑_高亮" width="18" height="17"/>
+        <image name="尾帧停留" width="45" height="45"/>
         <image name="播放" width="69" height="69"/>
         <image name="添加片段button" width="45" height="45"/>
         <image name="片段剪辑" width="45" height="45"/>

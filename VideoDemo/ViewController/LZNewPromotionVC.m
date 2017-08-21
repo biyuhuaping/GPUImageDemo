@@ -531,8 +531,8 @@
 
 //转换成时分秒
 - (NSString *)timeFormatted:(int)totalSeconds{
-    int seconds = totalSeconds % 60;
-    int minutes = (totalSeconds / 60) % 60;
+    int seconds = lround(totalSeconds) % 60;
+    int minutes = (lround(totalSeconds) / 60) % 60;
     //    int hours = totalSeconds / 3600;
     
     return [NSString stringWithFormat:@"%02d:%02d", minutes, seconds];

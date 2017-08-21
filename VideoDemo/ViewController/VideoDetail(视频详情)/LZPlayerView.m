@@ -10,6 +10,13 @@
 
 @implementation LZPlayerView
 
+- (instancetype)init{
+    if (self = [super init]) {
+        
+    }
+    return self;
+}
+
 + (Class)layerClass {
     return [AVPlayerLayer class];
 }
@@ -20,6 +27,14 @@
 
 - (void)setPlayer:(AVPlayer *)player {
     [(AVPlayerLayer *)[self layer] setPlayer:player];
+}
+
++ (void)play{
+    
+}
+
++ (void)pause{
+    
 }
 
 @end

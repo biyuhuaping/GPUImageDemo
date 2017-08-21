@@ -14,6 +14,7 @@
 #import "LZPlayerView.h"
 
 #import "LZVideoFilterVC.h"//视频滤镜VC
+#import "LZEndFrameVC.h"//尾帧淡出
 
 @interface LZVideoDetailsVC ()<SAVideoRangeSliderDelegate>
 
@@ -241,9 +242,16 @@
             [self.navigationController pushViewController:vc animated:YES];
         }
             break;
-        case 101:{//Add clips
+        case 101:{//尾帧淡出
+            LZEndFrameVC * vc = [[LZEndFrameVC alloc] initWithNibName:@"LZEndFrameVC" bundle:nil];
+            vc.recordSession = self.recordSession;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        case 102:{//Add clips
             [self.navigationController popViewControllerAnimated:YES];
         }
+            break;
     }
 }
 

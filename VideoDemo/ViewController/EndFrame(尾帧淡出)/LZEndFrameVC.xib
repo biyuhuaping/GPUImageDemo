@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LZEndFrameVC">
+            <connections>
+                <outlet property="playButton" destination="dRe-IF-Esc" id="Pbl-V8-q3I"/>
+                <outlet property="subView" destination="Yfs-WK-ELK" id="gq1-fb-SQl"/>
+                <outlet property="view" destination="fYs-gj-4t4" id="EfT-xA-pAH"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="fYs-gj-4t4">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yfs-WK-ELK">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="Yfs-WK-ELK" secondAttribute="height" id="1xO-85-lJ5"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dRe-IF-Esc">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="dRe-IF-Esc" secondAttribute="height" multiplier="1:1" id="RSU-ie-Dnu"/>
+                    </constraints>
+                    <state key="normal" image="播放"/>
+                    <connections>
+                        <action selector="lzPlayOrPause:" destination="-1" eventType="touchUpInside" id="OJv-zC-Uyb"/>
+                    </connections>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ysA-KT-VZZ">
+                    <rect key="frame" x="0.0" y="375" width="375" height="292"/>
+                    <subviews>
+                        <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="5" translatesAutoresizingMaskIntoConstraints="NO" id="u9L-Qk-Z2N">
+                            <rect key="frame" x="38" y="131" width="299" height="31"/>
+                            <connections>
+                                <action selector="updateSliderValue:" destination="-1" eventType="valueChanged" id="UU8-WN-HTJ"/>
+                            </connections>
+                        </slider>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0s" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fzU-9e-s0R">
+                            <rect key="frame" x="16" y="137.5" width="16" height="17"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5s" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sbt-rh-MTv">
+                            <rect key="frame" x="343" y="137" width="16" height="17"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="u9L-Qk-Z2N" secondAttribute="trailing" constant="40" id="4DL-Xw-X1d"/>
+                        <constraint firstItem="Sbt-rh-MTv" firstAttribute="leading" secondItem="u9L-Qk-Z2N" secondAttribute="trailing" constant="8" id="LFf-MR-l9T"/>
+                        <constraint firstItem="u9L-Qk-Z2N" firstAttribute="leading" secondItem="fzU-9e-s0R" secondAttribute="trailing" constant="8" id="ezf-Zi-ulw"/>
+                        <constraint firstItem="u9L-Qk-Z2N" firstAttribute="centerY" secondItem="ysA-KT-VZZ" secondAttribute="centerY" id="ltP-ky-vee"/>
+                        <constraint firstItem="fzU-9e-s0R" firstAttribute="centerY" secondItem="ysA-KT-VZZ" secondAttribute="centerY" id="rdK-Ql-GoP"/>
+                        <constraint firstItem="u9L-Qk-Z2N" firstAttribute="leading" secondItem="ysA-KT-VZZ" secondAttribute="leading" constant="40" id="xOR-aI-Zs0"/>
+                        <constraint firstItem="Sbt-rh-MTv" firstAttribute="centerY" secondItem="ysA-KT-VZZ" secondAttribute="centerY" id="yhx-kX-Sxu"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="ysA-KT-VZZ" firstAttribute="top" secondItem="dRe-IF-Esc" secondAttribute="bottom" id="3Yb-dX-GzF"/>
+                <constraint firstAttribute="trailing" secondItem="Yfs-WK-ELK" secondAttribute="trailing" id="KYx-0B-YgH"/>
+                <constraint firstAttribute="trailing" secondItem="ysA-KT-VZZ" secondAttribute="trailing" id="Lzh-DW-SSM"/>
+                <constraint firstItem="dRe-IF-Esc" firstAttribute="top" secondItem="fYs-gj-4t4" secondAttribute="top" id="ZhE-6Q-add"/>
+                <constraint firstItem="ysA-KT-VZZ" firstAttribute="leading" secondItem="fYs-gj-4t4" secondAttribute="leading" id="aSM-i5-AMq"/>
+                <constraint firstItem="Yfs-WK-ELK" firstAttribute="top" secondItem="fYs-gj-4t4" secondAttribute="top" id="qjT-RT-qXh"/>
+                <constraint firstItem="dRe-IF-Esc" firstAttribute="leading" secondItem="fYs-gj-4t4" secondAttribute="leading" id="w5L-wE-gb3"/>
+                <constraint firstAttribute="bottom" secondItem="ysA-KT-VZZ" secondAttribute="bottom" id="w9A-Gl-fCU"/>
+                <constraint firstAttribute="trailing" secondItem="dRe-IF-Esc" secondAttribute="trailing" id="wug-ZF-Ope"/>
+                <constraint firstItem="ysA-KT-VZZ" firstAttribute="top" secondItem="Yfs-WK-ELK" secondAttribute="bottom" id="y1b-eM-pY6"/>
+                <constraint firstItem="Yfs-WK-ELK" firstAttribute="leading" secondItem="fYs-gj-4t4" secondAttribute="leading" id="z0y-il-cUO"/>
+            </constraints>
+            <point key="canvasLocation" x="33.5" y="54.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="播放" width="69" height="69"/>
+    </resources>
+</document>

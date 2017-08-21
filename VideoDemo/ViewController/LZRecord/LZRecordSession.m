@@ -107,14 +107,6 @@
     DLog(@"开始录制");
 }
 
-- (void)updateProgress{
-    if ([self.delegate respondsToSelector:@selector(didAppendVideoSampleBufferInSession:)]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate didAppendVideoSampleBufferInSession:CMTimeGetSeconds(self.duration)];
-        });
-    }
-}
-
 //结束录制
 - (void)endRecordingFilter:(GPUImageOutput<GPUImageInput> * _Nullable)filter Completion:(void (^)(NSMutableArray * _Nullable segments))completion {
     [self.movieWriter finishRecordingWithCompletionHandler:^{
@@ -344,7 +336,11 @@
                 _endTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
                 _currentSegmentDuration = CMTimeSubtract(_endTime, _startTime);
                 DLog(@"%lld",_currentSegmentDuration.value/_currentSegmentDuration.timescale);
-                [self updateProgress];
+                if ([self.delegate respondsToSelector:@selector(didAppendVideoSampleBufferInSession:)]) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.delegate didAppendVideoSampleBufferInSession:CMTimeGetSeconds(self.duration)];
+                    });
+                }
             }
         }
 

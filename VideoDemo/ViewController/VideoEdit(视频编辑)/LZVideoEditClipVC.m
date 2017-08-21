@@ -87,6 +87,44 @@
     // Dispose of any resources that can be recreated.
 }
 
+//1. 调用无参无返回值的方法
+- (void)invocation1 {
+    // 1. 根据方法创建签名对象sig
+    NSMethodSignature *sig = [[self class] instanceMethodSignatureForSelector:@selector(method)];
+    
+    // 2. 根据签名对象创建调用对象invocation
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
+    
+    // 3. 设置调用对象的相关信息
+    // 注意：target不要设置成局部变量
+    invocation.target = self;
+    invocation.selector = @selector(method);
+    
+    //4. 调用方法
+    [invocation invoke];
+}
+
+//2. 调用有参无返回值的方法
+- (void)invocation2 {
+    // 1. 根据方法创建签名对象sig
+    NSMethodSignature *sig = [[self class] instanceMethodSignatureForSelector:@selector(methodWithArg1:arg2:)];
+    
+    // 2. 根据签名对象创建调用对象invocation
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
+    
+    // 3. 设置调用对象的相关信息
+    invocation.target = self;
+    invocation.selector = @selector(methodWithArg1:arg2:);
+    NSString *name = @"SJM";
+    int age = 18;
+    // 参数必须从第2个索引开始，因为前两个已经被target和selector使用
+    [invocation setArgument:&name atIndex:2];
+    [invocation setArgument:&age atIndex:3];
+    
+    // 4. 调用方法
+    [invocation invoke];
+}
+
 #pragma mark - configViews
 //配置navi
 - (void)configNavigationBar{
@@ -249,7 +287,8 @@
 - (IBAction)lzSplitButtonAction:(id)sender {
     //至少1秒，才能分割
     LZSessionSegment *segment = self.recordSegments[self.currentSelected];
-    if (CMTimeGetSeconds(segment.duration) < 1) {
+    int seconds = lround(CMTimeGetSeconds(segment.duration)) % 60;
+    if (seconds < 1) {
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:LZLocalizedString(@"edit_message", nil) message:@"至少1秒，才能分割!zhoubo" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"ok", nil];
         [alert show];
         return;
