@@ -8,12 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
-#import "LZSessionSegment.h"
 
 @interface PlayView : UIView
 
 @property (strong, nonatomic) AVPlayer *player;
-@property (strong, nonatomic) LZSessionSegment *segment;
+@property (strong, nonatomic) AVAsset *asset;
 
 - (void)play;
 

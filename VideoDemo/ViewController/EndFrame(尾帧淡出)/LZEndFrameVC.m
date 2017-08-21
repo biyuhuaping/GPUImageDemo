@@ -8,7 +8,6 @@
 
 #import "LZEndFrameVC.h"
 #import "LZVideoTools.h"
-#import "PlayViewController.h"
 
 @interface LZEndFrameVC ()
 
@@ -33,9 +32,6 @@
 
     [self configNavigationBar];
     [self configPlayerView];
-    
-    PlayViewController *vc = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
-    [self.view addSubview:vc.view];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -32,6 +32,19 @@
     return self;
 }
 
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        // Initialization code
+        self.playButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.playButton.frame = CGRectMake(0, 0, kScreenWidth, kScreenWidth);
+        [self.playButton setImage:[UIImage imageNamed:@"播放"] forState:UIControlStateNormal];
+        [self addSubview:self.playButton];
+        [self showVideo];
+    }
+    return self;
+}
+
 + (Class)layerClass {
     return [AVPlayerLayer class];
 }
@@ -54,7 +67,7 @@
 }
 
 - (void)showVideo{
-    AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithURL:self.segment.url];
+    AVPlayerItem *playerItem = [[AVPlayerItem alloc]initWithAsset:self.asset];
     self.player = [AVPlayer playerWithPlayerItem:playerItem];
     AVPlayerLayer *layer = [AVPlayerLayer playerLayerWithPlayer:self.player];
     layer.frame = CGRectMake(0, 0, kScreenWidth, kScreenWidth);
@@ -66,9 +79,9 @@
     WS(weakSelf);
     self.timeObser = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
         double current = CMTimeGetSeconds(time);
-        double total = CMTimeGetSeconds(weakSelf.segment.asset.duration);
+        double total = CMTimeGetSeconds(weakSelf.asset.duration);
         if (current >= total) {
-            CMTime time = CMTimeMakeWithSeconds(weakSelf.segment.startTime, weakSelf.segment.duration.timescale);
+            CMTime time = CMTimeMakeWithSeconds(0, weakSelf.asset.duration.timescale);
             [weakSelf.player seekToTime:time];
             [weakSelf.playButton setImage:[UIImage imageNamed:@"播放"] forState:UIControlStateNormal];
         }

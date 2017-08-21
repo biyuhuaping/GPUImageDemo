@@ -19,8 +19,6 @@
 		FB28D17C1ECC199000531210 /* HKMediaOperationTools.m in Sources */ = {isa = PBXBuildFile; fileRef = FB28D17A1ECC199000531210 /* HKMediaOperationTools.m */; };
 		FB4131671F46D9FE005873CD /* LZEndFrameVC.m in Sources */ = {isa = PBXBuildFile; fileRef = FB4131651F46D9FE005873CD /* LZEndFrameVC.m */; };
 		FB4131681F46D9FE005873CD /* LZEndFrameVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB4131661F46D9FE005873CD /* LZEndFrameVC.xib */; };
-		FB41316D1F46DA89005873CD /* PlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FB41316B1F46DA89005873CD /* PlayViewController.m */; };
-		FB41316E1F46DA89005873CD /* PlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB41316C1F46DA89005873CD /* PlayViewController.xib */; };
 		FB4D354C1EE64007000A92C8 /* GLProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = FB4D33D61EE64006000A92C8 /* GLProgram.m */; };
 		FB4D354D1EE64007000A92C8 /* GPUImage3x3ConvolutionFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = FB4D33D91EE64006000A92C8 /* GPUImage3x3ConvolutionFilter.m */; };
 		FB4D354E1EE64007000A92C8 /* GPUImage3x3TextureSamplingFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = FB4D33DB1EE64006000A92C8 /* GPUImage3x3TextureSamplingFilter.m */; };
@@ -314,9 +312,6 @@
 		FB4131641F46D9FE005873CD /* LZEndFrameVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZEndFrameVC.h; sourceTree = "<group>"; };
 		FB4131651F46D9FE005873CD /* LZEndFrameVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZEndFrameVC.m; sourceTree = "<group>"; };
 		FB4131661F46D9FE005873CD /* LZEndFrameVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LZEndFrameVC.xib; sourceTree = "<group>"; };
-		FB41316A1F46DA89005873CD /* PlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayViewController.h; sourceTree = "<group>"; };
-		FB41316B1F46DA89005873CD /* PlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayViewController.m; sourceTree = "<group>"; };
-		FB41316C1F46DA89005873CD /* PlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayViewController.xib; sourceTree = "<group>"; };
 		FB4D33D11EE64005000A92C8 /* GPUImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = GPUImage.xcodeproj; sourceTree = "<group>"; };
 		FB4D33D51EE64006000A92C8 /* GLProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLProgram.h; sourceTree = "<group>"; };
 		FB4D33D61EE64006000A92C8 /* GLProgram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLProgram.m; sourceTree = "<group>"; };
@@ -865,9 +860,6 @@
 		FB4131691F46DA6E005873CD /* PlayView */ = {
 			isa = PBXGroup;
 			children = (
-				FB41316A1F46DA89005873CD /* PlayViewController.h */,
-				FB41316B1F46DA89005873CD /* PlayViewController.m */,
-				FB41316C1F46DA89005873CD /* PlayViewController.xib */,
 				FBEC36F21F4A877B009DE418 /* PlayView.h */,
 				FBEC36F31F4A877B009DE418 /* PlayView.m */,
 			);
@@ -1750,7 +1742,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FB41316E1F46DA89005873CD /* PlayViewController.xib in Resources */,
 				FBEA25471F1DE05F00256A58 /* LZTrimCropVC.xib in Resources */,
 				FB69C5231EB9B690007B38BD /* ViewController.xib in Resources */,
 				FB69C40C1EB96ADD007B38BD /* LaunchScreen.storyboard in Resources */,
@@ -1998,7 +1989,6 @@
 				FB69C5041EB97863007B38BD /* XBNSensorManager.m in Sources */,
 				FB4D35C31EE64007000A92C8 /* GPUImageRawDataInput.m in Sources */,
 				FB4D35B51EE64007000A92C8 /* GPUImageOpacityFilter.m in Sources */,
-				FB41316D1F46DA89005873CD /* PlayViewController.m in Sources */,
 				FB4D35701EE64007000A92C8 /* GPUImageDirectionalNonMaximumSuppressionFilter.m in Sources */,
 				FB4D358B1EE64007000A92C8 /* GPUImageHarrisCornerDetectionFilter.m in Sources */,
 				FB69C4D61EB975EE007B38BD /* MASLayoutConstraint.m in Sources */,
