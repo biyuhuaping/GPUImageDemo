@@ -223,7 +223,6 @@
 		FB69C4DA1EB975EE007B38BD /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C4811EB975EE007B38BD /* NSLayoutConstraint+MASDebugAdditions.m */; };
 		FB69C4DB1EB975EE007B38BD /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C4831EB975EE007B38BD /* View+MASAdditions.m */; };
 		FB69C4DC1EB975EE007B38BD /* ViewController+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C4861EB975EE007B38BD /* ViewController+MASAdditions.m */; };
-		FB69C4DD1EB975EE007B38BD /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = FB69C4871EB975EE007B38BD /* README.md */; };
 		FB69C4DE1EB975EE007B38BD /* LZImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C48A1EB975EE007B38BD /* LZImageView.m */; };
 		FB69C4DF1EB975EE007B38BD /* SAVideoRangeSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C48C1EB975EE007B38BD /* SAVideoRangeSlider.m */; };
 		FB69C5041EB97863007B38BD /* XBNSensorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FB69C5031EB97863007B38BD /* XBNSensorManager.m */; };
@@ -726,7 +725,6 @@
 		FB69C4841EB975EE007B38BD /* View+MASShorthandAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+MASShorthandAdditions.h"; sourceTree = "<group>"; };
 		FB69C4851EB975EE007B38BD /* ViewController+MASAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ViewController+MASAdditions.h"; sourceTree = "<group>"; };
 		FB69C4861EB975EE007B38BD /* ViewController+MASAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ViewController+MASAdditions.m"; sourceTree = "<group>"; };
-		FB69C4871EB975EE007B38BD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		FB69C4891EB975EE007B38BD /* LZImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZImageView.h; sourceTree = "<group>"; };
 		FB69C48A1EB975EE007B38BD /* LZImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZImageView.m; sourceTree = "<group>"; };
 		FB69C48B1EB975EE007B38BD /* SAVideoRangeSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SAVideoRangeSlider.h; sourceTree = "<group>"; };
@@ -1442,7 +1440,6 @@
 			children = (
 				FB69C46C1EB975EE007B38BD /* LICENSE */,
 				FB69C46D1EB975EE007B38BD /* Masonry */,
-				FB69C4871EB975EE007B38BD /* README.md */,
 			);
 			path = Masonry;
 			sourceTree = "<group>";
@@ -1894,7 +1891,6 @@
 				FB69C4681EB97467007B38BD /* ProgressBar.m in Sources */,
 				FB4D35A01EE64007000A92C8 /* GPUImageLineGenerator.m in Sources */,
 				FB4D35941EE64007000A92C8 /* GPUImageHSBFilter.m in Sources */,
-				FB69C4DD1EB975EE007B38BD /* README.md in Sources */,
 				FB4D35AB1EE64007000A92C8 /* GPUImageMonochromeFilter.m in Sources */,
 				FB4D35AC1EE64007000A92C8 /* GPUImageMosaicFilter.m in Sources */,
 				FB4D35CA1EE64007000A92C8 /* GPUImageSaturationBlendFilter.m in Sources */,

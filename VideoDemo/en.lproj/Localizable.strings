@@ -65,6 +65,8 @@
 "copon" = "Coupon";         //优惠券
 "edit_promotion" = "Edit promotion";    //编辑优惠
 "edit_message" = "Video length is more than 15 seconds. Please trim it and try again.";//视频长度超过15秒，请裁剪后重试
+"edit_video_duration" = "Clip can't be trimmed too short.";//片段过短，无法裁剪
+"edit_video_submit" = "Video length should be more than 3 seconds.";//视频的长度必须超过3秒。
 
 "please_enter_promotion_name" = "Please enter promotion name";      //请设置优惠标题
 "please_enter_ingredients_components" = "Please enter the ingredients/components names, separated by commas.";//请填写食材/菜品名称，并用半角逗号（，）隔开多

@@ -22,6 +22,7 @@
 @property (strong, nonatomic) id timeObser;
 
 @property (strong, nonatomic) IBOutlet LZVideoCropperSlider *trimmerView;     //微调视图
+@property (assign, nonatomic) CGFloat position;
 
 @end
 
@@ -31,7 +32,8 @@
     [super viewDidLoad];
     self.title = @"分割";
     self.segment = self.recordSegments[self.currentSelected];
-    
+    self.position = CMTimeGetSeconds(self.segment.duration)/2;
+
     [self.trimmerView performSelectorInBackground:@selector(getMovieFrameWithAsset:) withObject:self.segment.asset];
     self.trimmerView.delegate = self;
     
@@ -95,20 +97,20 @@
 - (void)cutVideo {
     [self.recordSegments removeObjectAtIndex:self.currentSelected];
     
-    double startTime = 0.0;
-    double endTime = CMTimeGetSeconds(self.segment.duration)/2;
-    
     dispatch_group_t serviceGroup = dispatch_group_create();
     for (int i = 0; i < 2; i++) {
         NSString *filename = [NSString stringWithFormat:@"Video-%.f.m4v", self.recordSession.fileIndex];
         NSURL *filePath = [LZVideoTools filePathWithFileName:filename];
 
-        if (i == 1) {
-            startTime = CMTimeGetSeconds(self.segment.duration)/2;
-            endTime = self.segment.endTime;
+        CMTime start = kCMTimeZero;
+        CMTime duration = kCMTimeZero;
+        if (i == 0) {
+            start = CMTimeMakeWithSeconds(self.segment.startTime, self.segment.duration.timescale);
+            duration = CMTimeMakeWithSeconds(self.position - self.segment.startTime, self.segment.duration.timescale);
+        }else{
+            start = CMTimeMakeWithSeconds(self.position, self.segment.duration.timescale);
+            duration = CMTimeMakeWithSeconds(self.segment.endTime - self.position, self.segment.duration.timescale);
         }
-        CMTime start = CMTimeMakeWithSeconds(startTime, self.segment.duration.timescale);
-        CMTime duration = CMTimeMakeWithSeconds(endTime - startTime, self.segment.duration.timescale);
         CMTimeRange range = CMTimeRangeMake(start, duration);
         
         dispatch_group_enter(serviceGroup);
@@ -151,10 +153,10 @@
 - (void)videoRange:(LZVideoCropperSlider *)videoRange didChangePosition:(CGFloat)position{
     [self.player pause];
     [self.playButton setImage:[UIImage imageNamed:@"播放"] forState:UIControlStateNormal];
-    self.segment.endTime = position;
-    
+    self.position = position;
+
     //控制快进，后退
-    CMTime time = CMTimeMakeWithSeconds(position, self.segment.asset.duration.timescale);
+    CMTime time = CMTimeMakeWithSeconds(self.position, self.segment.asset.duration.timescale);
     [self.player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
 }
 

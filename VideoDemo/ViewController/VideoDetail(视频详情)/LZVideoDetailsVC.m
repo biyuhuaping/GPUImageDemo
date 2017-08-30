@@ -108,8 +108,13 @@
     [button setTitleColor:UIColorFromRGB(0xffffff, 1) forState:UIControlStateNormal];
     [button sizeToFit];
     button.frame = CGRectMake(0, 0, CGRectGetWidth(button.bounds), 40);
-    button.titleEdgeInsets = UIEdgeInsetsMake(0, 8, 0, -8);
+//    button.titleEdgeInsets = UIEdgeInsetsMake(0, 8, 0, -8);
     [button addTarget:self action:@selector(navbarRightButtonClickAction:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *item = [[UIBarButtonItem alloc]initWithCustomView:button];
+
+    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 0.5, 16)];
+    line.backgroundColor = [UIColor grayColor];
+    UIBarButtonItem *item0 = [[UIBarButtonItem alloc]initWithCustomView:line];
     
     UIButton *button1 = [UIButton buttonWithType:UIButtonTypeCustom];
     button1.titleLabel.font = [UIFont systemFontOfSize:15];
@@ -118,8 +123,9 @@
     [button1 sizeToFit];
     button1.frame = CGRectMake(0, 0, CGRectGetWidth(button1.bounds), 40);
     [button1 addTarget:self action:@selector(cutVideoAndSavedPhotosAlbum) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *item1 = [[UIBarButtonItem alloc]initWithCustomView:button1];
 
-    self.navigationItem.rightBarButtonItems = @[[[UIBarButtonItem alloc]initWithCustomView:button],[[UIBarButtonItem alloc]initWithCustomView:button1]];
+    self.navigationItem.rightBarButtonItems = @[item,item0,item1];
 }
 
 - (void)configPlayerView{
@@ -143,13 +149,39 @@
 #pragma mark - Event
 //提交
 - (void)navbarRightButtonClickAction:(UIButton*)sender {
-//    LZCreatePromotionViewController * vc = [[LZCreatePromotionViewController alloc] init];
-//    vc.recordSession = self.recordSession;
-//    [self.navigationController pushViewController:vc animated:YES];
+    //视频的长度必须超过3秒
+    double duration = CMTimeGetSeconds(self.asset.duration);
+    if(duration < 3){
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:LZLocalizedString(@"edit_video_submit", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        }]];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    //视频长度超过15秒，请裁剪后重试
+    else if (duration > 15){
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:LZLocalizedString(@"edit_message", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        }]];
+        [self presentViewController:alert animated:YES completion:nil];
+    }else{
+//        LZCreatePromotionViewController * vc = [[LZCreatePromotionViewController alloc] init];
+//        vc.recordSession = self.recordSession;
+//        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 //剪裁视频，保存到本地
 - (void)cutVideoAndSavedPhotosAlbum {
+    //视频的长度必须超过3秒
+    double durationSeconds = CMTimeGetSeconds(self.asset.duration);
+    if(durationSeconds < 3){
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:LZLocalizedString(@"edit_video_submit", @"") message:nil preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        }]];
+        [self presentViewController:alert animated:YES completion:nil];
+        return;
+    }
+    
     NSURL *tempPath = [LZVideoTools filePathWithFileName:@"LZVideoEdit-0.m4v"];
     [self.recordSession removeAllSegments];
     
@@ -233,7 +265,6 @@
 #pragma mark - 剪辑按钮们
 - (IBAction)clipsButtonActions:(UIButton *)sender {
     DLog(@"%ld",(long)sender.tag);
-    [self tailoringButton:self.tailoringButton];
 
     switch (sender.tag) {
         case 100:{//Clips edit
